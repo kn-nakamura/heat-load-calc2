@@ -110,9 +110,23 @@ export interface SystemEntity {
 export interface Project {
   id: string;
   name: string;
+  building_name: string;
+  building_location: string;
+  building_usage: string;
+  building_structure: string;
+  total_floor_area_m2: number | null;
+  floors_above: number | null;
+  floors_below: number | null;
+  report_author: string;
+  remarks: string;
   unit_system: string;
   region: string;
+  solar_region: string;
   orientation_basis: string;
+  orientation_deg: number;
+  location_lat: number | null;
+  location_lon: number | null;
+  location_label: string;
   design_conditions: DesignCondition[];
   rooms: Room[];
   surfaces: Surface[];

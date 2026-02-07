@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import Response
 
 from app.models.schemas import (
@@ -14,6 +14,7 @@ from app.models.schemas import (
     JsonImportRequest,
     PasteImportRequest,
     Project,
+    NearestRegionResponse,
     ReferenceTableResponse,
     ValidateResponse,
 )
@@ -21,7 +22,7 @@ from app.services.calculation import run_calculation
 from app.services.excel_export import export_excel
 from app.services.importers import apply_csv_import, apply_paste_import, preview_csv_import, preview_paste_import
 from app.services.json_io import export_project_json, import_project_json
-from app.services.reference import get_reference_table
+from app.services.reference import get_nearest_region, get_reference_table
 from app.services.validation import validate_project
 
 router = APIRouter()
@@ -84,6 +85,24 @@ def excel_export_endpoint(req: ExcelExportRequest):
         content=payload,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f"attachment; filename={filename}"},
+    )
+
+
+@router.get("/reference/nearest_region", response_model=NearestRegionResponse)
+def nearest_region_endpoint(
+    lat: float = Query(..., description="Latitude in decimal degrees."),
+    lon: float = Query(..., description="Longitude in decimal degrees."),
+    tag: str | None = Query("solar_gain", description="Optional tag filter (e.g. solar_gain, design_outdoor)."),
+):
+    record = get_nearest_region(lat, lon, tag)
+    if not record:
+        raise HTTPException(status_code=404, detail="No region coordinates available.")
+    return NearestRegionResponse(
+        region=str(record.get("region", "")),
+        lat=float(record.get("lat", 0.0)),
+        lon=float(record.get("lon", 0.0)),
+        distance_km=float(record.get("distance_km", 0.0)),
+        tags=list(record.get("tags", [])),
     )
 
 

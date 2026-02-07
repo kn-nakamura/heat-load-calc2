@@ -24,6 +24,7 @@ def run_calculation(project: Project) -> CalcResult:
     winter = _select_design_condition(project, "winter")
 
     outdoor = refs.lookup_outdoor(project.region)
+    solar_region = project.solar_region or project.region
     constructions = {c.id: c for c in project.constructions}
     glasses = {g.id: g for g in project.glasses}
 
@@ -68,7 +69,7 @@ def run_calculation(project: Project) -> CalcResult:
                 opening=opening,
                 glasses=glasses,
                 references=refs,
-                region=project.region,
+                region=solar_region,
             )
             traces.append(trace)
             (external_vectors if group == "external" else internal_vectors).append(vec)

@@ -11,8 +11,15 @@ def get_reference_table(table_name: str) -> dict:
         return repo.etd()
     if table_name == "standard_solar_gain":
         return repo.solar()
+    if table_name == "region_coordinates":
+        return repo.region_coordinates()
     if table_name == "aluminum_sash_infiltration":
         return repo.sash()
     if table_name == "others_tables":
         return repo.others()
     raise KeyError(f"Unsupported table_name: {table_name}")
+
+
+def get_nearest_region(lat: float, lon: float, tag: str | None = None) -> dict:
+    repo = get_reference_repository()
+    return repo.lookup_nearest_region(lat, lon, tag)
