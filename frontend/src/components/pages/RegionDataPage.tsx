@@ -34,7 +34,7 @@ type OrientationTable = Record<string, Record<string, number>>;
 
 const TIME_SLOTS = ["9", "12", "14", "16"] as const;
 const ORIENTATION_ORDER = [
-  "豌ｴ蟷ｳ",
+  "水平",
   "N",
   "NNE",
   "NE",
@@ -54,7 +54,7 @@ const ORIENTATION_ORDER = [
 ] as const;
 
 const SURFACE_AZIMUTH_DEG: Record<string, number | null> = {
-  豌ｴ蟷ｳ: null,
+  水平: null,
   N: 180,
   NNE: -157.5,
   NE: -135,
@@ -74,12 +74,12 @@ const SURFACE_AZIMUTH_DEG: Record<string, number | null> = {
 };
 
 const TABS = [
-  { key: "outdoor", label: "險ｭ險育畑螻句､匁擅莉ｶ", sublabel: "Outdoor" },
-  { key: "solar_gain", label: "讓呎ｺ匁律蟆・・蜿門ｾ悠G", sublabel: "Solar Gain" },
-  { key: "solar_altitude", label: "螟ｪ髯ｽ鬮伜ｺｦ", sublabel: "Solar Altitude" },
-  { key: "solar_azimuth", label: "螟ｪ髯ｽ譁ｹ菴・", sublabel: "Solar Azimuth" },
-  { key: "apparent_solar", label: "隕九°縺代・螟ｪ髯ｽ鬮伜ｺｦ/譁ｹ菴崎ｧ・", sublabel: "Apparent" },
-  { key: "etd", label: "螳溷柑貂ｩ蠎ｦ蟾ｮETD", sublabel: "ETD" },
+  { key: "outdoor", label: "設計用外気条件", sublabel: "Outdoor" },
+  { key: "solar_gain", label: "標準日射熱取得", sublabel: "Solar Gain" },
+  { key: "solar_altitude", label: "太陽高度", sublabel: "Solar Altitude" },
+  { key: "solar_azimuth", label: "太陽方位", sublabel: "Solar Azimuth" },
+  { key: "apparent_solar", label: "見かけの太陽高度/方位角", sublabel: "Apparent" },
+  { key: "etd", label: "相当外気温度差ETD", sublabel: "ETD" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -128,7 +128,7 @@ export default function RegionDataPage({ project }: Props) {
   const hourlyRows = outdoorData
     ? [
         {
-          label: "荵ｾ逅・ｸｩ蠎ｦ [ﾂｰC]",
+          label: "乾球温度 [°C]",
           h9: outdoorData.temp_9_c,
           h12: outdoorData.temp_12_c,
           h14: outdoorData.temp_14_c,
@@ -136,7 +136,7 @@ export default function RegionDataPage({ project }: Props) {
           winter: outdoorData.heating_drybulb_c,
         },
         {
-          label: "邨ｶ蟇ｾ貉ｿ蠎ｦ [g/kg(DA)]",
+          label: "絶対湿度 [g/kg(DA)]",
           h9: outdoorData.abs_humidity_g_per_kgda,
           h12: outdoorData.abs_humidity_g_per_kgda,
           h14: outdoorData.abs_humidity_g_per_kgda,
@@ -144,7 +144,7 @@ export default function RegionDataPage({ project }: Props) {
           winter: undefined,
         },
         {
-          label: "逶ｸ蟇ｾ貉ｿ蠎ｦ [%]",
+          label: "相対湿度 [%]",
           h9: outdoorData.cooling_rh_pct,
           h12: undefined,
           h14: undefined,
@@ -152,7 +152,7 @@ export default function RegionDataPage({ project }: Props) {
           winter: undefined,
         },
         {
-          label: "豈斐お繝ｳ繧ｿ繝ｫ繝斐・ [kJ/kg(DA)]",
+          label: "比エンタルピー [kJ/kg(DA)]",
           h9: outdoorData.enthalpy_kj_per_kgda,
           h12: undefined,
           h14: undefined,
@@ -160,7 +160,7 @@ export default function RegionDataPage({ project }: Props) {
           winter: undefined,
         },
         {
-          label: "貉ｿ逅・ｸｩ蠎ｦ [ﾂｰC]",
+          label: "湿球温度 [°C]",
           h9: outdoorData.wetbulb_c,
           h12: undefined,
           h14: undefined,
@@ -181,7 +181,7 @@ export default function RegionDataPage({ project }: Props) {
       <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
           <MapPin size={16} className="text-primary-600" />
-          <h3 className="text-sm font-semibold text-slate-800">蝨ｰ蛹ｺ繝・・繧ｿ</h3>
+          <h3 className="text-sm font-semibold text-slate-800">地区データ</h3>
           <span className="text-xs text-slate-400">Region Data</span>
         </div>
         <div className="p-5">
@@ -189,18 +189,18 @@ export default function RegionDataPage({ project }: Props) {
             <div className="flex items-center gap-2 px-4 py-2.5 bg-primary-50 border border-primary-200 rounded-xl">
               <MapPin size={16} className="text-primary-600" />
               <span className="text-sm font-medium text-primary-800">
-                驕ｸ謚槫慍蝓・ {project.region}
+                選択地域: {project.region}
               </span>
             </div>
             <p className="text-xs text-slate-500">
-              險ｭ險域擅莉ｶ繝壹・繧ｸ縺ｧ蝨ｰ蝓溘ｒ螟画峩縺ｧ縺阪∪縺吶ゅ％縺薙〒縺ｯ螻句､冶ｨｭ險域擅莉ｶ繧堤｢ｺ隱阪＠縺ｾ縺吶・
+              設計条件ページで地域を変更できます。ここでは外気設計条件を確認します。
             </p>
           </div>
 
           {loading && (
             <div className="flex items-center justify-center py-12">
               <Loader2 size={24} className="text-primary-500 animate-spin" />
-              <span className="ml-3 text-sm text-slate-500">繝・・繧ｿ隱ｭ霎ｼ荳ｭ...</span>
+              <span className="ml-3 text-sm text-slate-500">データ読込中...</span>
             </div>
           )}
 
@@ -253,47 +253,47 @@ export default function RegionDataPage({ project }: Props) {
                         <div className="p-4 bg-gradient-to-br from-orange-50 to-amber-50/50 border border-orange-200/60 rounded-xl">
                           <div className="flex items-center gap-2 mb-3">
                             <CloudSun size={16} className="text-orange-500" />
-                            <h4 className="text-sm font-semibold text-orange-800">螟乗悄險ｭ險域擅莉ｶ (Summer)</h4>
+                            <h4 className="text-sm font-semibold text-orange-800">夏期設計条件 (Summer)</h4>
                           </div>
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <DataCell label="荵ｾ逅・ｸｩ蠎ｦ (譌･譛鬮・" value={outdoorData.daily_max_c} unit="ﾂｰC" />
-                            <DataCell label="蜀ｷ謌ｿ險ｭ險域ｸｩ蠎ｦ" value={outdoorData.cooling_drybulb_c} unit="ﾂｰC" />
-                            <DataCell label="譛螟夐｢ｨ蜷・" value={outdoorData.wind_dir} />
-                            <DataCell label="貉ｿ逅・ｸｩ蠎ｦ" value={outdoorData.wetbulb_c} unit="ﾂｰC" />
-                            <DataCell label="逶ｸ蟇ｾ貉ｿ蠎ｦ" value={outdoorData.cooling_rh_pct} unit="%" />
-                            <DataCell label="豈斐お繝ｳ繧ｿ繝ｫ繝斐・" value={outdoorData.enthalpy_kj_per_kgda} unit="kJ/kg" />
+                            <DataCell label="乾球温度 (日最高)" value={outdoorData.daily_max_c} unit="°C" />
+                            <DataCell label="冷房設計温度" value={outdoorData.cooling_drybulb_c} unit="°C" />
+                            <DataCell label="最多風向" value={outdoorData.wind_dir} />
+                            <DataCell label="湿球温度" value={outdoorData.wetbulb_c} unit="°C" />
+                            <DataCell label="相対湿度" value={outdoorData.cooling_rh_pct} unit="%" />
+                            <DataCell label="比エンタルピー" value={outdoorData.enthalpy_kj_per_kgda} unit="kJ/kg" />
                           </div>
                         </div>
 
                         <div className="p-4 bg-gradient-to-br from-blue-50 to-sky-50/50 border border-blue-200/60 rounded-xl">
                           <div className="flex items-center gap-2 mb-3">
                             <Snowflake size={16} className="text-blue-500" />
-                            <h4 className="text-sm font-semibold text-blue-800">蜀ｬ譛溯ｨｭ險域擅莉ｶ (Winter)</h4>
+                            <h4 className="text-sm font-semibold text-blue-800">冬期設計条件 (Winter)</h4>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
-                            <DataCell label="證匁袷險ｭ險域ｸｩ蠎ｦ" value={outdoorData.heating_drybulb_c} unit="ﾂｰC" />
-                            <DataCell label="邨ｶ蟇ｾ貉ｿ蠎ｦ" value={outdoorData.abs_humidity_g_per_kgda} unit="g/kg" />
+                            <DataCell label="暖房設計温度" value={outdoorData.heating_drybulb_c} unit="°C" />
+                            <DataCell label="絶対湿度" value={outdoorData.abs_humidity_g_per_kgda} unit="g/kg" />
                           </div>
                         </div>
                       </div>
 
                       <div>
-                        <h4 className="text-sm font-semibold text-slate-700 mb-3">險ｭ險育畑螻句､匁擅莉ｶ (蜷・凾蛻ｻ)</h4>
+                        <h4 className="text-sm font-semibold text-slate-700 mb-3">設計用外気条件 (各時刻)</h4>
                         <div className="overflow-x-auto">
                           <table className="w-full text-sm border-collapse">
                             <thead>
                               <tr className="bg-slate-50">
-                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">鬆・岼</th>
-                                {["9譎・", "12譎・", "14譎・", "16譎・"].map((h) => (
+                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">項目</th>
+                                {["9時", "12時", "14時", "16時"].map((h) => (
                                   <th
                                     key={h}
                                     className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-orange-50/50"
                                   >
-                                    螟乗悄 {h}
+                                    夏期 {h}
                                   </th>
                                 ))}
                                 <th className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-blue-50/50">
-                                  蜀ｬ譛・
+                                  冬期
                                 </th>
                               </tr>
                             </thead>
@@ -325,7 +325,7 @@ export default function RegionDataPage({ project }: Props) {
 
                       <details className="group">
                         <summary className="cursor-pointer text-xs text-slate-400 hover:text-slate-600 transition-colors">
-                          逕溘ョ繝ｼ繧ｿ繧定｡ｨ遉ｺ (Raw JSON)
+                          生データを表示 (Raw JSON)
                         </summary>
                         <pre className="mt-2 p-3 bg-slate-50 rounded-lg text-xs text-slate-600 overflow-auto max-h-60 border border-slate-200">
                           {JSON.stringify(outdoorData, null, 2)}
@@ -344,17 +344,17 @@ export default function RegionDataPage({ project }: Props) {
                   {solarGainData && (
                     <>
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-semibold text-slate-700">讓呎ｺ匁律蟆・・蜿門ｾ悠G</h4>
-                        <span className="text-xs text-slate-400">蜊倅ｽ・ W/mﾂｲ</span>
+                        <h4 className="text-sm font-semibold text-slate-700">標準日射熱取得</h4>
+                        <span className="text-xs text-slate-400">単位: W/m²</span>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm border-collapse">
                           <thead>
                             <tr className="bg-slate-50">
-                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">譁ｹ菴・</th>
+                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">方位</th>
                               {TIME_SLOTS.map((h) => (
                                 <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium">
-                                  {h}譎・
+                                  {h}時
                                 </th>
                               ))}
                             </tr>
@@ -391,17 +391,17 @@ export default function RegionDataPage({ project }: Props) {
                       <table className="w-full text-sm border-collapse">
                         <thead>
                           <tr className="bg-slate-50">
-                            <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">鬆・岼</th>
+                            <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">項目</th>
                             {TIME_SLOTS.map((h) => (
                               <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium">
-                                {h}譎・
+                                {h}時
                               </th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
                           <tr className="hover:bg-slate-50/50">
-                            <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">螟ｪ髯ｽ鬮伜ｺｦ [deg]</td>
+                            <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">太陽高度 [deg]</td>
                             {TIME_SLOTS.map((slot) => (
                               <td
                                 key={`alt-${slot}`}
@@ -428,17 +428,17 @@ export default function RegionDataPage({ project }: Props) {
                       <table className="w-full text-sm border-collapse">
                         <thead>
                           <tr className="bg-slate-50">
-                            <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">鬆・岼</th>
+                            <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">項目</th>
                             {TIME_SLOTS.map((h) => (
                               <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium">
-                                {h}譎・
+                                {h}時
                               </th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
                           <tr className="hover:bg-slate-50/50">
-                            <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">螟ｪ髯ｽ譁ｹ菴・[deg]</td>
+                            <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">太陽方位 [deg]</td>
                             {TIME_SLOTS.map((slot) => (
                               <td
                                 key={`az-${slot}`}
@@ -464,17 +464,17 @@ export default function RegionDataPage({ project }: Props) {
                     <>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-semibold text-slate-700">隕九°縺代・螟ｪ髯ｽ鬮伜ｺｦ</h4>
-                          <span className="text-xs text-slate-400">蜊倅ｽ・ deg</span>
+                          <h4 className="text-sm font-semibold text-slate-700">見かけの太陽高度</h4>
+                          <span className="text-xs text-slate-400">単位: deg</span>
                         </div>
                         <div className="overflow-x-auto">
                           <table className="w-full text-sm border-collapse">
                             <thead>
                               <tr className="bg-slate-50">
-                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">譁ｹ菴・</th>
+                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">方位</th>
                                 {TIME_SLOTS.map((h) => (
                                   <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium">
-                                    {h}譎・
+                                    {h}時
                                   </th>
                                 ))}
                               </tr>
@@ -507,17 +507,17 @@ export default function RegionDataPage({ project }: Props) {
 
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-semibold text-slate-700">隕九°縺代・螟ｪ髯ｽ譁ｹ菴崎ｧ・</h4>
-                          <span className="text-xs text-slate-400">蜊倅ｽ・ deg</span>
+                          <h4 className="text-sm font-semibold text-slate-700">見かけの太陽方位角</h4>
+                          <span className="text-xs text-slate-400">単位: deg</span>
                         </div>
                         <div className="overflow-x-auto">
                           <table className="w-full text-sm border-collapse">
                             <thead>
                               <tr className="bg-slate-50">
-                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">譁ｹ菴・</th>
+                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">方位</th>
                                 {TIME_SLOTS.map((h) => (
                                   <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium">
-                                    {h}譎・
+                                    {h}時
                                   </th>
                                 ))}
                               </tr>
@@ -558,17 +558,17 @@ export default function RegionDataPage({ project }: Props) {
                   {etdData && (
                     <>
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-semibold text-slate-700">螳溷柑貂ｩ蠎ｦ蟾ｮETD</h4>
-                        <span className="text-xs text-slate-400">蜊倅ｽ・ ﾂｰC</span>
+                        <h4 className="text-sm font-semibold text-slate-700">相当外気温度差ETD</h4>
+                        <span className="text-xs text-slate-400">単位: °C</span>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm border-collapse">
                           <thead>
                             <tr className="bg-slate-50">
-                              <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">譁ｹ菴・</th>
+                              <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">方位</th>
                               {TIME_SLOTS.map((h) => (
                                 <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium">
-                                  {h}譎・
+                                  {h}時
                                 </th>
                               ))}
                             </tr>

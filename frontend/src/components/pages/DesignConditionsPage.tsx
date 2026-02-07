@@ -261,6 +261,8 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
         rounding: next,
       },
     });
+  };
+
   useEffect(() => {
     setLocationQuery(project.location_label);
   }, [project.location_label]);
