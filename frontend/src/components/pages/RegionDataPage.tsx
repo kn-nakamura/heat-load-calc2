@@ -73,6 +73,17 @@ const SURFACE_AZIMUTH_DEG: Record<string, number | null> = {
   NNW: 157.5,
 };
 
+const TABS = [
+  { key: "outdoor", label: "設計用屋外条件", sublabel: "Outdoor" },
+  { key: "solar_gain", label: "標準日射熱取得IG", sublabel: "Solar Gain" },
+  { key: "solar_altitude", label: "太陽高度", sublabel: "Solar Altitude" },
+  { key: "solar_azimuth", label: "太陽方位", sublabel: "Solar Azimuth" },
+  { key: "apparent_solar", label: "見かけの太陽高度/方位角", sublabel: "Apparent" },
+  { key: "etd", label: "実効温度差ETD", sublabel: "ETD" },
+] as const;
+
+type TabKey = (typeof TABS)[number]["key"];
+
 export default function RegionDataPage({ project }: Props) {
   const [outdoorData, setOutdoorData] = useState<OutdoorRecord | null>(null);
   const [solarGainData, setSolarGainData] = useState<OrientationTable | null>(null);
@@ -80,9 +91,7 @@ export default function RegionDataPage({ project }: Props) {
   const [etdData, setEtdData] = useState<OrientationTable | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<
-    "outdoor" | "solar_gain" | "solar_altitude" | "solar_azimuth" | "apparent_solar" | "etd"
-  >("outdoor");
+  const [activeTab, setActiveTab] = useState<TabKey>("outdoor");
 
   useEffect(() => {
     const fetchRegionData = async () => {
@@ -167,15 +176,6 @@ export default function RegionDataPage({ project }: Props) {
       ? ORIENTATION_ORDER.filter((key) => key in etdData)
       : ORIENTATION_ORDER;
 
-  const tabs = [
-    { key: "outdoor", label: "設計用屋外条件", sublabel: "Outdoor" },
-    { key: "solar_gain", label: "標準日射熱取得IG", sublabel: "Solar Gain" },
-    { key: "solar_altitude", label: "太陽高度", sublabel: "Solar Altitude" },
-    { key: "solar_azimuth", label: "太陽方位", sublabel: "Solar Azimuth" },
-    { key: "apparent_solar", label: "見かけの太陽高度/方位角", sublabel: "Apparent" },
-    { key: "etd", label: "実効温度差ETD", sublabel: "ETD" },
-  ] as const;
-
   return (
     <div className="space-y-6">
       <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -213,27 +213,32 @@ export default function RegionDataPage({ project }: Props) {
           {!loading && (
             <div className="space-y-6">
               <div className="flex flex-wrap gap-2">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => setActiveTab(tab.key)}
-                    className={`
-                      inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all
-                      ${activeTab === tab.key
-                        ? "bg-primary-600 text-white shadow-md shadow-primary-600/20"
-                        : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
-                      }
-                    `}
-                  >
-                    <span>{tab.label}</span>
-                    <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${
-                      activeTab === tab.key ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
-                    }`}>
-                      {tab.sublabel}
-                    </span>
-                  </button>
-                ))}
+                {TABS.map((tab) => {
+                  const isActive = activeTab === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      onClick={() => setActiveTab(tab.key)}
+                      className={[
+                        "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
+                        isActive
+                          ? "bg-primary-600 text-white shadow-md shadow-primary-600/20"
+                          : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50",
+                      ].join(" ")}
+                    >
+                      <span>{tab.label}</span>
+                      <span
+                        className={[
+                          "text-[11px] px-1.5 py-0.5 rounded-full",
+                          isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500",
+                        ].join(" ")}
+                      >
+                        {tab.sublabel}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
               {activeTab === "outdoor" && (
