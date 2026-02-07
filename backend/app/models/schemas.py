@@ -111,6 +111,8 @@ class Surface(BaseModel):
     height_m: float | None = None
     area_m2: float | None = None
     adjacent_type: str = "outdoor"
+    adjacent_temp_c: float | None = None
+    adjacent_r_factor: float = 1.0
     construction_id: str | None = None
     etd_profile_key: str | None = None
     intermittent_factor: float = 1.0

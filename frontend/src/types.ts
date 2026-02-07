@@ -54,6 +54,8 @@ export interface Surface {
   height_m?: number;
   area_m2?: number;
   adjacent_type?: string;
+  adjacent_temp_c?: number;
+  adjacent_r_factor?: number;
   construction_id?: string;
 }
 
