@@ -157,7 +157,7 @@ def _dataset_entity_from_filename(filename: str) -> str | None:
 
 
 def _default_project() -> Project:
-    return Project(id="new-project", name="新規プロジェクト", region="東京")
+    return Project(id="new-project", name="新規プロジェクト", region="東京", solar_region="東京")
 
 
 def _upsert_list(current: list, incoming: list[dict], model_cls, delete_missing: bool) -> tuple[list, ImportDiff]:

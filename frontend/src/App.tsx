@@ -25,7 +25,11 @@ const defaultProject: Project = {
   remarks: "",
   unit_system: "SI",
   region: "東京",
+  solar_region: "東京",
   orientation_basis: "north",
+  location_lat: null,
+  location_lon: null,
+  location_label: "",
   design_conditions: [
     { id: "dc-summer", season: "summer", indoor_temp_c: 26, indoor_rh_pct: 50 },
     { id: "dc-winter", season: "winter", indoor_temp_c: 22, indoor_rh_pct: 40 },

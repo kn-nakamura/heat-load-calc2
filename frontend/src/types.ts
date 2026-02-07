@@ -105,7 +105,11 @@ export interface Project {
   remarks: string;
   unit_system: string;
   region: string;
+  solar_region: string;
   orientation_basis: string;
+  location_lat: number | null;
+  location_lon: number | null;
+  location_label: string;
   design_conditions: DesignCondition[];
   rooms: Room[];
   surfaces: Surface[];
