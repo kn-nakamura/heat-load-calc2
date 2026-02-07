@@ -48,25 +48,37 @@ def calc_surface_load(
     area = _surface_area(surface)
     u_val = _u_value(surface, constructions)
     orientation = surface.orientation or "N"
+    indoor_summer = summer_condition.indoor_temp_c if summer_condition else 26.0
+    indoor_winter = winter_condition.indoor_temp_c if winter_condition else 20.0
+    adjacent_temp = surface.adjacent_temp_c
+    adjacent_r = surface.adjacent_r_factor
 
     values = {}
     ref_src = "reference.etd"
     for t in _TIME_KEYS:
-        if surface.temperature_difference_override and t in surface.temperature_difference_override:
+        if surface.adjacent_type in {"internal", "unconditioned"}:
+            base_temp = adjacent_temp if adjacent_temp is not None else indoor_summer
+            delta = max(base_temp - indoor_summer, 0.0) * adjacent_r
+            ref_src = "adjacent_temperature"
+        elif surface.temperature_difference_override and t in surface.temperature_difference_override:
             delta = surface.temperature_difference_override[t]
             ref_src = "override"
         else:
             delta = references.lookup_etd(region, orientation, t)
         values[t] = round_half_up(area * u_val * delta * surface.intermittent_factor, 0)
 
-    indoor_winter = winter_condition.indoor_temp_c if winter_condition else 20.0
     outdoor_winter = float(outdoor.get("heating_drybulb_c", 0.0))
-    heating_delta = (
-        surface.heating_delta_override
-        if surface.heating_delta_override is not None
-        else max(indoor_winter - outdoor_winter, 0.0)
-    )
-    heating_factor = references.lookup_orientation_factor_for_heating(orientation)
+    if surface.adjacent_type in {"internal", "unconditioned"}:
+        base_temp = adjacent_temp if adjacent_temp is not None else indoor_winter
+        heating_delta = max(indoor_winter - base_temp, 0.0) * adjacent_r
+        heating_factor = 1.0
+    else:
+        heating_delta = (
+            surface.heating_delta_override
+            if surface.heating_delta_override is not None
+            else max(indoor_winter - outdoor_winter, 0.0)
+        )
+        heating_factor = references.lookup_orientation_factor_for_heating(orientation)
     heat_sensible = round_half_up(area * u_val * heating_delta * heating_factor, 0)
 
     load = LoadVector(
@@ -89,8 +101,11 @@ def calc_surface_load(
             "u_value_w_m2k": u_val,
             "orientation": orientation,
             "intermittent_factor": surface.intermittent_factor,
+            "indoor_summer_c": indoor_summer,
             "indoor_winter_c": indoor_winter,
             "outdoor_winter_c": outdoor_winter,
+            "adjacent_temp_c": adjacent_temp,
+            "adjacent_r_factor": adjacent_r,
         },
         references={
             "etd_table": "execution_temperature_difference",

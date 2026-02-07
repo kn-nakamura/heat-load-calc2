@@ -21,6 +21,8 @@ ALIAS_MAPS: dict[str, dict[str, list[str]]] = {
         "height_m": ["height", "height_m", "高さ"],
         "area_m2": ["area", "area_m2", "面積"],
         "adjacent_type": ["adjacent_type", "隣接"],
+        "adjacent_temp_c": ["adjacent_temp_c", "隣室温度", "隣接温度"],
+        "adjacent_r_factor": ["adjacent_r_factor", "非空調係数", "r係数", "r"],
         "construction_id": ["construction_id", "構造体id", "構造体"],
         "etd_profile_key": ["etd_profile_key", "etd", "実行温度差key"],
     },

@@ -29,7 +29,16 @@ const numberParser = (params: ValueParserParams): number | undefined => {
 const createEmptyRoom = () =>
   ({ id: "", name: "", usage: "", floor: "", area_m2: "", ceiling_height_m: "", system_id: "" } as unknown as Room);
 const createEmptySurface = () =>
-  ({ id: "", room_id: "", kind: "", orientation: "", area_m2: "", construction_id: "" } as unknown as Surface);
+  ({
+    id: "",
+    room_id: "",
+    kind: "",
+    orientation: "",
+    area_m2: "",
+    adjacent_type: "outdoor",
+    adjacent_r_factor: 1,
+    construction_id: "",
+  } as unknown as Surface);
 const createEmptyOpening = () =>
   ({ id: "", room_id: "", surface_id: "", orientation: "", area_m2: "", glass_id: "", shading_sc: "" } as unknown as Opening);
 const createEmptyInternalLoad = () =>
@@ -71,6 +80,15 @@ export default function RoomRegistrationPage({ project, onChange }: Props) {
       { field: "width_m", headerName: "幅 [m]", valueParser: numberParser, minWidth: 90 },
       { field: "height_m", headerName: "高さ [m]", valueParser: numberParser, minWidth: 90 },
       { field: "area_m2", headerName: "面積 [m²]", valueParser: numberParser, minWidth: 100 },
+      {
+        field: "adjacent_type",
+        headerName: "隣接種別",
+        cellEditor: "agSelectCellEditor",
+        cellEditorParams: { values: ["outdoor", "external", "ground", "internal", "unconditioned"] },
+        minWidth: 120,
+      },
+      { field: "adjacent_temp_c", headerName: "隣室温度 [°C]", valueParser: numberParser, minWidth: 130 },
+      { field: "adjacent_r_factor", headerName: "非空調係数 r", valueParser: numberParser, minWidth: 130 },
       { field: "construction_id", headerName: "構造体ID", minWidth: 120 },
     ],
     []
