@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ColDef, ValueParserParams } from "ag-grid-community";
 import { DoorOpen, SquareStack, PanelTop, Fan } from "lucide-react";
 import GridEditor from "../GridEditor";
@@ -40,7 +40,8 @@ const createEmptyVentilation = () =>
 type Tab = "rooms" | "surfaces" | "openings" | "internal_loads" | "ventilation";
 
 export default function RoomRegistrationPage({ project, onChange }: Props) {
-  const [activeTab, setActiveTab] = useState<Tab>("rooms");
+  const [activeTab, setActiveTab] = useState<Tab>("surfaces");
+  const [selectedRoomId, setSelectedRoomId] = useState<string | undefined>();
 
   const roomColumns = useMemo<ColDef<Room>[]>(
     () => [
@@ -119,96 +120,173 @@ export default function RoomRegistrationPage({ project, onChange }: Props) {
   );
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count: number }[] = [
-    { key: "rooms", label: "室", icon: <DoorOpen size={15} />, count: project.rooms.length },
-    { key: "surfaces", label: "面（壁・屋根・床）", icon: <SquareStack size={15} />, count: project.surfaces.length },
-    { key: "openings", label: "開口部（窓）", icon: <PanelTop size={15} />, count: project.openings.length },
-    { key: "internal_loads", label: "内部発熱", icon: <Fan size={15} />, count: project.internal_loads.length },
-    { key: "ventilation", label: "換気・隙間風", icon: <Fan size={15} />, count: project.ventilation_infiltration.length },
+    {
+      key: "surfaces",
+      label: "面（壁・屋根・床）",
+      icon: <SquareStack size={15} />,
+      count: selectedRoomId ? project.surfaces.filter((row) => row.room_id === selectedRoomId).length : 0,
+    },
+    {
+      key: "openings",
+      label: "開口部（窓）",
+      icon: <PanelTop size={15} />,
+      count: selectedRoomId ? project.openings.filter((row) => row.room_id === selectedRoomId).length : 0,
+    },
+    {
+      key: "internal_loads",
+      label: "内部発熱",
+      icon: <Fan size={15} />,
+      count: selectedRoomId ? project.internal_loads.filter((row) => row.room_id === selectedRoomId).length : 0,
+    },
+    {
+      key: "ventilation",
+      label: "換気・隙間風",
+      icon: <Fan size={15} />,
+      count: selectedRoomId ? project.ventilation_infiltration.filter((row) => row.room_id === selectedRoomId).length : 0,
+    },
   ];
+
+  const selectedRoom = useMemo(
+    () => project.rooms.find((room) => room.id === selectedRoomId),
+    [project.rooms, selectedRoomId]
+  );
+
+  useEffect(() => {
+    if (selectedRoomId && !selectedRoom) {
+      setSelectedRoomId(undefined);
+    }
+  }, [selectedRoomId, selectedRoom]);
+
+  const filterByRoom = <T extends { room_id?: string }>(rows: T[]) =>
+    selectedRoomId ? rows.filter((row) => row.room_id === selectedRoomId) : [];
+
+  const updateRowsForRoom = <T extends { room_id?: string }>(rows: T[], updatedRows: T[]) => {
+    if (!selectedRoomId) return rows;
+    const preserved = rows.filter((row) => row.room_id !== selectedRoomId);
+    const withRoom = updatedRows.map((row) => ({ ...row, room_id: selectedRoomId }));
+    return [...preserved, ...withRoom];
+  };
 
   return (
     <div className="space-y-5">
-      {/* Tab bar */}
-      <div className="flex flex-wrap gap-2">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => setActiveTab(tab.key)}
-            className={`
-              inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all
-              ${activeTab === tab.key
-                ? "bg-primary-600 text-white shadow-md shadow-primary-600/20"
-                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
-              }
-            `}
-          >
-            {tab.icon}
-            {tab.label}
-            <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-              activeTab === tab.key ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
-            }`}>
-              {tab.count}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Grids */}
-      {activeTab === "rooms" && (
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(320px,1fr)_minmax(520px,2fr)] gap-5">
         <GridEditor
           title="室登録 (Rooms)"
-          hint="各室のID、名称、用途、階、床面積、天井高、系統IDを入力"
+          hint="室リストから対象の室を選択すると、右側で壁・窓・内部負荷などを入力できます。"
           rows={project.rooms}
           columns={roomColumns}
           createEmptyRow={createEmptyRoom}
+          rowSelection="single"
+          onSelectionChange={(rows) => {
+            const first = rows[0] as Room | undefined;
+            setSelectedRoomId(first?.id ? String(first.id) : undefined);
+          }}
           onChange={(rows) => onChange({ ...project, rooms: rows })}
         />
-      )}
+        <div className="space-y-4">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+            <h3 className="text-sm font-semibold text-slate-800">室別入力パネル</h3>
+            {selectedRoom ? (
+              <div className="mt-3 grid grid-cols-2 gap-3 text-xs text-slate-600">
+                <div>
+                  <span className="block text-[11px] text-slate-400">室ID</span>
+                  <span className="font-medium text-slate-700">{selectedRoom.id}</span>
+                </div>
+                <div>
+                  <span className="block text-[11px] text-slate-400">室名</span>
+                  <span className="font-medium text-slate-700">{selectedRoom.name || "未設定"}</span>
+                </div>
+                <div>
+                  <span className="block text-[11px] text-slate-400">用途</span>
+                  <span className="font-medium text-slate-700">{selectedRoom.usage || "未設定"}</span>
+                </div>
+                <div>
+                  <span className="block text-[11px] text-slate-400">階</span>
+                  <span className="font-medium text-slate-700">{selectedRoom.floor || "未設定"}</span>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-2 text-xs text-slate-500">左の室リストから室を選択してください。</p>
+            )}
+          </div>
 
-      {activeTab === "surfaces" && (
-        <GridEditor
-          title="面データ (Surfaces)"
-          hint="壁・屋根・床の面ID、室ID、種別、方位、面積、構造体IDを入力"
-          rows={project.surfaces}
-          columns={surfaceColumns}
-          createEmptyRow={createEmptySurface}
-          onChange={(rows) => onChange({ ...project, surfaces: rows })}
-        />
-      )}
+          <div className="flex flex-wrap gap-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setActiveTab(tab.key)}
+                className={`
+                  inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all
+                  ${activeTab === tab.key
+                    ? "bg-primary-600 text-white shadow-md shadow-primary-600/20"
+                    : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                  }
+                `}
+                disabled={!selectedRoom}
+              >
+                {tab.icon}
+                {tab.label}
+                <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                  activeTab === tab.key ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
+                }`}>
+                  {selectedRoom ? tab.count : 0}
+                </span>
+              </button>
+            ))}
+          </div>
 
-      {activeTab === "openings" && (
-        <GridEditor
-          title="開口部データ (Openings)"
-          hint="窓のID、室ID、面ID、方位、面積、ガラスID、遮蔽係数を入力"
-          rows={project.openings}
-          columns={openingColumns}
-          createEmptyRow={createEmptyOpening}
-          onChange={(rows) => onChange({ ...project, openings: rows })}
-        />
-      )}
+          {!selectedRoom && (
+            <div className="bg-slate-50 border border-dashed border-slate-200 rounded-xl p-6 text-center text-sm text-slate-500">
+              室を選択すると、壁・開口部・内部負荷・換気条件をこのパネルで入力できます。
+            </div>
+          )}
 
-      {activeTab === "internal_loads" && (
-        <GridEditor
-          title="内部発熱 (Internal Loads)"
-          hint="照明・人体・機器の発熱量を入力"
-          rows={project.internal_loads}
-          columns={internalLoadColumns}
-          createEmptyRow={createEmptyInternalLoad}
-          onChange={(rows) => onChange({ ...project, internal_loads: rows })}
-        />
-      )}
+          {selectedRoom && activeTab === "surfaces" && (
+            <GridEditor
+              title={`面データ (Surfaces) - ${selectedRoom.name || selectedRoom.id}`}
+              hint="壁・屋根・床の面ID、種別、方位、面積、構造体IDを入力"
+              rows={filterByRoom(project.surfaces)}
+              columns={surfaceColumns.filter((col) => col.field !== "room_id")}
+              createEmptyRow={() => ({ ...createEmptySurface(), room_id: selectedRoom.id })}
+              onChange={(rows) => onChange({ ...project, surfaces: updateRowsForRoom(project.surfaces, rows) })}
+            />
+          )}
 
-      {activeTab === "ventilation" && (
-        <GridEditor
-          title="換気・隙間風 (Ventilation & Infiltration)"
-          hint="外気取入量、サッシ種別、気密性能を入力"
-          rows={project.ventilation_infiltration}
-          columns={ventilationColumns}
-          createEmptyRow={createEmptyVentilation}
-          onChange={(rows) => onChange({ ...project, ventilation_infiltration: rows })}
-        />
-      )}
+          {selectedRoom && activeTab === "openings" && (
+            <GridEditor
+              title={`開口部データ (Openings) - ${selectedRoom.name || selectedRoom.id}`}
+              hint="窓のID、面ID、方位、面積、ガラスID、遮蔽係数を入力"
+              rows={filterByRoom(project.openings)}
+              columns={openingColumns.filter((col) => col.field !== "room_id")}
+              createEmptyRow={() => ({ ...createEmptyOpening(), room_id: selectedRoom.id })}
+              onChange={(rows) => onChange({ ...project, openings: updateRowsForRoom(project.openings, rows) })}
+            />
+          )}
+
+          {selectedRoom && activeTab === "internal_loads" && (
+            <GridEditor
+              title={`内部発熱 (Internal Loads) - ${selectedRoom.name || selectedRoom.id}`}
+              hint="照明・人体・機器の発熱量を入力"
+              rows={filterByRoom(project.internal_loads)}
+              columns={internalLoadColumns.filter((col) => col.field !== "room_id")}
+              createEmptyRow={() => ({ ...createEmptyInternalLoad(), room_id: selectedRoom.id })}
+              onChange={(rows) => onChange({ ...project, internal_loads: updateRowsForRoom(project.internal_loads, rows) })}
+            />
+          )}
+
+          {selectedRoom && activeTab === "ventilation" && (
+            <GridEditor
+              title={`換気・隙間風 (Ventilation & Infiltration) - ${selectedRoom.name || selectedRoom.id}`}
+              hint="外気取入量、サッシ種別、気密性能を入力"
+              rows={filterByRoom(project.ventilation_infiltration)}
+              columns={ventilationColumns.filter((col) => col.field !== "room_id")}
+              createEmptyRow={() => ({ ...createEmptyVentilation(), room_id: selectedRoom.id })}
+              onChange={(rows) => onChange({ ...project, ventilation_infiltration: updateRowsForRoom(project.ventilation_infiltration, rows) })}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -17,6 +17,8 @@ interface GridEditorProps<T extends object> {
   createEmptyRow: () => T;
   onChange: (rows: T[]) => void;
   height?: string;
+  rowSelection?: "single" | "multiple";
+  onSelectionChange?: (rows: T[]) => void;
 }
 
 const EMPTY_DISPLAY_ROWS = 20;
@@ -39,7 +41,9 @@ export default function GridEditor<T extends object>({
   columns,
   createEmptyRow,
   onChange,
-  height = "480px"
+  height = "480px",
+  rowSelection = "multiple",
+  onSelectionChange
 }: GridEditorProps<T>) {
   const apiRef = useRef<GridApi<T> | null>(null);
   const rowsRef = useRef(rows);
@@ -119,7 +123,10 @@ export default function GridEditor<T extends object>({
     onChange(nextRows);
   };
 
-  const handleSelectionChanged = (_event: SelectionChangedEvent<T>) => {};
+  const handleSelectionChanged = (event: SelectionChangedEvent<T>) => {
+    if (!onSelectionChange) return;
+    onSelectionChange(event.api.getSelectedRows());
+  };
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -153,7 +160,7 @@ export default function GridEditor<T extends object>({
           theme={themeQuartz}
           rowData={displayRows}
           columnDefs={tableColumns}
-          rowSelection="multiple"
+          rowSelection={rowSelection}
           singleClickEdit
           stopEditingWhenCellsLoseFocus
           defaultColDef={{
