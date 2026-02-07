@@ -52,6 +52,187 @@
     }
   ],
   "units": {
-    "factor": "-"
-  }
+    "factor": "-",
+    "non_air_conditioned_adjacent_room_temp_diff_factor": "-",
+    "design_illuminance": "lx",
+    "power_density": "W/m2",
+    "body_heat": "W/person"
+  },
+  "non_air_conditioned_adjacent_room_temp_diff_factors": [
+    {
+      "reference_room": "事務室",
+      "adjacent_room": "廊下",
+      "ventilation_condition": "非空調室",
+      "r": 0.4
+    },
+    {
+      "reference_room": "事務室",
+      "adjacent_room": "廊下",
+      "ventilation_condition": "廊下一部還気方式",
+      "r": 0.3
+    },
+    {
+      "reference_room": "事務室",
+      "adjacent_room": "廊下",
+      "ventilation_condition": "廊下還気方式",
+      "r": 0.1
+    },
+    {
+      "reference_room": "事務室",
+      "adjacent_room": "便所",
+      "ventilation_condition": "還気による換気",
+      "r": 0.4
+    },
+    {
+      "reference_room": "事務室",
+      "adjacent_room": "便所",
+      "ventilation_condition": "外気による換気",
+      "r": 0.8
+    },
+    {
+      "reference_room": "事務室",
+      "adjacent_room": "倉庫ほか",
+      "ventilation_condition": null,
+      "r": 0.3
+    }
+  ],
+  "lighting_design_illuminance_and_power_density": [
+    {
+      "design_illuminance_lx": 750,
+      "room_examples": [
+        "事務室",
+        "上級室",
+        "設計室",
+        "製図室"
+      ],
+      "fluorescent_open_type_w_per_m2": 19,
+      "fluorescent_louver_w_per_m2": 20,
+      "fluorescent_acrylic_cover_w_per_m2": 28,
+      "led_open_type_w_per_m2": 14
+    },
+    {
+      "design_illuminance_lx": 500,
+      "room_examples": [
+        "電子計算機室",
+        "会議室",
+        "講堂",
+        "厨房",
+        "監視室",
+        "制御室"
+      ],
+      "fluorescent_open_type_w_per_m2": 12,
+      "fluorescent_louver_w_per_m2": 13,
+      "fluorescent_acrylic_cover_w_per_m2": 19,
+      "led_open_type_w_per_m2": 10
+    },
+    {
+      "design_illuminance_lx": 300,
+      "room_examples": [
+        "受付",
+        "食堂"
+      ],
+      "fluorescent_open_type_w_per_m2": 7,
+      "fluorescent_louver_w_per_m2": 8,
+      "fluorescent_acrylic_cover_w_per_m2": 11,
+      "led_open_type_w_per_m2": 6
+    },
+    {
+      "design_illuminance_lx": 200,
+      "room_examples": [
+        "電気室",
+        "機械室",
+        "書庫",
+        "湯沸室",
+        "便所",
+        "洗面所",
+        "更衣室"
+      ],
+      "fluorescent_open_type_w_per_m2": 5,
+      "fluorescent_louver_w_per_m2": 5,
+      "fluorescent_acrylic_cover_w_per_m2": 8,
+      "led_open_type_w_per_m2": 4
+    },
+    {
+      "design_illuminance_lx": 150,
+      "room_examples": [
+        "階段室"
+      ],
+      "fluorescent_open_type_w_per_m2": 4,
+      "fluorescent_louver_w_per_m2": 4,
+      "fluorescent_acrylic_cover_w_per_m2": 6,
+      "led_open_type_w_per_m2": 3
+    },
+    {
+      "design_illuminance_lx": 100,
+      "room_examples": [
+        "玄関ホール",
+        "廊下",
+        "倉庫"
+      ],
+      "fluorescent_open_type_w_per_m2": 2,
+      "fluorescent_louver_w_per_m2": 3,
+      "fluorescent_acrylic_cover_w_per_m2": 4,
+      "led_open_type_w_per_m2": 2
+    },
+    {
+      "design_illuminance_lx": 75,
+      "room_examples": [
+        "車庫"
+      ],
+      "fluorescent_open_type_w_per_m2": 2,
+      "fluorescent_louver_w_per_m2": 2,
+      "fluorescent_acrylic_cover_w_per_m2": 3,
+      "led_open_type_w_per_m2": 1
+    }
+  ],
+  "occupant_density_and_body_heat": [
+    {
+      "room": "事務室",
+      "occupant_density_range": 0.15,
+      "at_28c": {
+        "sensible_sh_w_per_person": 55,
+        "latent_lh_w_per_person": 66
+      },
+      "at_26c": {
+        "sensible_sh_w_per_person": 69,
+        "latent_lh_w_per_person": 53
+      }
+    },
+    {
+      "room": "会議室",
+      "occupant_density_range": 0.5,
+      "at_28c": {
+        "sensible_sh_w_per_person": 55,
+        "latent_lh_w_per_person": 62
+      },
+      "at_26c": {
+        "sensible_sh_w_per_person": 67,
+        "latent_lh_w_per_person": 49
+      }
+    },
+    {
+      "room": "講堂",
+      "occupant_density_range": 0.7,
+      "at_28c": {
+        "sensible_sh_w_per_person": 51,
+        "latent_lh_w_per_person": 47
+      },
+      "at_26c": {
+        "sensible_sh_w_per_person": 64,
+        "latent_lh_w_per_person": 34
+      }
+    },
+    {
+      "room": "食堂",
+      "occupant_density_range": 0.8,
+      "at_28c": {
+        "sensible_sh_w_per_person": 65,
+        "latent_lh_w_per_person": 81
+      },
+      "at_26c": {
+        "sensible_sh_w_per_person": 79,
+        "latent_lh_w_per_person": 67
+      }
+    }
+  ]
 }
