@@ -188,7 +188,7 @@ export default function IndoorDataPage({ project, onChange }: Props) {
       </section>
 
       {activeTab === "lighting" && (
-        <GridEditor
+        <GridEditor<InternalLoad>
           title="内部発熱（照明）"
           hint="室IDごとに照明の発熱量を入力します。"
           rows={filterInternalLoads("lighting")}
@@ -200,7 +200,7 @@ export default function IndoorDataPage({ project, onChange }: Props) {
       )}
 
       {activeTab === "occupancy" && (
-        <GridEditor
+        <GridEditor<InternalLoad>
           title="内部発熱（人体）"
           hint="室IDごとに人体の発熱量を入力します。"
           rows={filterInternalLoads("occupancy")}
@@ -212,7 +212,7 @@ export default function IndoorDataPage({ project, onChange }: Props) {
       )}
 
       {activeTab === "equipment" && (
-        <GridEditor
+        <GridEditor<InternalLoad>
           title="内部発熱（機器）"
           hint="室IDごとに機器の発熱量を入力します。"
           rows={filterInternalLoads("equipment")}
