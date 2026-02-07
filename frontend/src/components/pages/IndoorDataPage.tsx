@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type { ColDef, ValueParserParams } from "ag-grid-community";
 import { Thermometer } from "lucide-react";
 import GridEditor from "../GridEditor";
-import type { Project, DesignCondition } from "../../types";
+import type { Project, DesignCondition, InternalLoad } from "../../types";
 
 interface Props {
   project: Project;
@@ -27,8 +27,11 @@ const createEmptyCondition = () =>
     indoor_rh_pct: "",
   } as unknown as DesignCondition);
 
+const createEmptyInternalLoad = () =>
+  ({ id: "", room_id: "", kind: "", sensible_w: "", latent_w: "" } as unknown as InternalLoad);
+
 export default function IndoorDataPage({ project, onChange }: Props) {
-  const columns = useMemo<ColDef<DesignCondition>[]>(
+  const [activeTab, setActiveTab] = useState<"conditions" | "lighting" | "occupancy" | "equipment">("conditions");
     () => [
       { field: "id", headerName: "ID", minWidth: 120 },
       {
@@ -54,7 +57,29 @@ export default function IndoorDataPage({ project, onChange }: Props) {
     []
   );
 
-  return (
+  const internalLoadColumns = useMemo<ColDef<InternalLoad>[]>(
+    () => [
+      { field: "id", headerName: "ID", minWidth: 100 },
+      { field: "room_id", headerName: "室ID", minWidth: 110 },
+      { field: "kind", headerName: "種別", minWidth: 120 },
+      { field: "sensible_w", headerName: "顕熱 [W]", valueParser: numberParser, minWidth: 110 },
+      { field: "latent_w", headerName: "潜熱 [W]", valueParser: numberParser, minWidth: 110 },
+    ],
+    []
+  );
+
+    { key: "lighting" as const, label: "照明" },
+    { key: "occupancy" as const, label: "人体" },
+    { key: "equipment" as const, label: "機器" },
+  const filterInternalLoads = (kind: InternalLoad["kind"]) =>
+    project.internal_loads.filter((row) => row.kind === kind);
+
+  const updateInternalLoads = (kind: InternalLoad["kind"], rows: InternalLoad[]) => {
+    const preserved = project.internal_loads.filter((row) => row.kind !== kind);
+    const normalized = rows.map((row) => ({ ...row, kind }));
+    onChange({ ...project, internal_loads: [...preserved, ...normalized] });
+  };
+
     <div className="space-y-6">
       <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
@@ -110,6 +135,40 @@ export default function IndoorDataPage({ project, onChange }: Props) {
         createEmptyRow={createEmptyCondition}
         onChange={(rows) => onChange({ ...project, design_conditions: rows })}
         height="360px"
+      />
+
+      <GridEditor
+        title="内部発熱（照明・人体・機器）"
+      {activeTab === "lighting" && (
+        <GridEditor
+          title="内部発熱（照明）"
+          hint="室IDごとに照明の発熱量を入力します。"
+          rows={filterInternalLoads("lighting")}
+          columns={internalLoadColumns}
+          createEmptyRow={() => ({ ...createEmptyInternalLoad(), kind: "lighting" })}
+          onChange={(rows) => updateInternalLoads("lighting", rows)}
+          height="360px"
+        />
+      )}
+
+      {activeTab === "occupancy" && (
+        <GridEditor
+          title="内部発熱（人体）"
+          hint="室IDごとに人体の発熱量を入力します。"
+          rows={filterInternalLoads("occupancy")}
+          columns={internalLoadColumns}
+          createEmptyRow={() => ({ ...createEmptyInternalLoad(), kind: "occupancy" })}
+          onChange={(rows) => updateInternalLoads("occupancy", rows)}
+          height="360px"
+        />
+      )}
+
+      {activeTab === "equipment" && (
+          title="内部発熱（機器）"
+          hint="室IDごとに機器の発熱量を入力します。"
+          rows={filterInternalLoads("equipment")}
+          createEmptyRow={() => ({ ...createEmptyInternalLoad(), kind: "equipment" })}
+          onChange={(rows) => updateInternalLoads("equipment", rows)}
       />
     </div>
   );
