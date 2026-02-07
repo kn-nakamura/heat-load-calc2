@@ -179,15 +179,16 @@ export default function GlassStructurePage({ project, onChange }: Props) {
     [activeWallType, project.constructions]
   );
 
-  const updateRowsForType = <T extends Record<string, unknown>, K extends keyof T>(
+  const updateRowsForType = <T extends object, K extends keyof T>(
     rows: T[],
     updatedRows: T[],
     typeKey: K,
     activeType: T[K] | "all"
   ): T[] => {
     if (activeType === "all") return updatedRows;
-    const preserved = rows.filter((row) => row[typeKey] !== activeType);
-    const withType = updatedRows.map((row) => ({ ...row, [typeKey]: activeType }));
+    const typedActiveType = activeType as T[K];
+    const preserved = rows.filter((row) => row[typeKey] !== typedActiveType);
+    const withType = updatedRows.map((row) => ({ ...row, [typeKey]: typedActiveType }));
     return [...preserved, ...withType];
   };
 
