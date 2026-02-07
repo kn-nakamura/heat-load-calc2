@@ -70,6 +70,8 @@ def run_calculation(project: Project) -> CalcResult:
                 glasses=glasses,
                 references=refs,
                 region=solar_region,
+                design_condition=summer,
+                outdoor=outdoor,
             )
             traces.append(trace)
             (external_vectors if group == "external" else internal_vectors).append(vec)

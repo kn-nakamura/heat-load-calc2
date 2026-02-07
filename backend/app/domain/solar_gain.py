@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.domain.reference_lookup import ReferenceRepository
 from app.domain.rounding import round_half_up
-from app.models.schemas import CalcTrace, GlassSpec, LoadVector, Opening
+from app.models.schemas import CalcTrace, DesignCondition, GlassSpec, LoadVector, Opening
 
 _TIME_KEYS = ("9", "12", "14", "16")
 
@@ -15,11 +15,22 @@ def _opening_area(opening: Opening) -> float:
     return 0.0
 
 
+def _outdoor_temp_series(outdoor: dict) -> dict[str, float]:
+    return {
+        "9": float(outdoor.get("temp_9_c", outdoor.get("cooling_drybulb_c", 34.0))),
+        "12": float(outdoor.get("temp_12_c", outdoor.get("cooling_drybulb_c", 34.0))),
+        "14": float(outdoor.get("temp_14_c", outdoor.get("cooling_drybulb_c", 34.0))),
+        "16": float(outdoor.get("temp_16_c", outdoor.get("cooling_drybulb_c", 34.0))),
+    }
+
+
 def calc_opening_solar_gain(
     opening: Opening,
     glasses: dict[str, GlassSpec],
     references: ReferenceRepository,
     region: str,
+    design_condition: DesignCondition | None,
+    outdoor: dict,
 ) -> tuple[LoadVector, CalcTrace, str]:
     if opening.preset_load is not None:
         trace = CalcTrace(
@@ -37,9 +48,13 @@ def calc_opening_solar_gain(
     area = _opening_area(opening)
     orientation = opening.orientation or "N"
     glass = glasses.get(opening.glass_id) if opening.glass_id else None
+    u_value = glass.u_value_w_m2k if glass and glass.u_value_w_m2k is not None else 0.0
     glass_factor = 1.0
     if glass and glass.u_value_w_m2k is not None and glass.u_value_w_m2k > 0:
         glass_factor = min(1.0, 6.0 / glass.u_value_w_m2k)
+
+    indoor_cool = design_condition.indoor_temp_c if design_condition else 26.0
+    outdoor_temp = _outdoor_temp_series(outdoor)
 
     values: dict[str, float] = {}
     ref_src = "reference.solar"
@@ -49,14 +64,15 @@ def calc_opening_solar_gain(
             ref_src = "override"
         else:
             unit_gain = references.lookup_solar_gain(region, orientation, t)
-        gain = (
+        solar_gain = (
             area
             * unit_gain
             * opening.shading_sc
             * (opening.solar_area_ratio_pct / 100.0)
             * glass_factor
         )
-        values[t] = round_half_up(gain, 0)
+        q_g1 = area * u_value * (outdoor_temp[t] - indoor_cool)
+        values[t] = round_half_up(solar_gain + q_g1, 0)
 
     load = LoadVector(
         cool_9=values["9"],
@@ -79,9 +95,11 @@ def calc_opening_solar_gain(
             "shading_sc": opening.shading_sc,
             "solar_area_ratio_pct": opening.solar_area_ratio_pct,
             "glass_factor": glass_factor,
+            "u_value_w_m2k": u_value,
+            "indoor_cooling_c": indoor_cool,
         },
         references={"solar_table": "standard_solar_gain", "unit_gain_source": ref_src},
-        intermediates={"unit_gains": values},
+        intermediates={"unit_gains": values, "outdoor_temp_series": outdoor_temp},
         output=load.model_dump(),
     )
     return load, trace, "external"
