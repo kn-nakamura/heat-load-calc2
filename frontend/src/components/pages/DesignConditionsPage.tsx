@@ -14,7 +14,7 @@ function InputField({
   type = "text",
 }: {
   label: string;
-  value: string | number;
+  value: string | number | null;
   onChange: (v: string) => void;
   placeholder?: string;
   type?: string;
@@ -24,10 +24,35 @@ function InputField({
       <label className="block text-xs font-medium text-slate-600 mb-1.5">{label}</label>
       <input
         type={type}
-        value={value}
+        value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="w-full h-9 px-3 text-sm border border-slate-300 rounded-lg bg-white text-slate-800 placeholder-slate-400"
+      />
+    </div>
+  );
+}
+
+function TextareaField({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-slate-600 mb-1.5">{label}</label>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        rows={3}
+        className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white text-slate-800 placeholder-slate-400"
       />
     </div>
   );
@@ -83,6 +108,16 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
   const updateField = (field: keyof Project, value: string) => {
     onChange({ ...project, [field]: value });
   };
+  const updateNumberField = (
+    field: "total_floor_area_m2" | "floors_above" | "floors_below",
+    value: string,
+  ) => {
+    const num = value === "" ? null : Number(value);
+    onChange({
+      ...project,
+      [field]: Number.isFinite(num) ? num : null,
+    });
+  };
 
   const summerDc = project.design_conditions.find((d) => d.season === "summer");
   const winterDc = project.design_conditions.find((d) => d.season === "winter");
@@ -131,6 +166,54 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
               onChange={(v) => updateField("name", v)}
               placeholder="新規プロジェクト"
             />
+            <InputField
+              label="建物名称"
+              value={project.building_name}
+              onChange={(v) => updateField("building_name", v)}
+              placeholder="例: ○○ビル"
+            />
+            <InputField
+              label="所在地"
+              value={project.building_location}
+              onChange={(v) => updateField("building_location", v)}
+              placeholder="例: 東京都千代田区"
+            />
+            <InputField
+              label="建物用途"
+              value={project.building_usage}
+              onChange={(v) => updateField("building_usage", v)}
+              placeholder="例: 事務所"
+            />
+            <InputField
+              label="建物構造"
+              value={project.building_structure}
+              onChange={(v) => updateField("building_structure", v)}
+              placeholder="例: 鉄筋コンクリート造"
+            />
+            <InputField
+              label="延べ床面積 [m²]"
+              value={project.total_floor_area_m2}
+              onChange={(v) => updateNumberField("total_floor_area_m2", v)}
+              type="number"
+            />
+            <InputField
+              label="階数（地上）"
+              value={project.floors_above}
+              onChange={(v) => updateNumberField("floors_above", v)}
+              type="number"
+            />
+            <InputField
+              label="階数（地下）"
+              value={project.floors_below}
+              onChange={(v) => updateNumberField("floors_below", v)}
+              type="number"
+            />
+            <InputField
+              label="帳票作成者"
+              value={project.report_author}
+              onChange={(v) => updateField("report_author", v)}
+              placeholder="例: 山田 太郎"
+            />
             <SelectField
               label="地域 / Region"
               value={project.region}
@@ -150,6 +233,12 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
               value={project.orientation_basis}
               onChange={(v) => updateField("orientation_basis", v)}
               options={ORIENTATION_OPTIONS}
+            />
+            <TextareaField
+              label="備考"
+              value={project.remarks}
+              onChange={(v) => updateField("remarks", v)}
+              placeholder="特記事項を入力"
             />
           </div>
         </div>
