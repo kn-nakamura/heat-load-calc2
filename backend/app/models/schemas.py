@@ -173,7 +173,11 @@ class Project(BaseModel):
     name: str
     unit_system: str = "SI"
     region: str
+    solar_region: str | None = None
     orientation_basis: str = "north"
+    location_lat: float | None = None
+    location_lon: float | None = None
+    location_label: str | None = None
     design_conditions: list[DesignCondition] = Field(default_factory=list)
     rooms: list[Room] = Field(default_factory=list)
     surfaces: list[Surface] = Field(default_factory=list)
