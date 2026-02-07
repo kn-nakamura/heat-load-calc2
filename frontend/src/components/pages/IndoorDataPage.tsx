@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import type { ColDef, ValueParserParams } from "ag-grid-community";
 import { Thermometer, Fan } from "lucide-react";
 import GridEditor from "../GridEditor";
+import LightingLoadEditor from "../LightingLoadEditor";
+import OccupancyLoadEditor from "../OccupancyLoadEditor";
 import type { Project, DesignCondition, InternalLoad, MechanicalLoad } from "../../types";
 
 interface Props {
@@ -32,6 +34,18 @@ const createEmptyInternalLoad = () =>
 
 const createEmptyMechanicalLoad = () =>
   ({ id: "", room_id: "", sensible_w: "", latent_w: "" } as unknown as MechanicalLoad);
+
+// Generate auto ID based on load kind
+const generateLoadId = (kind: "lighting" | "occupancy" | "equipment"): string => {
+  const prefixMap = {
+    lighting: "qE",
+    occupancy: "qH",
+    equipment: "qM",
+  };
+  return prefixMap[kind];
+};
+
+const generateMechanicalId = (): string => "qM";
 
 type LoadTab = "lighting" | "occupancy" | "equipment" | "mechanical";
 
@@ -66,7 +80,7 @@ export default function IndoorDataPage({ project, onChange }: Props) {
 
   const internalLoadColumns = useMemo<ColDef<InternalLoad>[]>(
     () => [
-      { field: "id", headerName: "ID", minWidth: 100 },
+      { field: "id", headerName: "ID", minWidth: 100, editable: false },
       { field: "room_id", headerName: "室ID", minWidth: 110 },
       { field: "kind", headerName: "種別", minWidth: 120 },
       { field: "sensible_w", headerName: "顕熱 [W]", valueParser: numberParser, minWidth: 110 },
@@ -77,7 +91,7 @@ export default function IndoorDataPage({ project, onChange }: Props) {
 
   const mechanicalLoadColumns = useMemo<ColDef<MechanicalLoad>[]>(
     () => [
-      { field: "id", headerName: "ID", minWidth: 100 },
+      { field: "id", headerName: "ID", minWidth: 100, editable: false },
       { field: "room_id", headerName: "室ID", minWidth: 110 },
       { field: "sensible_w", headerName: "顕熱 [W]", valueParser: numberParser, minWidth: 110 },
       { field: "latent_w", headerName: "潜熱 [W]", valueParser: numberParser, minWidth: 110 },
@@ -188,26 +202,18 @@ export default function IndoorDataPage({ project, onChange }: Props) {
       </section>
 
       {activeTab === "lighting" && (
-        <GridEditor<InternalLoad>
-          title="内部発熱（照明）"
-          hint="室IDごとに照明の発熱量を入力します。"
+        <LightingLoadEditor
+          project={project}
           rows={filterInternalLoads("lighting")}
-          columns={internalLoadColumns}
-          createEmptyRow={() => ({ ...createEmptyInternalLoad(), kind: "lighting" })}
           onChange={(rows) => updateInternalLoads("lighting", rows)}
-          height="360px"
         />
       )}
 
       {activeTab === "occupancy" && (
-        <GridEditor<InternalLoad>
-          title="内部発熱（人体）"
-          hint="室IDごとに人体の発熱量を入力します。"
+        <OccupancyLoadEditor
+          project={project}
           rows={filterInternalLoads("occupancy")}
-          columns={internalLoadColumns}
-          createEmptyRow={() => ({ ...createEmptyInternalLoad(), kind: "occupancy" })}
           onChange={(rows) => updateInternalLoads("occupancy", rows)}
-          height="360px"
         />
       )}
 
@@ -217,7 +223,15 @@ export default function IndoorDataPage({ project, onChange }: Props) {
           hint="室IDごとに機器の発熱量を入力します。"
           rows={filterInternalLoads("equipment")}
           columns={internalLoadColumns}
-          createEmptyRow={() => ({ ...createEmptyInternalLoad(), kind: "equipment" })}
+          createEmptyRow={() => {
+            const existingLoads = filterInternalLoads("equipment");
+            const nextIndex = existingLoads.length + 1;
+            return {
+              ...createEmptyInternalLoad(),
+              kind: "equipment",
+              id: `${generateLoadId("equipment")}_${nextIndex}`,
+            };
+          }}
           onChange={(rows) => updateInternalLoads("equipment", rows)}
           height="360px"
         />
@@ -229,7 +243,13 @@ export default function IndoorDataPage({ project, onChange }: Props) {
           hint="室IDごとに機械負荷の顕熱・潜熱を入力します。"
           rows={project.mechanical_loads}
           columns={mechanicalLoadColumns}
-          createEmptyRow={createEmptyMechanicalLoad}
+          createEmptyRow={() => {
+            const nextIndex = project.mechanical_loads.length + 1;
+            return {
+              ...createEmptyMechanicalLoad(),
+              id: `${generateMechanicalId()}_${nextIndex}`,
+            };
+          }}
           onChange={(rows) => onChange({ ...project, mechanical_loads: rows })}
           height="360px"
         />

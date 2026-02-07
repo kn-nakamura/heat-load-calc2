@@ -43,8 +43,8 @@
         "cool_14": 2755,
         "cool_16": 2856,
         "cool_latent": 472,
-        "heat_sensible": 711,
-        "heat_latent": 37
+        "heat_sensible": 0,
+        "heat_latent": 0
       }
     }
   ],

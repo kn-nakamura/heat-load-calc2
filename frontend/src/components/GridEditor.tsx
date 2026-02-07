@@ -57,11 +57,25 @@ export default function GridEditor<T extends object>({
   }, [createEmptyRow, rows]);
 
   const tableColumns = useMemo<ColDef<T>[]>(() => {
-    const rowNoCol: ColDef<T> = {
-      headerName: "#",
+    const checkboxCol: ColDef<T> = {
+      headerName: "",
       width: 52,
       minWidth: 52,
-      maxWidth: 64,
+      maxWidth: 52,
+      pinned: "left",
+      checkboxSelection: true,
+      headerCheckboxSelection: true,
+      editable: false,
+      sortable: false,
+      filter: false,
+      resizable: false,
+      cellClass: "text-center"
+    };
+    const rowNoCol: ColDef<T> = {
+      headerName: "#",
+      width: 40,
+      minWidth: 40,
+      maxWidth: 40,
       pinned: "left",
       editable: false,
       sortable: false,
@@ -70,7 +84,7 @@ export default function GridEditor<T extends object>({
       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
       cellClass: "text-right text-slate-400 text-xs"
     };
-    return [rowNoCol, ...columns];
+    return [checkboxCol, rowNoCol, ...columns];
   }, [columns]);
 
   const syncRowsFromGrid = useCallback((api: GridApi<T>) => {

@@ -91,6 +91,13 @@ export interface InternalLoad {
   kind: "lighting" | "occupancy" | "equipment" | "other" | "internal_envelope" | "internal_solar";
   sensible_w: number;
   latent_w: number;
+  // Optional fields for lighting loads
+  illuminance_lux?: number;
+  power_density_w_m2?: number;
+  // Optional fields for occupancy loads
+  occupancy_count?: number;
+  sensible_per_person_w?: number;
+  latent_per_person_w?: number;
 }
 
 export interface MechanicalLoad {
