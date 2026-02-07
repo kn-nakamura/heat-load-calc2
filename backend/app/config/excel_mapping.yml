@@ -1,0 +1,81 @@
+sheets:
+  様式001:
+    - cell: C4
+      source: project.name
+    - cell: C5
+      source: project.region
+    - cell: C6
+      source: project.unit_system
+  様式006:
+    - cell: R48
+      source: calc.major_cells.R48
+    - cell: X48
+      source: calc.major_cells.X48
+    - cell: AB48
+      source: calc.major_cells.AB48
+    - cell: AF48
+      source: calc.major_cells.AF48
+    - cell: AL48
+      source: calc.major_cells.AL48
+    - cell: N50
+      source: calc.major_cells.N50
+    - cell: R50
+      source: calc.major_cells.R50
+    - cell: X50
+      source: calc.major_cells.X50
+    - cell: AB50
+      source: calc.major_cells.AB50
+    - cell: AF50
+      source: calc.major_cells.AF50
+    - cell: AJ50
+      source: calc.major_cells.AJ50
+    - cell: AL50
+      source: calc.major_cells.AL50
+    - cell: N52
+      source: calc.major_cells.N52
+    - cell: R52
+      source: calc.major_cells.R52
+    - cell: X52
+      source: calc.major_cells.X52
+    - cell: AB52
+      source: calc.major_cells.AB52
+    - cell: AF52
+      source: calc.major_cells.AF52
+    - cell: AJ52
+      source: calc.major_cells.AJ52
+    - cell: AL52
+      source: calc.major_cells.AL52
+    - cell: N53
+      source: calc.major_cells.N53
+    - cell: R53
+      source: calc.major_cells.R53
+    - cell: X53
+      source: calc.major_cells.X53
+    - cell: AB53
+      source: calc.major_cells.AB53
+    - cell: AF53
+      source: calc.major_cells.AF53
+    - cell: AJ53
+      source: calc.major_cells.AJ53
+    - cell: AL53
+      source: calc.major_cells.AL53
+    - cell: R54
+      source: calc.major_cells.R54
+    - cell: X54
+      source: calc.major_cells.X54
+    - cell: AB54
+      source: calc.major_cells.AB54
+    - cell: AF54
+      source: calc.major_cells.AF54
+    - cell: AJ54
+      source: calc.major_cells.AJ54
+    - cell: R55
+      source: calc.major_cells.R55
+    - cell: X55
+      source: calc.major_cells.X55
+    - cell: AB55
+      source: calc.major_cells.AB55
+    - cell: AF55
+      source: calc.major_cells.AF55
+    - cell: AJ55
+      source: calc.major_cells.AJ55

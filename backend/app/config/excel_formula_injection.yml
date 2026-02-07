@@ -1,0 +1,17 @@
+injections:
+  - sheet: 様式006
+    cell: K28
+    formula: '=IF(SUM(M26:M27)=0,"",(SUM(M26:M27)))'
+    mode: if_missing
+  - sheet: 様式006
+    cell: N28
+    formula: '=IF(SUM(O26:O27)=0,"",SUM(O26:O27))'
+    mode: if_missing
+  - sheet: 様式006
+    cell: P28
+    formula: '=IF(SUM(Q26:Q27)=0,"",SUM(Q26:Q27))'
+    mode: if_missing
+  - sheet: 様式006
+    cell: R28
+    formula: '=IF(SUM(S26:S27)=0,"",SUM(S26:S27))'
+    mode: if_missing

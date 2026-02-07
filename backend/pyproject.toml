@@ -1,0 +1,29 @@
+﻿[build-system]
+requires = ["hatchling>=1.24.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "heat-load-calc-backend"
+version = "0.1.0"
+description = "MVP backend for Japanese building heat-load calculation"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.116.0",
+  "uvicorn[standard]>=0.31.0",
+  "pydantic>=2.10.0",
+  "pyyaml>=6.0.2",
+  "openpyxl>=3.1.5",
+  "python-multipart>=0.0.12"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.0",
+  "httpx>=0.28.0"
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,86 @@
+{
+  "id": "example2",
+  "name": "例題2",
+  "region": "東京",
+  "unit_system": "SI",
+  "orientation_basis": "north",
+  "design_conditions": [
+    {
+      "id": "dc-summer",
+      "season": "summer",
+      "indoor_temp_c": 24,
+      "indoor_rh_pct": 45
+    },
+    {
+      "id": "dc-winter",
+      "season": "winter",
+      "indoor_temp_c": 19,
+      "indoor_rh_pct": 40
+    }
+  ],
+  "rooms": [
+    {
+      "id": "r1",
+      "name": "高負荷室",
+      "area_m2": 10,
+      "ceiling_height_m": 2.7,
+      "design_condition_id": "dc-summer",
+      "system_id": "sys1"
+    }
+  ],
+  "surfaces": [],
+  "openings": [],
+  "constructions": [],
+  "glasses": [],
+  "internal_loads": [
+    {
+      "id": "il1",
+      "room_id": "r1",
+      "kind": "equipment",
+      "preset_load": {
+        "cool_9": 12872,
+        "cool_12": 12872,
+        "cool_14": 12872,
+        "cool_16": 12872,
+        "cool_latent": 142,
+        "heat_sensible": 0,
+        "heat_latent": 0
+      }
+    }
+  ],
+  "ventilation_infiltration": [
+    {
+      "id": "v1",
+      "room_id": "r1",
+      "outdoor_air_m3h": 0,
+      "infiltration_mode": "none",
+      "preset_load": {
+        "cool_9": 465,
+        "cool_12": 502,
+        "cool_14": 522,
+        "cool_16": 542,
+        "cool_latent": 858,
+        "heat_sensible": 0,
+        "heat_latent": 0
+      }
+    }
+  ],
+  "systems": [
+    {
+      "id": "sys1",
+      "name": "系統1",
+      "room_ids": ["r1"]
+    }
+  ],
+  "metadata": {
+    "correction_factors": {
+      "cool_9": 1.1,
+      "cool_12": 1.1,
+      "cool_14": 1.1,
+      "cool_16": 1.1,
+      "cool_latent": 1.0,
+      "heat_sensible": 1.0,
+      "heat_latent": 1.0
+    }
+  }
+}

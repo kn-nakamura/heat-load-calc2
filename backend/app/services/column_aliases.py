@@ -1,0 +1,81 @@
+from __future__ import annotations
+
+ALIAS_MAPS: dict[str, dict[str, list[str]]] = {
+    "rooms": {
+        "id": ["id", "room_id", "室id", "室ID", "室番号"],
+        "name": ["name", "room_name", "室名"],
+        "usage": ["usage", "用途"],
+        "floor": ["floor", "階"],
+        "area_m2": ["area", "area_m2", "面積"],
+        "ceiling_height_m": ["ceiling_height", "ceiling_height_m", "天井高"],
+        "volume_m3": ["volume", "volume_m3", "室容積"],
+        "design_condition_id": ["design_condition_id", "設計条件id"],
+        "system_id": ["system_id", "系統id", "系統"],
+    },
+    "surfaces": {
+        "id": ["id", "surface_id", "面id", "面ID"],
+        "room_id": ["room_id", "室id", "室ID"],
+        "kind": ["kind", "surface_kind", "種別"],
+        "orientation": ["orientation", "方位"],
+        "width_m": ["width", "width_m", "幅"],
+        "height_m": ["height", "height_m", "高さ"],
+        "area_m2": ["area", "area_m2", "面積"],
+        "adjacent_type": ["adjacent_type", "隣接"],
+        "construction_id": ["construction_id", "構造体id", "構造体"],
+        "etd_profile_key": ["etd_profile_key", "etd", "実行温度差key"],
+    },
+    "openings": {
+        "id": ["id", "opening_id", "窓id", "窓ID"],
+        "room_id": ["room_id", "室id", "室ID"],
+        "surface_id": ["surface_id", "面id", "面ID"],
+        "orientation": ["orientation", "方位"],
+        "width_m": ["width", "width_m", "幅"],
+        "height_m": ["height", "height_m", "高さ"],
+        "area_m2": ["area", "area_m2", "面積"],
+        "glass_id": ["glass_id", "ガラスid", "ガラス"],
+        "shading_sc": ["shading_sc", "sc", "遮蔽係数"],
+        "solar_area_ratio_pct": ["solar_area_ratio_pct", "日射面積率", "solar_area_ratio"],
+    },
+    "constructions": {
+        "id": ["id", "construction_id", "構造体id"],
+        "name": ["name", "構造体名"],
+        "u_value_w_m2k": ["u", "u_value", "u_value_w_m2k", "熱貫流率", "k値"],
+        "wall_type": ["wall_type", "壁タイプ"],
+        "notes": ["notes", "備考"],
+    },
+    "glasses": {
+        "id": ["id", "glass_id", "ガラスid"],
+        "name": ["name", "ガラス名"],
+        "solar_gain_key": ["solar_gain_key", "日射取得key"],
+        "u_value_w_m2k": ["u", "u_value", "u_value_w_m2k", "熱貫流率"],
+    },
+    "internal_loads": {
+        "id": ["id", "load_id", "内部負荷id"],
+        "room_id": ["room_id", "室id", "室ID"],
+        "kind": ["kind", "種別"],
+        "sensible_w": ["sensible_w", "sh", "顕熱"],
+        "latent_w": ["latent_w", "lh", "潜熱"],
+        "schedule_id": ["schedule_id", "スケジュールid"],
+    },
+    "ventilation": {
+        "id": ["id", "vent_id", "換気id"],
+        "room_id": ["room_id", "室id", "室ID"],
+        "outdoor_air_m3h": ["outdoor_air_m3h", "外気量", "換気量"],
+        "infiltration_mode": ["infiltration_mode", "侵入方式"],
+        "infiltration_area_m2": ["infiltration_area_m2", "サッシ面積"],
+        "sash_type": ["sash_type", "サッシ種別"],
+        "airtightness": ["airtightness", "気密度"],
+        "wind_speed_ms": ["wind_speed_ms", "風速"],
+    },
+}
+
+
+DATASET_TO_ENTITY = {
+    "rooms": "rooms",
+    "surfaces": "surfaces",
+    "openings": "openings",
+    "constructions": "constructions",
+    "glasses": "glasses",
+    "internal_loads": "internal_loads",
+    "ventilation": "ventilation",
+}

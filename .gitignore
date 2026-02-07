@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+backend/.venv/
+backend/.mypy_cache/
+
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+.DS_Store
+Thumbs.db
+ver3.0_熱負荷計算書.xlsx
+R6建築設備設計計算書_計算様式(DL用)_機械設備工事_ver3.xlsx
