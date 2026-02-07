@@ -1,41 +1,25 @@
-import { useMemo, useState } from "react";
-import type { ColDef, ValueParserParams } from "ag-grid-community";
-import StepNav from "./components/StepNav";
-import GridEditor from "./components/GridEditor";
-import ResultPanel from "./components/ResultPanel";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import StepNav, { STEPS } from "./components/StepNav";
 import BulkImportPanel from "./components/BulkImportPanel";
-import { exportExcel, exportJson, runCalculation, validateProject } from "./api/client";
-import type {
-  CalcResult,
-  DesignCondition,
-  Opening,
-  Project,
-  Room,
-  Surface,
-  SystemEntity
-} from "./types";
-
-const steps = [
-  "Project Basics",
-  "Design Conditions",
-  "Region Data",
-  "Openings",
-  "Surfaces",
-  "Rooms",
-  "Systems",
-  "Calculation",
-  "Export"
-];
+import DesignConditionsPage from "./components/pages/DesignConditionsPage";
+import RegionDataPage from "./components/pages/RegionDataPage";
+import IndoorDataPage from "./components/pages/IndoorDataPage";
+import GlassStructurePage from "./components/pages/GlassStructurePage";
+import RoomRegistrationPage from "./components/pages/RoomRegistrationPage";
+import SystemRegistrationPage from "./components/pages/SystemRegistrationPage";
+import LoadCheckPage from "./components/pages/LoadCheckPage";
+import type { CalcResult, Project } from "./types";
 
 const defaultProject: Project = {
   id: "project-1",
-  name: "New Heat Load Project",
+  name: "新規プロジェクト",
   unit_system: "SI",
-  region: "Tokyo",
+  region: "東京",
   orientation_basis: "north",
   design_conditions: [
-    { id: "dc-summer", season: "summer", indoor_temp_c: 24, indoor_rh_pct: 45 },
-    { id: "dc-winter", season: "winter", indoor_temp_c: 19, indoor_rh_pct: 40 }
+    { id: "dc-summer", season: "summer", indoor_temp_c: 26, indoor_rh_pct: 50 },
+    { id: "dc-winter", season: "winter", indoor_temp_c: 22, indoor_rh_pct: 40 },
   ],
   rooms: [],
   surfaces: [],
@@ -53,357 +37,111 @@ const defaultProject: Project = {
       cool_16: 1.1,
       cool_latent: 1.0,
       heat_sensible: 1.1,
-      heat_latent: 1.0
-    }
-  }
+      heat_latent: 1.0,
+    },
+  },
 };
-
-const numberValueParser = (params: ValueParserParams): number | undefined => {
-  const raw = params.newValue;
-  if (raw === undefined || raw === null) {
-    return undefined;
-  }
-  if (typeof raw === "number") {
-    return Number.isFinite(raw) ? raw : undefined;
-  }
-  const value = String(raw).trim();
-  if (!value) {
-    return undefined;
-  }
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
-};
-
-const createEmptyDesignCondition = () =>
-  ({
-    id: "",
-    season: "",
-    indoor_temp_c: "",
-    indoor_rh_pct: ""
-  } as unknown as DesignCondition);
-
-const createEmptyRoom = () =>
-  ({
-    id: "",
-    name: "",
-    usage: "",
-    floor: "",
-    area_m2: "",
-    ceiling_height_m: "",
-    system_id: ""
-  } as unknown as Room);
-
-const createEmptySurface = () =>
-  ({
-    id: "",
-    room_id: "",
-    kind: "",
-    orientation: "",
-    area_m2: "",
-    construction_id: ""
-  } as unknown as Surface);
-
-const createEmptyOpening = () =>
-  ({
-    id: "",
-    room_id: "",
-    surface_id: "",
-    orientation: "",
-    area_m2: "",
-    glass_id: "",
-    shading_sc: ""
-  } as unknown as Opening);
-
-const createEmptySystem = () =>
-  ({
-    id: "",
-    name: "",
-    room_ids: ""
-  } as unknown as SystemEntity);
-
-function downloadBlob(blob: Blob, filename: string) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function downloadJson(data: unknown, filename: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  downloadBlob(blob, filename);
-}
 
 export default function App() {
   const [stepIndex, setStepIndex] = useState(0);
   const [project, setProject] = useState<Project>(defaultProject);
   const [calcResult, setCalcResult] = useState<CalcResult | null>(null);
   const [issues, setIssues] = useState<Array<{ message: string; level: string }>>([]);
-  const [busy, setBusy] = useState(false);
 
-  const roomColumns = useMemo<ColDef<Room>[]>(
-    () => [
-      { field: "id", headerName: "ID" },
-      { field: "name", headerName: "Room Name" },
-      { field: "usage", headerName: "Usage" },
-      { field: "floor", headerName: "Floor" },
-      { field: "area_m2", headerName: "Area [m2]", valueParser: numberValueParser },
-      { field: "ceiling_height_m", headerName: "Ceiling H [m]", valueParser: numberValueParser },
-      { field: "system_id", headerName: "System ID" }
-    ],
-    []
-  );
+  const currentStep = STEPS[stepIndex];
 
-  const surfaceColumns = useMemo<ColDef<Surface>[]>(
-    () => [
-      { field: "id", headerName: "ID" },
-      { field: "room_id", headerName: "Room ID" },
-      {
-        field: "kind",
-        headerName: "Kind",
-        cellEditor: "agSelectCellEditor",
-        cellEditorParams: { values: ["wall", "roof", "floor", "internal"] }
-      },
-      { field: "orientation", headerName: "Orientation" },
-      { field: "area_m2", headerName: "Area [m2]", valueParser: numberValueParser },
-      { field: "construction_id", headerName: "Construction ID" }
-    ],
-    []
-  );
-
-  const openingColumns = useMemo<ColDef<Opening>[]>(
-    () => [
-      { field: "id", headerName: "ID" },
-      { field: "room_id", headerName: "Room ID" },
-      { field: "surface_id", headerName: "Surface ID" },
-      { field: "orientation", headerName: "Orientation" },
-      { field: "area_m2", headerName: "Area [m2]", valueParser: numberValueParser },
-      { field: "glass_id", headerName: "Glass ID" },
-      { field: "shading_sc", headerName: "SC", valueParser: numberValueParser }
-    ],
-    []
-  );
-
-  const systemColumns = useMemo<ColDef<SystemEntity>[]>(
-    () => [
-      { field: "id", headerName: "System ID" },
-      { field: "name", headerName: "Name" },
-      { field: "room_ids", headerName: "Room IDs (comma separated)" }
-    ],
-    []
-  );
-
-  const designColumns = useMemo<ColDef<DesignCondition>[]>(
-    () => [
-      { field: "id", headerName: "ID" },
-      {
-        field: "season",
-        headerName: "Season",
-        cellEditor: "agSelectCellEditor",
-        cellEditorParams: { values: ["summer", "winter"] }
-      },
-      { field: "indoor_temp_c", headerName: "Indoor Temp [C]", valueParser: numberValueParser },
-      { field: "indoor_rh_pct", headerName: "Indoor RH [%]", valueParser: numberValueParser }
-    ],
-    []
-  );
-
-  const onRunCalc = async () => {
-    setBusy(true);
-    try {
-      const validation = await validateProject(project);
-      setIssues(validation.issues || []);
-      if (!validation.valid) {
-        return;
-      }
-      const result = await runCalculation(project);
-      setCalcResult(result);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const onExportJson = async () => {
-    setBusy(true);
-    try {
-      const payload = await exportJson(project, calcResult);
-      downloadJson(payload, "project.json");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const onExportExcel = async () => {
-    setBusy(true);
-    try {
-      const blob = await exportExcel(project, calcResult);
-      downloadBlob(blob, "heat_load_result.xlsx");
-    } finally {
-      setBusy(false);
+  const renderPage = () => {
+    switch (stepIndex) {
+      case 0:
+        return <DesignConditionsPage project={project} onChange={setProject} />;
+      case 1:
+        return <RegionDataPage project={project} />;
+      case 2:
+        return <IndoorDataPage project={project} onChange={setProject} />;
+      case 3:
+        return <GlassStructurePage project={project} onChange={setProject} />;
+      case 4:
+        return <RoomRegistrationPage project={project} onChange={setProject} />;
+      case 5:
+        return <SystemRegistrationPage project={project} onChange={setProject} />;
+      case 6:
+        return (
+          <LoadCheckPage
+            project={project}
+            calcResult={calcResult}
+            onCalcResult={setCalcResult}
+            issues={issues}
+            onIssues={setIssues}
+          />
+        );
+      default:
+        return null;
     }
   };
 
   return (
-    <div className="app-shell">
-      <StepNav steps={steps} currentStep={stepIndex} issuesCount={issues.length} onSelectStep={setStepIndex} />
-      <main className="main-panel">
-        <header>
-          <h2>{steps[stepIndex]}</h2>
-          <p>Spreadsheet-like web input: direct edit, copy/paste from Excel, add/delete rows.</p>
+    <div className="flex min-h-screen bg-slate-50">
+      {/* Sidebar */}
+      <StepNav
+        currentStep={stepIndex}
+        issuesCount={issues.length}
+        onSelectStep={setStepIndex}
+      />
+
+      {/* Main content */}
+      <main className="flex-1 min-w-0 flex flex-col">
+        {/* Top header */}
+        <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-slate-400">
+                  STEP {stepIndex + 1}/{STEPS.length}
+                </span>
+                <h2 className="text-lg font-bold text-slate-900">{currentStep.label}</h2>
+                <span className="text-sm text-slate-400">{currentStep.sublabel}</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {project.name} — {project.region}
+              </p>
+            </div>
+
+            {/* Step navigation buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={stepIndex === 0}
+                onClick={() => setStepIndex((s) => s - 1)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg transition-all"
+              >
+                <ChevronLeft size={16} />
+                戻る
+              </button>
+              <button
+                type="button"
+                disabled={stepIndex === STEPS.length - 1}
+                onClick={() => setStepIndex((s) => s + 1)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg shadow-sm transition-all"
+              >
+                次へ
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
         </header>
 
-        <BulkImportPanel project={project} onProjectChange={setProject} onIssues={(next) => setIssues(next)} />
-
-        {stepIndex === 0 && (
-          <section className="form-grid">
-            <label>
-              Project Name
-              <input value={project.name} onChange={(e) => setProject({ ...project, name: e.target.value })} />
-            </label>
-            <label>
-              Region
-              <input value={project.region} onChange={(e) => setProject({ ...project, region: e.target.value })} />
-            </label>
-            <label>
-              Unit System
-              <input
-                value={project.unit_system}
-                onChange={(e) => setProject({ ...project, unit_system: e.target.value })}
-              />
-            </label>
-            <label>
-              Orientation Basis
-              <input
-                value={project.orientation_basis}
-                onChange={(e) => setProject({ ...project, orientation_basis: e.target.value })}
-              />
-            </label>
-          </section>
-        )}
-
-        {stepIndex === 1 && (
-          <GridEditor
-            title="Design Conditions"
-            rows={project.design_conditions}
-            columns={designColumns}
-            createEmptyRow={createEmptyDesignCondition}
-            onChange={(rows) => setProject({ ...project, design_conditions: rows })}
+        {/* Page content */}
+        <div className="flex-1 px-8 py-6 space-y-6 overflow-y-auto">
+          {/* Bulk import panel (collapsible) */}
+          <BulkImportPanel
+            project={project}
+            onProjectChange={setProject}
+            onIssues={setIssues}
           />
-        )}
 
-        {stepIndex === 2 && (
-          <section className="card">
-            <p>
-              Region reference values are applied from backend tables using current region:{" "}
-              <strong>{project.region}</strong>.
-            </p>
-          </section>
-        )}
-
-        {stepIndex === 3 && (
-          <GridEditor
-            title="Openings"
-            rows={project.openings}
-            columns={openingColumns}
-            createEmptyRow={createEmptyOpening}
-            onChange={(rows) => setProject({ ...project, openings: rows })}
-          />
-        )}
-
-        {stepIndex === 4 && (
-          <GridEditor
-            title="Surfaces"
-            rows={project.surfaces}
-            columns={surfaceColumns}
-            createEmptyRow={createEmptySurface}
-            onChange={(rows) => setProject({ ...project, surfaces: rows })}
-          />
-        )}
-
-        {stepIndex === 5 && (
-          <GridEditor
-            title="Rooms"
-            rows={project.rooms}
-            columns={roomColumns}
-            createEmptyRow={createEmptyRoom}
-            onChange={(rows) => setProject({ ...project, rooms: rows })}
-          />
-        )}
-
-        {stepIndex === 6 && (
-          <GridEditor
-            title="Systems"
-            rows={project.systems}
-            columns={systemColumns}
-            createEmptyRow={createEmptySystem}
-            onChange={(rows) =>
-              setProject({
-                ...project,
-                systems: rows.map((row) => ({
-                  ...row,
-                  room_ids: (() => {
-                    const raw = (row as unknown as { room_ids: unknown }).room_ids;
-                    if (typeof raw === "string") {
-                      return raw
-                        .split(",")
-                        .map((x) => x.trim())
-                        .filter(Boolean);
-                    }
-                    return Array.isArray(raw) ? (raw as string[]) : [];
-                  })()
-                }))
-              })
-            }
-          />
-        )}
-
-        {stepIndex === 7 && (
-          <section className="card">
-            <button type="button" onClick={onRunCalc} disabled={busy}>
-              {busy ? "Running..." : "Run Calculation"}
-            </button>
-            <ResultPanel result={calcResult} />
-          </section>
-        )}
-
-        {stepIndex === 8 && (
-          <section className="card output-panel">
-            <button type="button" onClick={onExportJson} disabled={busy}>
-              Export JSON
-            </button>
-            <button type="button" onClick={onExportExcel} disabled={busy}>
-              Export Excel
-            </button>
-            <p>Excel output keeps formula-based workbook behavior.</p>
-          </section>
-        )}
-
-        {issues.length > 0 && (
-          <section className="issue-panel">
-            <h3>Validation Messages</h3>
-            <ul>
-              {issues.map((issue, idx) => (
-                <li key={`${issue.level}-${idx}`}>
-                  [{issue.level}] {issue.message}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <footer className="step-actions">
-          <button type="button" disabled={stepIndex === 0} onClick={() => setStepIndex((s) => s - 1)}>
-            Back
-          </button>
-          <button
-            type="button"
-            disabled={stepIndex === steps.length - 1}
-            onClick={() => setStepIndex((s) => s + 1)}
-          >
-            Next
-          </button>
-        </footer>
+          {/* Step-specific content */}
+          {renderPage()}
+        </div>
       </main>
     </div>
   );
