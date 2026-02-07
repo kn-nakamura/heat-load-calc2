@@ -4,6 +4,8 @@ from app.domain.rounding import round_by_mode, round_half_up
 from app.models.schemas import CalcTrace, InternalLoad, LoadVector, OccupancyRounding
 
 _TIME_KEYS = ("9", "12", "14", "16")
+# 暖房寄与率は手引きに基づき内部発熱の25%（例: 0.25）を負荷減算として扱う。
+_HEATING_CONTRIBUTION_RATIO = 0.25
 
 
 def calc_internal_load(
@@ -30,13 +32,16 @@ def calc_internal_load(
             for t in _TIME_KEYS
         }
         latent = round_by_mode(load.latent_w, occupancy_rounding.mode)
-        heat_sensible = round_by_mode(load.sensible_w * 0.25, occupancy_rounding.mode)
-        heat_latent = round_by_mode(load.latent_w * 0.25, occupancy_rounding.mode)
+        heat_sensible = -round_by_mode(
+            load.sensible_w * _HEATING_CONTRIBUTION_RATIO,
+            occupancy_rounding.mode,
+        )
+        heat_latent = -round_by_mode(load.latent_w * _HEATING_CONTRIBUTION_RATIO, occupancy_rounding.mode)
     else:
         values = {t: round_half_up(load.sensible_w * float(ratio.get(t, 1.0)), 0) for t in _TIME_KEYS}
         latent = round_half_up(load.latent_w, 0)
-        heat_sensible = round_half_up(load.sensible_w * 0.25, 0)
-        heat_latent = round_half_up(load.latent_w * 0.25, 0)
+        heat_sensible = -round_half_up(load.sensible_w * _HEATING_CONTRIBUTION_RATIO, 0)
+        heat_latent = -round_half_up(load.latent_w * _HEATING_CONTRIBUTION_RATIO, 0)
 
     vec = LoadVector(
         cool_9=values["9"],

@@ -32,6 +32,7 @@ def major_cells_from_subtotals(
     cells["X50"] = internal.cool_12
     cells["AB50"] = internal.cool_14
     cells["AF50"] = internal.cool_16
+    # 内部発熱の暖房寄与は減算扱いのため、internal側は符号付き値を合算する。
     cells["AJ50"] = internal.heat_latent if internal.heat_latent != 0 else None
     cells["AL50"] = internal.heat_sensible if internal.heat_sensible != 0 else None
 
