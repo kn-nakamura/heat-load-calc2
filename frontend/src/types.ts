@@ -10,6 +10,22 @@ export interface CorrectionFactors {
   heat_latent: number;
 }
 
+export type RoundingMode = "round" | "ceil";
+
+export interface OccupancyRounding {
+  mode: RoundingMode;
+}
+
+export interface OutdoorAirRounding {
+  mode: RoundingMode;
+  step: number;
+}
+
+export interface RoundingSettings {
+  occupancy: OccupancyRounding;
+  outdoor_air: OutdoorAirRounding;
+}
+
 export interface DesignCondition {
   id: string;
   season: Season;
@@ -122,6 +138,7 @@ export interface Project {
   systems: SystemEntity[];
   metadata: {
     correction_factors: CorrectionFactors;
+    rounding: RoundingSettings;
   };
 }
 

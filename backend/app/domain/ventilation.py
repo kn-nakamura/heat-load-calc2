@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from app.domain.psychrometrics import moist_air_state
 from app.domain.reference_lookup import ReferenceRepository
-from app.domain.rounding import round_half_up
-from app.models.schemas import CalcTrace, DesignCondition, LoadVector, Room, VentilationInfiltration
+from app.domain.rounding import round_by_mode, round_half_up
+from app.models.schemas import CalcTrace, DesignCondition, LoadVector, OutdoorAirRounding, Room, VentilationInfiltration
 
 _TIME_KEYS = ("9", "12", "14", "16")
 
@@ -24,6 +24,7 @@ def calc_ventilation_load(
     winter_condition: DesignCondition | None,
     outdoor: dict,
     references: ReferenceRepository,
+    outdoor_air_rounding: OutdoorAirRounding | None = None,
 ) -> tuple[LoadVector, CalcTrace, str]:
     if vent.preset_load is not None:
         trace = CalcTrace(
@@ -38,7 +39,10 @@ def calc_ventilation_load(
         )
         return vent.preset_load, trace, "external"
 
-    base_flow = vent.outdoor_air_m3h
+    if outdoor_air_rounding is not None:
+        base_flow = round_by_mode(vent.outdoor_air_m3h, outdoor_air_rounding.mode, outdoor_air_rounding.step)
+    else:
+        base_flow = vent.outdoor_air_m3h
     infil = 0.0
     if vent.infiltration_mode == "sash" and vent.sash_type and vent.airtightness and vent.wind_speed_ms:
         sash_q = references.lookup_sash_infiltration(vent.sash_type, vent.airtightness, vent.wind_speed_ms)

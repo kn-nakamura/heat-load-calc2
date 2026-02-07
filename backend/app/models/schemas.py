@@ -63,6 +63,25 @@ class CorrectionFactors(BaseModel):
     heat_latent: float = 1.0
 
 
+class RoundingMode(StrEnum):
+    ROUND = "round"
+    CEIL = "ceil"
+
+
+class OccupancyRounding(BaseModel):
+    mode: RoundingMode = RoundingMode.ROUND
+
+
+class OutdoorAirRounding(BaseModel):
+    mode: RoundingMode = RoundingMode.ROUND
+    step: float = 10.0
+
+
+class RoundingSettings(BaseModel):
+    occupancy: OccupancyRounding = Field(default_factory=OccupancyRounding)
+    outdoor_air: OutdoorAirRounding = Field(default_factory=OutdoorAirRounding)
+
+
 class DesignCondition(BaseModel):
     id: str
     season: Season
@@ -166,6 +185,7 @@ class ProjectMetadata(BaseModel):
     version: str | None = None
     notes: str | None = None
     correction_factors: CorrectionFactors = Field(default_factory=CorrectionFactors)
+    rounding: RoundingSettings = Field(default_factory=RoundingSettings)
 
 
 class Project(BaseModel):
