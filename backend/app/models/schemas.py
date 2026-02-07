@@ -317,3 +317,11 @@ class ExcelExportRequest(BaseModel):
 class ReferenceTableResponse(BaseModel):
     table_name: str
     data: dict[str, Any]
+
+
+class NearestRegionResponse(BaseModel):
+    region: str
+    lat: float
+    lon: float
+    distance_km: float
+    tags: list[str] = Field(default_factory=list)
