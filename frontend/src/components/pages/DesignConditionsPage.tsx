@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Building2, Compass } from "lucide-react";
-import type { Project, DesignCondition } from "../../types";
+import { Building2 } from "lucide-react";
+import type { Project } from "../../types";
 
 interface Props {
   project: Project;
@@ -126,6 +126,60 @@ const SOLAR_REGION_COORDS: Record<string, { lat: number; lon: number }> = {
   那覇: { lat: 26.2124, lon: 127.6792 },
 };
 
+const REGION_COORDS: Record<string, { lat: number; lon: number }> = {
+  稚内: { lat: 45.4156, lon: 141.6731 },
+  旭川: { lat: 43.7706, lon: 142.3649 },
+  札幌: { lat: 43.0618, lon: 141.3545 },
+  室蘭: { lat: 42.3152, lon: 140.9738 },
+  青森: { lat: 40.8246, lon: 140.74 },
+  盛岡: { lat: 39.7036, lon: 141.1527 },
+  仙台: { lat: 38.2682, lon: 140.8694 },
+  秋田: { lat: 39.72, lon: 140.1026 },
+  山形: { lat: 38.2554, lon: 140.3396 },
+  福島: { lat: 37.7608, lon: 140.4747 },
+  水戸: { lat: 36.3659, lon: 140.471 },
+  宇都宮: { lat: 36.5551, lon: 139.8828 },
+  前橋: { lat: 36.3895, lon: 139.0634 },
+  さいたま: { lat: 35.8617, lon: 139.6455 },
+  千葉: { lat: 35.6073, lon: 140.1063 },
+  東京: { lat: 35.6895, lon: 139.6917 },
+  横浜: { lat: 35.4437, lon: 139.638 },
+  新潟: { lat: 37.9161, lon: 139.0364 },
+  富山: { lat: 36.6953, lon: 137.2113 },
+  金沢: { lat: 36.5613, lon: 136.6562 },
+  福井: { lat: 36.0641, lon: 136.2195 },
+  甲府: { lat: 35.662, lon: 138.5684 },
+  長野: { lat: 36.6486, lon: 138.1948 },
+  岐阜: { lat: 35.4233, lon: 136.7607 },
+  静岡: { lat: 34.9756, lon: 138.3828 },
+  名古屋: { lat: 35.1815, lon: 136.9066 },
+  津: { lat: 34.7303, lon: 136.5086 },
+  大津: { lat: 35.017, lon: 135.8548 },
+  京都: { lat: 35.0116, lon: 135.7681 },
+  大阪: { lat: 34.6937, lon: 135.5023 },
+  神戸: { lat: 34.6901, lon: 135.1955 },
+  奈良: { lat: 34.6851, lon: 135.8048 },
+  和歌山: { lat: 34.2305, lon: 135.1708 },
+  鳥取: { lat: 35.5011, lon: 134.2351 },
+  松江: { lat: 35.4681, lon: 133.0484 },
+  岡山: { lat: 34.6551, lon: 133.9195 },
+  広島: { lat: 34.3853, lon: 132.4553 },
+  山口: { lat: 34.1785, lon: 131.4737 },
+  徳島: { lat: 34.0703, lon: 134.5548 },
+  高松: { lat: 34.3428, lon: 134.0466 },
+  松山: { lat: 33.8392, lon: 132.7657 },
+  高知: { lat: 33.5597, lon: 133.5311 },
+  福岡: { lat: 33.5902, lon: 130.4017 },
+  佐賀: { lat: 33.2635, lon: 130.3009 },
+  長崎: { lat: 32.7503, lon: 129.8777 },
+  熊本: { lat: 32.8031, lon: 130.7079 },
+  大分: { lat: 33.2396, lon: 131.6093 },
+  宮崎: { lat: 31.9077, lon: 131.4202 },
+  鹿児島: { lat: 31.5966, lon: 130.5571 },
+  那覇: { lat: 26.2124, lon: 127.6809 },
+  Tokyo: { lat: 35.6895, lon: 139.6917 },
+};
+
 const NOMINATIM_ENDPOINT = "https://nominatim.openstreetmap.org/search";
 const NOMINATIM_RATE_LIMIT_MS = 1100;
 
@@ -186,6 +240,23 @@ const pickNearestSolarRegion = (lat: number, lon: number) => {
   return nearest;
 };
 
+const pickNearestRegion = (lat: number, lon: number) => {
+  let nearest = REGION_OPTIONS[0];
+  let nearestDistance = Number.POSITIVE_INFINITY;
+  REGION_OPTIONS.forEach((region) => {
+    const coords = REGION_COORDS[region];
+    if (!coords) {
+      return;
+    }
+    const distance = haversineDistanceKm(lat, lon, coords.lat, coords.lon);
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearest = region;
+    }
+  });
+  return nearest;
+};
+
 export default function DesignConditionsPage({ project, onChange }: Props) {
   const [locationQuery, setLocationQuery] = useState(project.location_label);
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
@@ -212,38 +283,9 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
     onChange({ ...project, orientation_deg: clamped });
   };
 
-  const summerDc = project.design_conditions.find((d) => d.season === "summer");
-  const winterDc = project.design_conditions.find((d) => d.season === "winter");
   const rounding = project.metadata.rounding ?? {
     occupancy: { mode: "round" },
     outdoor_air: { mode: "round", step: 10 },
-  };
-
-  const updateCondition = (season: "summer" | "winter", field: keyof DesignCondition, value: string) => {
-    const updated = project.design_conditions.map((dc) => {
-      if (dc.season === season) {
-        if (field === "indoor_temp_c" || field === "indoor_rh_pct") {
-          return { ...dc, [field]: value === "" ? "" : Number(value) };
-        }
-        return { ...dc, [field]: value };
-      }
-      return dc;
-    });
-    onChange({ ...project, design_conditions: updated });
-  };
-
-  const updateCorrectionFactor = (key: string, value: string) => {
-    const num = value === "" ? 1.0 : Number(value);
-    onChange({
-      ...project,
-      metadata: {
-        ...project.metadata,
-        correction_factors: {
-          ...project.metadata.correction_factors,
-          [key]: Number.isFinite(num) ? num : 1.0,
-        },
-      },
-    });
   };
 
   const updateRounding = (section: "occupancy" | "outdoor_air", key: string, value: string) => {
@@ -334,16 +376,22 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
     const lon = Number(result.lon);
     const candidates = extractAddressCandidates(result);
     const matchedRegion = findRegionMatch(candidates, REGION_OPTIONS);
-    const selectedSolarRegion = Number.isFinite(lat) && Number.isFinite(lon)
-      ? pickNearestSolarRegion(lat, lon)
-      : project.solar_region;
+    const selectedSolarRegion =
+      Number.isFinite(lat) && Number.isFinite(lon)
+        ? pickNearestSolarRegion(lat, lon)
+        : project.solar_region;
+    const selectedRegion =
+      Number.isFinite(lat) && Number.isFinite(lon)
+        ? pickNearestRegion(lat, lon)
+        : project.region;
 
     onChange({
       ...project,
       location_lat: Number.isFinite(lat) ? lat : project.location_lat,
       location_lon: Number.isFinite(lon) ? lon : project.location_lon,
       location_label: result.display_name,
-      region: matchedRegion ?? project.region,
+      building_location: result.display_name,
+      region: matchedRegion ?? selectedRegion ?? project.region,
       solar_region: selectedSolarRegion ?? project.solar_region,
     });
     setLocationQuery(result.display_name);
@@ -515,83 +563,6 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
               onChange={(v) => updateField("remarks", v)}
               placeholder="特記事項を入力"
             />
-          </div>
-        </div>
-      </section>
-
-      {/* Design Conditions */}
-      <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
-          <Compass size={16} className="text-primary-600" />
-          <h3 className="text-sm font-semibold text-slate-800">室内設計条件</h3>
-          <span className="text-xs text-slate-400">Indoor Design Conditions</span>
-        </div>
-        <div className="p-5">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Summer */}
-            <div className="p-4 bg-orange-50/50 border border-orange-200/50 rounded-xl">
-              <h4 className="text-sm font-semibold text-orange-800 mb-3 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-orange-400" />
-                夏期 (Summer)
-              </h4>
-              <div className="grid grid-cols-2 gap-3">
-                <InputField
-                  label="室内温度 [°C]"
-                  value={summerDc?.indoor_temp_c ?? ""}
-                  onChange={(v) => updateCondition("summer", "indoor_temp_c", v)}
-                  type="number"
-                />
-                <InputField
-                  label="相対湿度 [%]"
-                  value={summerDc?.indoor_rh_pct ?? ""}
-                  onChange={(v) => updateCondition("summer", "indoor_rh_pct", v)}
-                  type="number"
-                />
-              </div>
-            </div>
-
-            {/* Winter */}
-            <div className="p-4 bg-blue-50/50 border border-blue-200/50 rounded-xl">
-              <h4 className="text-sm font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-400" />
-                冬期 (Winter)
-              </h4>
-              <div className="grid grid-cols-2 gap-3">
-                <InputField
-                  label="室内温度 [°C]"
-                  value={winterDc?.indoor_temp_c ?? ""}
-                  onChange={(v) => updateCondition("winter", "indoor_temp_c", v)}
-                  type="number"
-                />
-                <InputField
-                  label="相対湿度 [%]"
-                  value={winterDc?.indoor_rh_pct ?? ""}
-                  onChange={(v) => updateCondition("winter", "indoor_rh_pct", v)}
-                  type="number"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Correction Factors */}
-      <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
-          <h3 className="text-sm font-semibold text-slate-800">補正係数</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Correction Factors (intermittent operation etc.)</p>
-        </div>
-        <div className="p-5">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-            {Object.entries(project.metadata.correction_factors).map(([key, val]) => (
-              <InputField
-                key={key}
-                label={key.replace(/_/g, " ")}
-                value={val}
-                onChange={(v) => updateCorrectionFactor(key, v)}
-                type="number"
-              />
-            ))}
           </div>
         </div>
       </section>
