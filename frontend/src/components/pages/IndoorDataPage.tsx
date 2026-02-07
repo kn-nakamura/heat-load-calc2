@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type { ColDef, ValueParserParams } from "ag-grid-community";
 import { Thermometer } from "lucide-react";
 import GridEditor from "../GridEditor";
-import type { Project, DesignCondition } from "../../types";
+import type { Project, DesignCondition, InternalLoad } from "../../types";
 
 interface Props {
   project: Project;
@@ -27,6 +27,9 @@ const createEmptyCondition = () =>
     indoor_rh_pct: "",
   } as unknown as DesignCondition);
 
+const createEmptyInternalLoad = () =>
+  ({ id: "", room_id: "", kind: "", sensible_w: "", latent_w: "" } as unknown as InternalLoad);
+
 export default function IndoorDataPage({ project, onChange }: Props) {
   const columns = useMemo<ColDef<DesignCondition>[]>(
     () => [
@@ -50,6 +53,23 @@ export default function IndoorDataPage({ project, onChange }: Props) {
         valueParser: numberParser,
         minWidth: 130,
       },
+    ],
+    []
+  );
+
+  const internalLoadColumns = useMemo<ColDef<InternalLoad>[]>(
+    () => [
+      { field: "id", headerName: "ID", minWidth: 100 },
+      { field: "room_id", headerName: "室ID", minWidth: 110 },
+      {
+        field: "kind",
+        headerName: "種別",
+        cellEditor: "agSelectCellEditor",
+        cellEditorParams: { values: ["lighting", "occupancy", "equipment"] },
+        minWidth: 120,
+      },
+      { field: "sensible_w", headerName: "顕熱 [W]", valueParser: numberParser, minWidth: 110 },
+      { field: "latent_w", headerName: "潜熱 [W]", valueParser: numberParser, minWidth: 110 },
     ],
     []
   );
@@ -109,6 +129,16 @@ export default function IndoorDataPage({ project, onChange }: Props) {
         columns={columns}
         createEmptyRow={createEmptyCondition}
         onChange={(rows) => onChange({ ...project, design_conditions: rows })}
+        height="360px"
+      />
+
+      <GridEditor
+        title="内部発熱（照明・人体・機器）"
+        hint="室IDごとに照明・人体・機器の発熱量を入力します。"
+        rows={project.internal_loads}
+        columns={internalLoadColumns}
+        createEmptyRow={createEmptyInternalLoad}
+        onChange={(rows) => onChange({ ...project, internal_loads: rows })}
         height="360px"
       />
     </div>
