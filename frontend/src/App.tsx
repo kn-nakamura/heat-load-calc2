@@ -103,21 +103,23 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-slate-50 flex-col md:flex-row">
       {/* Sidebar */}
-      <StepNav
-        currentStep={stepIndex}
-        issuesCount={issues.length}
-        onSelectStep={setStepIndex}
-      />
+      <div className="hidden md:block">
+        <StepNav
+          currentStep={stepIndex}
+          issuesCount={issues.length}
+          onSelectStep={setStepIndex}
+        />
+      </div>
 
       {/* Main content */}
       <main className="flex-1 min-w-0 flex flex-col">
         {/* Top header */}
-        <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4">
-          <div className="flex items-center justify-between">
+        <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <span className="text-xs font-mono text-slate-400">
                   STEP {stepIndex + 1}/{STEPS.length}
                 </span>
@@ -135,7 +137,7 @@ export default function App() {
                 type="button"
                 disabled={stepIndex === 0}
                 onClick={() => setStepIndex((s) => s - 1)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg transition-all"
               >
                 <ChevronLeft size={16} />
                 戻る
@@ -144,17 +146,44 @@ export default function App() {
                 type="button"
                 disabled={stepIndex === STEPS.length - 1}
                 onClick={() => setStepIndex((s) => s + 1)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg shadow-sm transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg shadow-sm transition-all"
               >
                 次へ
                 <ChevronRight size={16} />
               </button>
             </div>
           </div>
+
+          <div className="mt-4 md:hidden space-y-3">
+            {issues.length > 0 && (
+              <div className="px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700">
+                {issues.length} 件のバリデーション警告
+              </div>
+            )}
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {STEPS.map((step, idx) => {
+                const isActive = idx === stepIndex;
+                return (
+                  <button
+                    key={step.key}
+                    type="button"
+                    onClick={() => setStepIndex(idx)}
+                    className={`shrink-0 px-3 py-2 rounded-full text-xs font-medium border transition-all ${
+                      isActive
+                        ? "bg-primary-600 text-white border-primary-600"
+                        : "bg-white text-slate-600 border-slate-200"
+                    }`}
+                  >
+                    {idx + 1}. {step.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </header>
 
         {/* Page content */}
-        <div className="flex-1 px-8 py-6 space-y-6 overflow-y-auto">
+        <div className="flex-1 px-4 py-6 sm:px-6 lg:px-8 space-y-6 overflow-y-auto">
           {/* Bulk import panel (collapsible) */}
           <BulkImportPanel
             project={project}
