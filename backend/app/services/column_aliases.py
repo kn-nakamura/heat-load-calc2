@@ -47,6 +47,7 @@ ALIAS_MAPS: dict[str, dict[str, list[str]]] = {
         "id": ["id", "glass_id", "ガラスid"],
         "name": ["name", "ガラス名"],
         "solar_gain_key": ["solar_gain_key", "日射取得key"],
+        "glass_type": ["glass_type", "ガラス種別", "種別"],
         "u_value_w_m2k": ["u", "u_value", "u_value_w_m2k", "熱貫流率"],
     },
     "internal_loads": {

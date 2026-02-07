@@ -146,6 +146,7 @@ class GlassSpec(BaseModel):
     id: str
     name: str
     solar_gain_key: str | None = None
+    glass_type: str | None = None
     u_value_w_m2k: float | None = None
 
 
