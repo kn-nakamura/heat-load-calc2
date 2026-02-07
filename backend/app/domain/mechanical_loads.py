@@ -6,7 +6,7 @@ from app.models.schemas import CalcTrace, LoadVector, MechanicalLoad
 _TIME_KEYS = ("9", "12", "14", "16")
 
 
-def calc_mechanical_load(load: MechanicalLoad) -> tuple[LoadVector, CalcTrace, str]:
+def calc_mechanical_load(load: MechanicalLoad, heat_mode: bool = False) -> tuple[LoadVector, CalcTrace, str]:
     if load.preset_load is not None:
         trace = CalcTrace(
             formula_id="mechanical.preset_override",
@@ -23,8 +23,13 @@ def calc_mechanical_load(load: MechanicalLoad) -> tuple[LoadVector, CalcTrace, s
     ratio = load.schedule_ratio or {"9": 1.0, "12": 1.0, "14": 1.0, "16": 1.0}
     values = {t: round_half_up(load.sensible_w * float(ratio.get(t, 1.0)), 0) for t in _TIME_KEYS}
     latent = round_half_up(load.latent_w, 0)
-    heat_sensible = round_half_up(load.sensible_w * 0.25, 0)
-    heat_latent = round_half_up(load.latent_w * 0.25, 0)
+    # 暖房モード: 機械負荷を除外（表2-9）
+    if heat_mode:
+        heat_sensible = 0.0
+        heat_latent = 0.0
+    else:
+        heat_sensible = round_half_up(load.sensible_w * 0.25, 0)
+        heat_latent = round_half_up(load.latent_w * 0.25, 0)
 
     vec = LoadVector(
         cool_9=values["9"],

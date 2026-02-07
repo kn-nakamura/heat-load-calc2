@@ -62,9 +62,13 @@ def run_calculation(project: Project) -> CalcResult:
         )
         room_summer = room_conditions.get("summer") if room_conditions else summer
         room_winter = room_conditions.get("winter") if room_conditions else winter
-        external_vectors: list[LoadVector] = []
-        internal_vectors: list[LoadVector] = []
 
+        # 新しい構造: 外皮、内部、外気を分離
+        envelope_by_orientation: dict[str, LoadVector] = defaultdict(lambda: LoadVector())
+        internal_vectors: list[LoadVector] = []
+        ventilation_vectors: list[LoadVector] = []
+
+        # 表面負荷（方位別に集計）
         for surface in room_surface_map.get(room.id, []):
             vec, trace, group = calc_surface_load(
                 surface=surface,
@@ -77,8 +81,10 @@ def run_calculation(project: Project) -> CalcResult:
                 outdoor=outdoor,
             )
             traces.append(trace)
-            (external_vectors if group == "external" else internal_vectors).append(vec)
+            orientation = surface.orientation or "N"
+            envelope_by_orientation[orientation] = envelope_by_orientation[orientation].add(vec)
 
+        # 開口負荷（方位別に集計）
         for opening in room_opening_map.get(room.id, []):
             vec, trace, group = calc_opening_solar_gain(
                 opening=opening,
@@ -89,19 +95,26 @@ def run_calculation(project: Project) -> CalcResult:
                 outdoor=outdoor,
             )
             traces.append(trace)
-            (external_vectors if group == "external" else internal_vectors).append(vec)
+            orientation = opening.orientation or "N"
+            envelope_by_orientation[orientation] = envelope_by_orientation[orientation].add(vec)
 
+        # 内部負荷（暖房モード: 暖房から除外）
         for internal_load in room_internal_map.get(room.id, []):
-            vec, trace, group = calc_internal_load(internal_load, project.metadata.rounding.occupancy)
+            vec, trace, group = calc_internal_load(
+                internal_load,
+                project.metadata.rounding.occupancy,
+                heat_mode=True  # 暖房モード
+            )
             traces.append(trace)
-            (external_vectors if group == "external" else internal_vectors).append(vec)
+            internal_vectors.append(vec)
 
-        mechanical_vectors: list[LoadVector] = []
+        # 機械負荷（暖房モード: 暖房から除外）
         for mechanical_load in room_mechanical_map.get(room.id, []):
-            vec, trace, group = calc_mechanical_load(mechanical_load)
+            vec, trace, group = calc_mechanical_load(mechanical_load, heat_mode=True)
             traces.append(trace)
-            (external_vectors if group == "external" else mechanical_vectors).append(vec)
+            internal_vectors.append(vec)
 
+        # 換気負荷（潜熱含む）
         for vent in room_vent_map.get(room.id, []):
             vec, trace, group = calc_ventilation_load(
                 vent=vent,
@@ -113,38 +126,41 @@ def run_calculation(project: Project) -> CalcResult:
                 outdoor_air_rounding=project.metadata.rounding.outdoor_air,
             )
             traces.append(trace)
-            (external_vectors if group == "external" else internal_vectors).append(vec)
+            ventilation_vectors.append(vec)
 
-        external_total = combine(external_vectors)
+        # 集計
+        envelope_total = sum(envelope_by_orientation.values(), LoadVector())
         internal_total = combine(internal_vectors)
-        mechanical_total = combine(mechanical_vectors)
-        internal_combined = internal_total.add(mechanical_total)
+        ventilation_total = combine(ventilation_vectors)
+
+        # 冷房: 全て合算
+        cooling_total = envelope_total.add(internal_total).add(ventilation_total)
 
         correction = project.metadata.correction_factors
         major_cells = major_cells_from_subtotals(
-            external_total,
+            envelope_total,
             internal_total,
-            mechanical_total,
+            ventilation_total,
             room.area_m2,
             correction,
         )
 
-        pre = external_total.add(internal_combined)
+        pre = cooling_total
         post = LoadVector(
-            cool_9=float(major_cells.get("R53") or 0.0),
-            cool_12=float(major_cells.get("X53") or 0.0),
-            cool_14=float(major_cells.get("AB53") or 0.0),
-            cool_16=float(major_cells.get("AF53") or 0.0),
-            cool_latent=float(major_cells.get("N53") or 0.0),
-            heat_sensible=float(major_cells.get("AL53") or 0.0),
-            heat_latent=float(major_cells.get("AJ53") or 0.0),
+            cool_9=float(major_cells.get("R55") or 0.0),
+            cool_12=float(major_cells.get("X55") or 0.0),
+            cool_14=float(major_cells.get("AB55") or 0.0),
+            cool_16=float(major_cells.get("AF55") or 0.0),
+            cool_latent=float(major_cells.get("N55") or 0.0),
+            heat_sensible=float(major_cells.get("AL55") or 0.0),
+            heat_latent=float(major_cells.get("AJ55") or 0.0),
         )
         final_totals = {
-            "cool_9_total": float(major_cells.get("R54") or 0.0),
-            "cool_12_total": float(major_cells.get("X54") or 0.0),
-            "cool_14_total": float(major_cells.get("AB54") or 0.0),
-            "cool_16_total": float(major_cells.get("AF54") or 0.0),
-            "heating_total": float(major_cells.get("AJ54") or 0.0),
+            "cool_9_total": float(major_cells.get("R56") or 0.0),
+            "cool_12_total": float(major_cells.get("X56") or 0.0),
+            "cool_14_total": float(major_cells.get("AB56") or 0.0),
+            "cool_16_total": float(major_cells.get("AF56") or 0.0),
+            "heating_total": float(major_cells.get("AJ56") or 0.0),
         }
 
         all_major_cells = major_cells
@@ -152,8 +168,10 @@ def run_calculation(project: Project) -> CalcResult:
             RoomLoadSummary(
                 room_id=room.id,
                 room_name=room.name,
-                external=external_total,
-                internal=internal_combined,
+                envelope_loads=envelope_total,
+                envelope_loads_by_orientation=dict(envelope_by_orientation),
+                internal_loads=internal_total,
+                ventilation_loads=ventilation_total,
                 pre_correction=pre,
                 post_correction=post,
                 final_totals=final_totals,

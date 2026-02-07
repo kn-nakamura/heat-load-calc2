@@ -267,8 +267,12 @@ class CalcTrace(BaseModel):
 class RoomLoadSummary(BaseModel):
     room_id: str
     room_name: str
-    external: LoadVector
-    internal: LoadVector
+    # 新しい分離構造
+    envelope_loads: LoadVector  # qK + qG (外皮負荷)
+    envelope_loads_by_orientation: dict[str, LoadVector]  # 方位別外皮負荷
+    internal_loads: LoadVector  # qE + qH + qM (内部負荷、冷房のみ)
+    ventilation_loads: LoadVector  # qL + qO (外気負荷、潜熱含む)
+    # 集計結果
     pre_correction: LoadVector
     post_correction: LoadVector
     final_totals: dict[str, float]

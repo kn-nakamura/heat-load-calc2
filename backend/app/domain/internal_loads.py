@@ -11,6 +11,7 @@ _HEATING_CONTRIBUTION_RATIO = 0.25
 def calc_internal_load(
     load: InternalLoad,
     occupancy_rounding: OccupancyRounding | None = None,
+    heat_mode: bool = False,  # True: 暖房モード、内部負荷を除外
 ) -> tuple[LoadVector, CalcTrace, str]:
     if load.preset_load is not None:
         trace = CalcTrace(
@@ -32,16 +33,26 @@ def calc_internal_load(
             for t in _TIME_KEYS
         }
         latent = round_by_mode(load.latent_w, occupancy_rounding.mode)
-        heat_sensible = -round_by_mode(
-            load.sensible_w * _HEATING_CONTRIBUTION_RATIO,
-            occupancy_rounding.mode,
-        )
-        heat_latent = -round_by_mode(load.latent_w * _HEATING_CONTRIBUTION_RATIO, occupancy_rounding.mode)
+        # 暖房モード: 内部負荷を除外（表2-9）
+        if heat_mode:
+            heat_sensible = 0.0
+            heat_latent = 0.0
+        else:
+            heat_sensible = -round_by_mode(
+                load.sensible_w * _HEATING_CONTRIBUTION_RATIO,
+                occupancy_rounding.mode,
+            )
+            heat_latent = -round_by_mode(load.latent_w * _HEATING_CONTRIBUTION_RATIO, occupancy_rounding.mode)
     else:
         values = {t: round_half_up(load.sensible_w * float(ratio.get(t, 1.0)), 0) for t in _TIME_KEYS}
         latent = round_half_up(load.latent_w, 0)
-        heat_sensible = -round_half_up(load.sensible_w * _HEATING_CONTRIBUTION_RATIO, 0)
-        heat_latent = -round_half_up(load.latent_w * _HEATING_CONTRIBUTION_RATIO, 0)
+        # 暖房モード: 内部負荷を除外（表2-9）
+        if heat_mode:
+            heat_sensible = 0.0
+            heat_latent = 0.0
+        else:
+            heat_sensible = -round_half_up(load.sensible_w * _HEATING_CONTRIBUTION_RATIO, 0)
+            heat_latent = -round_half_up(load.latent_w * _HEATING_CONTRIBUTION_RATIO, 0)
 
     vec = LoadVector(
         cool_9=values["9"],

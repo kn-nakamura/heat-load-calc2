@@ -81,6 +81,8 @@ def calc_ventilation_load(
 
     heat_delta = max(indoor_heat - float(outdoor.get("heating_drybulb_c", 0.0)), 0.0)
     heat_sensible = round_half_up(1.006 * total_flow / 3.6 * heat_delta, 0)
+    # 外気は冷たいので潜熱も暖房に含める（外気負荷の定義により）
+    heat_latent = latent
 
     vec = LoadVector(
         cool_9=sensible["9"],
@@ -89,7 +91,7 @@ def calc_ventilation_load(
         cool_16=sensible["16"],
         cool_latent=latent,
         heat_sensible=heat_sensible,
-        heat_latent=0.0,
+        heat_latent=heat_latent,
     )
 
     trace = CalcTrace(
