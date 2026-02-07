@@ -74,8 +74,8 @@ const subTabButtonStyles = (isActive: boolean) =>
 
 export default function GlassStructurePage({ project, onChange }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("glass");
-  const [activeGlassType, setActiveGlassType] = useState<string>("all");
-  const [activeWallType, setActiveWallType] = useState<string>("all");
+  const [activeGlassType, setActiveGlassType] = useState<Glass["glass_type"] | "all">("all");
+  const [activeWallType, setActiveWallType] = useState<Construction["wall_type"] | "all">("all");
 
   const glassColumns = useMemo<ColDef<Glass>[]>(
     () => [
@@ -179,12 +179,12 @@ export default function GlassStructurePage({ project, onChange }: Props) {
     [activeWallType, project.constructions]
   );
 
-  const updateRowsForType = <T extends Record<string, unknown>>(
+  const updateRowsForType = <T extends Record<string, unknown>, K extends keyof T>(
     rows: T[],
     updatedRows: T[],
-    typeKey: string,
-    activeType: string
-  ) => {
+    typeKey: K,
+    activeType: T[K] | "all"
+  ): T[] => {
     if (activeType === "all") return updatedRows;
     const preserved = rows.filter((row) => row[typeKey] !== activeType);
     const withType = updatedRows.map((row) => ({ ...row, [typeKey]: activeType }));
@@ -242,7 +242,7 @@ export default function GlassStructurePage({ project, onChange }: Props) {
             onChange={(rows) =>
               onChange({
                 ...project,
-                glasses: updateRowsForType(project.glasses, rows, "glass_type", activeGlassType) as Glass[],
+                glasses: updateRowsForType(project.glasses, rows, "glass_type", activeGlassType),
               })
             }
           />
@@ -278,7 +278,7 @@ export default function GlassStructurePage({ project, onChange }: Props) {
             onChange={(rows) =>
               onChange({
                 ...project,
-                constructions: updateRowsForType(project.constructions, rows, "wall_type", activeWallType) as Construction[],
+                constructions: updateRowsForType(project.constructions, rows, "wall_type", activeWallType),
               })
             }
           />
