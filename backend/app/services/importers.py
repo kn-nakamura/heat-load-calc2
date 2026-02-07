@@ -12,6 +12,7 @@ from app.models.schemas import (
     ImportDiff,
     ImportPreviewResponse,
     InternalLoad,
+    MechanicalLoad,
     Opening,
     PasteImportRequest,
     Project,
@@ -115,7 +116,7 @@ def _parse_table(entity: str, text: str, has_header: bool) -> tuple[list[dict], 
             )
 
     required = {"id"}
-    if entity in {"surfaces", "openings", "internal_loads", "ventilation"}:
+    if entity in {"surfaces", "openings", "internal_loads", "mechanical_loads", "ventilation"}:
         required.add("room_id")
 
     for i, rec in enumerate(records, start=1):
@@ -237,6 +238,7 @@ def apply_csv_import(req: CsvImportRequest) -> ImportApplyResponse:
         "constructions": ConstructionAssembly,
         "glasses": GlassSpec,
         "internal_loads": InternalLoad,
+        "mechanical_loads": MechanicalLoad,
         "ventilation": VentilationInfiltration,
     }
 

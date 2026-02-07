@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { ColDef, ValueParserParams } from "ag-grid-community";
-import { Thermometer } from "lucide-react";
+import { Thermometer, Fan } from "lucide-react";
 import GridEditor from "../GridEditor";
-import type { Project, DesignCondition, InternalLoad } from "../../types";
+import type { Project, DesignCondition, InternalLoad, MechanicalLoad } from "../../types";
 
 interface Props {
   project: Project;
@@ -30,8 +30,15 @@ const createEmptyCondition = () =>
 const createEmptyInternalLoad = () =>
   ({ id: "", room_id: "", kind: "", sensible_w: "", latent_w: "" } as unknown as InternalLoad);
 
+const createEmptyMechanicalLoad = () =>
+  ({ id: "", room_id: "", sensible_w: "", latent_w: "" } as unknown as MechanicalLoad);
+
+type LoadTab = "lighting" | "occupancy" | "equipment" | "mechanical";
+
 export default function IndoorDataPage({ project, onChange }: Props) {
-  const [activeTab, setActiveTab] = useState<"conditions" | "lighting" | "occupancy" | "equipment">("conditions");
+  const [activeTab, setActiveTab] = useState<LoadTab>("lighting");
+
+  const conditionColumns = useMemo<ColDef<DesignCondition>[]>(
     () => [
       { field: "id", headerName: "ID", minWidth: 120 },
       {
@@ -68,9 +75,23 @@ export default function IndoorDataPage({ project, onChange }: Props) {
     []
   );
 
+  const mechanicalLoadColumns = useMemo<ColDef<MechanicalLoad>[]>(
+    () => [
+      { field: "id", headerName: "ID", minWidth: 100 },
+      { field: "room_id", headerName: "室ID", minWidth: 110 },
+      { field: "sensible_w", headerName: "顕熱 [W]", valueParser: numberParser, minWidth: 110 },
+      { field: "latent_w", headerName: "潜熱 [W]", valueParser: numberParser, minWidth: 110 },
+    ],
+    []
+  );
+
+  const loadTabs = [
     { key: "lighting" as const, label: "照明" },
     { key: "occupancy" as const, label: "人体" },
     { key: "equipment" as const, label: "機器" },
+    { key: "mechanical" as const, label: "機械負荷" },
+  ];
+
   const filterInternalLoads = (kind: InternalLoad["kind"]) =>
     project.internal_loads.filter((row) => row.kind === kind);
 
@@ -80,6 +101,7 @@ export default function IndoorDataPage({ project, onChange }: Props) {
     onChange({ ...project, internal_loads: [...preserved, ...normalized] });
   };
 
+  return (
     <div className="space-y-6">
       <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
@@ -92,7 +114,6 @@ export default function IndoorDataPage({ project, onChange }: Props) {
             各室の夏期・冬期における室内設計温湿度を設定します。下のグリッドで直接編集するか、Excelからコピー＆ペーストできます。
           </p>
 
-          {/* Quick summary */}
           {project.design_conditions.length > 0 && (
             <div className="grid grid-cols-2 gap-4 mb-5">
               {project.design_conditions
@@ -131,14 +152,41 @@ export default function IndoorDataPage({ project, onChange }: Props) {
         title="屋内設計条件テーブル"
         hint="Indoor Conditions Table - click cells to edit"
         rows={project.design_conditions}
-        columns={columns}
+        columns={conditionColumns}
         createEmptyRow={createEmptyCondition}
         onChange={(rows) => onChange({ ...project, design_conditions: rows })}
         height="360px"
       />
 
-      <GridEditor
-        title="内部発熱（照明・人体・機器）"
+      <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
+          <Fan size={16} className="text-primary-600" />
+          <h3 className="text-sm font-semibold text-slate-800">内部発熱・機械負荷</h3>
+          <span className="text-xs text-slate-400">Internal & Mechanical Loads</span>
+        </div>
+        <div className="p-5 space-y-4">
+          <p className="text-xs text-slate-500">
+            照明・人体・機器・機械負荷の発熱量を室IDごとに入力します。
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {loadTabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setActiveTab(tab.key)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  activeTab === tab.key
+                    ? "bg-primary-600 text-white shadow-md shadow-primary-600/20"
+                    : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {activeTab === "lighting" && (
         <GridEditor
           title="内部発熱（照明）"
@@ -164,12 +212,28 @@ export default function IndoorDataPage({ project, onChange }: Props) {
       )}
 
       {activeTab === "equipment" && (
+        <GridEditor
           title="内部発熱（機器）"
           hint="室IDごとに機器の発熱量を入力します。"
           rows={filterInternalLoads("equipment")}
+          columns={internalLoadColumns}
           createEmptyRow={() => ({ ...createEmptyInternalLoad(), kind: "equipment" })}
           onChange={(rows) => updateInternalLoads("equipment", rows)}
-      />
+          height="360px"
+        />
+      )}
+
+      {activeTab === "mechanical" && (
+        <GridEditor
+          title="機械負荷"
+          hint="室IDごとに機械負荷の顕熱・潜熱を入力します。"
+          rows={project.mechanical_loads}
+          columns={mechanicalLoadColumns}
+          createEmptyRow={createEmptyMechanicalLoad}
+          onChange={(rows) => onChange({ ...project, mechanical_loads: rows })}
+          height="360px"
+        />
+      )}
     </div>
   );
 }

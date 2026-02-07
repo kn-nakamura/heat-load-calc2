@@ -163,6 +163,16 @@ class InternalLoad(BaseModel):
     preset_load: LoadVector | None = None
 
 
+class MechanicalLoad(BaseModel):
+    id: str
+    room_id: str
+    sensible_w: float = 0.0
+    latent_w: float = 0.0
+    schedule_id: str | None = None
+    schedule_ratio: dict[str, float] | None = None
+    preset_load: LoadVector | None = None
+
+
 class VentilationInfiltration(BaseModel):
     id: str
     room_id: str
@@ -220,6 +230,7 @@ class Project(BaseModel):
     constructions: list[ConstructionAssembly] = Field(default_factory=list)
     glasses: list[GlassSpec] = Field(default_factory=list)
     internal_loads: list[InternalLoad] = Field(default_factory=list)
+    mechanical_loads: list[MechanicalLoad] = Field(default_factory=list)
     ventilation_infiltration: list[VentilationInfiltration] = Field(default_factory=list)
     systems: list[System] = Field(default_factory=list)
     metadata: ProjectMetadata = Field(default_factory=ProjectMetadata)
@@ -309,6 +320,7 @@ class PasteImportRequest(BaseModel):
         "constructions",
         "glasses",
         "internal_loads",
+        "mechanical_loads",
         "ventilation",
     ]
     text: str

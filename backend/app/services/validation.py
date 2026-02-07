@@ -32,6 +32,7 @@ def validate_project(project: Project) -> list[ValidationIssue]:
     issues.extend(_duplicate_issues("constructions", project.constructions))
     issues.extend(_duplicate_issues("glasses", project.glasses))
     issues.extend(_duplicate_issues("internal_loads", project.internal_loads))
+    issues.extend(_duplicate_issues("mechanical_loads", project.mechanical_loads))
     issues.extend(_duplicate_issues("ventilation", project.ventilation_infiltration))
     issues.extend(_duplicate_issues("systems", project.systems))
 
@@ -115,6 +116,18 @@ def validate_project(project: Project) -> list[ValidationIssue]:
                     code="reference_not_found",
                     message=f"internal_load.room_id が rooms に存在しません: {load.room_id}",
                     entity="internal_loads",
+                    field="room_id",
+                )
+            )
+
+    for load in project.mechanical_loads:
+        if load.room_id not in room_ids:
+            issues.append(
+                ValidationIssue(
+                    level=ValidationLevel.ERROR,
+                    code="reference_not_found",
+                    message=f"mechanical_load.room_id が rooms に存在しません: {load.room_id}",
+                    entity="mechanical_loads",
                     field="room_id",
                 )
             )

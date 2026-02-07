@@ -89,6 +89,7 @@ export const previewPasteImport = async (
     | "constructions"
     | "glasses"
     | "internal_loads"
+    | "mechanical_loads"
     | "ventilation",
   text: string,
   hasHeader = true,
@@ -116,6 +117,7 @@ export const applyPasteImport = async (
     | "constructions"
     | "glasses"
     | "internal_loads"
+    | "mechanical_loads"
     | "ventilation",
   text: string,
   hasHeader = true,

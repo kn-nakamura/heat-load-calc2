@@ -60,6 +60,13 @@ ALIAS_MAPS: dict[str, dict[str, list[str]]] = {
         "latent_w": ["latent_w", "lh", "潜熱"],
         "schedule_id": ["schedule_id", "スケジュールid"],
     },
+    "mechanical_loads": {
+        "id": ["id", "load_id", "機械負荷id"],
+        "room_id": ["room_id", "室id", "室ID"],
+        "sensible_w": ["sensible_w", "sh", "顕熱"],
+        "latent_w": ["latent_w", "lh", "潜熱"],
+        "schedule_id": ["schedule_id", "スケジュールid"],
+    },
     "ventilation": {
         "id": ["id", "vent_id", "換気id"],
         "room_id": ["room_id", "室id", "室ID"],
@@ -82,5 +89,6 @@ DATASET_TO_ENTITY = {
     "constructions": "constructions",
     "glasses": "glasses",
     "internal_loads": "internal_loads",
+    "mechanical_loads": "mechanical_loads",
     "ventilation": "ventilation",
 }

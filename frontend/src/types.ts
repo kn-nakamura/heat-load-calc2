@@ -93,6 +93,13 @@ export interface InternalLoad {
   latent_w: number;
 }
 
+export interface MechanicalLoad {
+  id: string;
+  room_id: string;
+  sensible_w: number;
+  latent_w: number;
+}
+
 export interface Ventilation {
   id: string;
   room_id: string;
@@ -137,6 +144,7 @@ export interface Project {
   constructions: Construction[];
   glasses: Glass[];
   internal_loads: InternalLoad[];
+  mechanical_loads: MechanicalLoad[];
   ventilation_infiltration: Ventilation[];
   systems: SystemEntity[];
   metadata: {
