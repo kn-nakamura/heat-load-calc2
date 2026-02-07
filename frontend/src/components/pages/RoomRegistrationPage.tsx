@@ -29,26 +29,26 @@ const numberParser = (params: ValueParserParams): number | undefined => {
 };
 
 const createEmptyRoom = () =>
-  ({ id: "", name: "", usage: "", floor: "", area_m2: "", ceiling_height_m: "", system_id: "" } as unknown as Room);
+  ({ id: "", name: "", usage: "", floor: "", area_m2: 0, ceiling_height_m: 0, system_id: "" } as unknown as Room);
 const createEmptySurface = () =>
   ({
     id: "",
     room_id: "",
     kind: "",
     orientation: "",
-    area_m2: "",
+    area_m2: 0,
     adjacent_type: "outdoor",
     adjacent_r_factor: 1,
     construction_id: "",
   } as unknown as Surface);
 const createEmptyOpening = () =>
-  ({ id: "", room_id: "", surface_id: "", orientation: "", area_m2: "", glass_id: "", shading_sc: "" } as unknown as Opening);
+  ({ id: "", room_id: "", surface_id: "", orientation: "", area_m2: 0, glass_id: "", shading_sc: 0 } as unknown as Opening);
 const createEmptyInternalLoad = () =>
-  ({ id: "", room_id: "", kind: "", sensible_w: "", latent_w: "" } as unknown as InternalLoad);
+  ({ id: "", room_id: "", kind: "", sensible_w: 0, latent_w: 0 } as unknown as InternalLoad);
 const createEmptyMechanicalLoad = () =>
-  ({ id: "", room_id: "", sensible_w: "", latent_w: "" } as unknown as MechanicalLoad);
+  ({ id: "", room_id: "", sensible_w: 0, latent_w: 0 } as unknown as MechanicalLoad);
 const createEmptyVentilation = () =>
-  ({ id: "", room_id: "", outdoor_air_m3h: "", infiltration_mode: "", sash_type: "", airtightness: "", wind_speed_ms: "" } as unknown as Ventilation);
+  ({ id: "", room_id: "", outdoor_air_m3h: 0, infiltration_mode: "", sash_type: "", airtightness: "", wind_speed_ms: 0 } as unknown as Ventilation);
 
 type Tab = "rooms" | "surfaces" | "openings" | "internal_loads" | "mechanical_loads" | "ventilation";
 
