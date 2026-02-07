@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MapPin, CloudSun, Loader2 } from "lucide-react";
+import { MapPin, CloudSun, Snowflake, Loader2 } from "lucide-react";
 import type { Project } from "../../types";
 import api from "../../api/client";
 
@@ -7,18 +7,26 @@ interface Props {
   project: Project;
 }
 
-interface OutdoorConditions {
+interface OutdoorRecord {
   city: string;
-  summer_db_max: number;
-  summer_wind_dir: string;
-  winter_db: number;
-  winter_wind_dir: string;
-  hourly?: Record<string, Record<string, number>>;
+  cooling_drybulb_c?: number;
+  daily_max_c?: number;
+  temp_9_c?: number;
+  temp_12_c?: number;
+  temp_14_c?: number;
+  temp_16_c?: number;
+  wetbulb_c?: number;
+  abs_humidity_g_per_kgda?: number;
+  cooling_rh_pct?: number;
+  enthalpy_kj_per_kgda?: number;
+  max_monthly_c?: number;
+  wind_dir?: string;
+  heating_drybulb_c?: number;
   [key: string]: unknown;
 }
 
 export default function RegionDataPage({ project }: Props) {
-  const [data, setData] = useState<OutdoorConditions | null>(null);
+  const [data, setData] = useState<OutdoorRecord | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,15 +36,14 @@ export default function RegionDataPage({ project }: Props) {
       setError(null);
       try {
         const res = await api.get(`/reference/design_outdoor_conditions`);
-        const records = res.data?.records || res.data?.data || [];
-        const match = Array.isArray(records)
-          ? records.find(
-              (r: Record<string, unknown>) =>
-                r.city === project.region || r.地名 === project.region
-            )
-          : null;
+        // Response: { table_name, data: { metadata, records: [...] } }
+        const tableData = res.data?.data;
+        const records: OutdoorRecord[] = tableData?.records || [];
+        const match = records.find(
+          (r) => r.city === project.region
+        );
         if (match) {
-          setData(match as OutdoorConditions);
+          setData(match);
         } else {
           setData(null);
           setError(`「${project.region}」の地区データが見つかりません。`);
@@ -50,9 +57,54 @@ export default function RegionDataPage({ project }: Props) {
     if (project.region) fetchRegionData();
   }, [project.region]);
 
+  // Build hourly table rows from the data
+  const hourlyRows = data
+    ? [
+        {
+          label: "乾球温度 [°C]",
+          h9: data.temp_9_c,
+          h12: data.temp_12_c,
+          h14: data.temp_14_c,
+          h16: data.temp_16_c,
+          winter: data.heating_drybulb_c,
+        },
+        {
+          label: "絶対湿度 [g/kg(DA)]",
+          h9: data.abs_humidity_g_per_kgda,
+          h12: data.abs_humidity_g_per_kgda,
+          h14: data.abs_humidity_g_per_kgda,
+          h16: data.abs_humidity_g_per_kgda,
+          winter: undefined,
+        },
+        {
+          label: "相対湿度 [%]",
+          h9: data.cooling_rh_pct,
+          h12: undefined,
+          h14: undefined,
+          h16: undefined,
+          winter: undefined,
+        },
+        {
+          label: "比エンタルピー [kJ/kg(DA)]",
+          h9: data.enthalpy_kj_per_kgda,
+          h12: undefined,
+          h14: undefined,
+          h16: undefined,
+          winter: undefined,
+        },
+        {
+          label: "湿球温度 [°C]",
+          h9: data.wetbulb_c,
+          h12: undefined,
+          h14: undefined,
+          h16: undefined,
+          winter: undefined,
+        },
+      ]
+    : [];
+
   return (
     <div className="space-y-6">
-      {/* Region Selector Info */}
       <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
           <MapPin size={16} className="text-primary-600" />
@@ -87,73 +139,82 @@ export default function RegionDataPage({ project }: Props) {
 
           {!loading && data && (
             <div className="space-y-6">
-              {/* Main outdoor conditions */}
+              {/* Summer / Winter peak conditions */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Summer peak */}
+                {/* Summer */}
                 <div className="p-4 bg-gradient-to-br from-orange-50 to-amber-50/50 border border-orange-200/60 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
                     <CloudSun size={16} className="text-orange-500" />
                     <h4 className="text-sm font-semibold text-orange-800">夏期設計条件 (Summer)</h4>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <DataCell label="乾球温度 (日最高)" value={data.summer_db_max} unit="°C" />
-                    <DataCell label="最多風向" value={data.summer_wind_dir} />
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <DataCell label="乾球温度 (日最高)" value={data.daily_max_c} unit="°C" />
+                    <DataCell label="冷房設計温度" value={data.cooling_drybulb_c} unit="°C" />
+                    <DataCell label="最多風向" value={data.wind_dir} />
+                    <DataCell label="湿球温度" value={data.wetbulb_c} unit="°C" />
+                    <DataCell label="相対湿度" value={data.cooling_rh_pct} unit="%" />
+                    <DataCell label="比エンタルピー" value={data.enthalpy_kj_per_kgda} unit="kJ/kg" />
                   </div>
                 </div>
 
-                {/* Winter peak */}
+                {/* Winter */}
                 <div className="p-4 bg-gradient-to-br from-blue-50 to-sky-50/50 border border-blue-200/60 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
-                    <CloudSun size={16} className="text-blue-500" />
+                    <Snowflake size={16} className="text-blue-500" />
                     <h4 className="text-sm font-semibold text-blue-800">冬期設計条件 (Winter)</h4>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <DataCell label="乾球温度" value={data.winter_db} unit="°C" />
-                    <DataCell label="最多風向" value={data.winter_wind_dir} />
+                    <DataCell label="暖房設計温度" value={data.heating_drybulb_c} unit="°C" />
+                    <DataCell label="絶対湿度" value={data.abs_humidity_g_per_kgda} unit="g/kg" />
                   </div>
                 </div>
               </div>
 
               {/* Hourly data table */}
-              {data.hourly && (
-                <div>
-                  <h4 className="text-sm font-semibold text-slate-700 mb-3">設計用屋外条件 (各時刻)</h4>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm border-collapse">
-                      <thead>
-                        <tr className="bg-slate-50">
-                          <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">項目</th>
-                          {["9時", "12時", "14時", "16時"].map((h) => (
-                            <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-orange-50/50">
-                              夏期 {h}
-                            </th>
-                          ))}
-                          <th className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-blue-50/50">
-                            冬期
+              <div>
+                <h4 className="text-sm font-semibold text-slate-700 mb-3">設計用屋外条件 (各時刻)</h4>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-slate-50">
+                        <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">項目</th>
+                        {["9時", "12時", "14時", "16時"].map((h) => (
+                          <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-orange-50/50">
+                            夏期 {h}
                           </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.entries(data.hourly).map(([key, vals]) => (
-                          <tr key={key} className="hover:bg-slate-50/50">
-                            <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">{key}</td>
-                            {["9", "12", "14", "16"].map((h) => (
-                              <td key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
-                                {(vals as Record<string, number>)?.[h] ?? "—"}
-                              </td>
-                            ))}
-                            <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
-                              {(vals as Record<string, number>)?.["winter"] ?? "—"}
-                            </td>
-                          </tr>
                         ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        <th className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-blue-50/50">
+                          冬期
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {hourlyRows.map((row) => (
+                        <tr key={row.label} className="hover:bg-slate-50/50">
+                          <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">{row.label}</td>
+                          <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
+                            {row.h9 != null ? row.h9 : "—"}
+                          </td>
+                          <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
+                            {row.h12 != null ? row.h12 : "—"}
+                          </td>
+                          <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
+                            {row.h14 != null ? row.h14 : "—"}
+                          </td>
+                          <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
+                            {row.h16 != null ? row.h16 : "—"}
+                          </td>
+                          <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
+                            {row.winter != null ? row.winter : "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              )}
+              </div>
 
-              {/* Raw data display */}
+              {/* Raw data */}
               <details className="group">
                 <summary className="cursor-pointer text-xs text-slate-400 hover:text-slate-600 transition-colors">
                   生データを表示 (Raw JSON)
@@ -176,7 +237,7 @@ function DataCell({ label, value, unit }: { label: string; value: unknown; unit?
       <div className="text-xs text-slate-500 mb-1">{label}</div>
       <div className="text-lg font-semibold text-slate-800 tabular-nums">
         {value != null ? String(value) : "—"}
-        {unit && <span className="text-xs text-slate-400 ml-1">{unit}</span>}
+        {unit && value != null && <span className="text-xs text-slate-400 ml-1">{unit}</span>}
       </div>
     </div>
   );
