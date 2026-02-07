@@ -79,6 +79,17 @@ const ORIENTATION_OPTIONS = [
   { value: "west", label: "西 (W)" },
 ];
 
+const ROUNDING_MODE_OPTIONS = [
+  { value: "ceil", label: "切り上げ" },
+  { value: "round", label: "四捨五入" },
+];
+
+const OUTDOOR_AIR_STEP_OPTIONS = [
+  { value: "10", label: "10" },
+  { value: "50", label: "50" },
+  { value: "100", label: "100" },
+];
+
 export default function DesignConditionsPage({ project, onChange }: Props) {
   const updateField = (field: keyof Project, value: string) => {
     onChange({ ...project, [field]: value });
@@ -86,6 +97,10 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
 
   const summerDc = project.design_conditions.find((d) => d.season === "summer");
   const winterDc = project.design_conditions.find((d) => d.season === "winter");
+  const rounding = project.metadata.rounding ?? {
+    occupancy: { mode: "round" },
+    outdoor_air: { mode: "round", step: 10 },
+  };
 
   const updateCondition = (season: "summer" | "winter", field: keyof DesignCondition, value: string) => {
     const updated = project.design_conditions.map((dc) => {
@@ -110,6 +125,23 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
           ...project.metadata.correction_factors,
           [key]: Number.isFinite(num) ? num : 1.0,
         },
+      },
+    });
+  };
+
+  const updateRounding = (section: "occupancy" | "outdoor_air", key: string, value: string) => {
+    const next = {
+      ...rounding,
+      [section]: {
+        ...rounding[section],
+        [key]: key === "step" ? Number(value) : value,
+      },
+    };
+    onChange({
+      ...project,
+      metadata: {
+        ...project.metadata,
+        rounding: next,
       },
     });
   };
@@ -228,6 +260,38 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
                 type="number"
               />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Rounding Settings */}
+      <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
+          <h3 className="text-sm font-semibold text-slate-800">丸め設定</h3>
+          <p className="text-xs text-slate-400 mt-0.5">Rounding rules for people and outdoor air.</p>
+        </div>
+        <div className="p-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <SelectField
+              label="人員の小数点以下丸め"
+              value={rounding.occupancy.mode}
+              onChange={(v) => updateRounding("occupancy", "mode", v)}
+              options={ROUNDING_MODE_OPTIONS}
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <SelectField
+                label="設計外気量まるめ"
+                value={rounding.outdoor_air.mode}
+                onChange={(v) => updateRounding("outdoor_air", "mode", v)}
+                options={ROUNDING_MODE_OPTIONS}
+              />
+              <SelectField
+                label="外気量丸め単位"
+                value={String(rounding.outdoor_air.step)}
+                onChange={(v) => updateRounding("outdoor_air", "step", v)}
+                options={OUTDOOR_AIR_STEP_OPTIONS}
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from app.domain.rounding import round_half_up
-from app.models.schemas import CalcTrace, InternalLoad, LoadVector
+from app.domain.rounding import round_by_mode, round_half_up
+from app.models.schemas import CalcTrace, InternalLoad, LoadVector, OccupancyRounding
 
 _TIME_KEYS = ("9", "12", "14", "16")
 
 
-def calc_internal_load(load: InternalLoad) -> tuple[LoadVector, CalcTrace, str]:
+def calc_internal_load(
+    load: InternalLoad,
+    occupancy_rounding: OccupancyRounding | None = None,
+) -> tuple[LoadVector, CalcTrace, str]:
     if load.preset_load is not None:
         trace = CalcTrace(
             formula_id="internal.preset_override",
@@ -21,16 +24,28 @@ def calc_internal_load(load: InternalLoad) -> tuple[LoadVector, CalcTrace, str]:
         return load.preset_load, trace, "internal"
 
     ratio = load.schedule_ratio or {"9": 1.0, "12": 1.0, "14": 1.0, "16": 1.0}
-    values = {t: round_half_up(load.sensible_w * float(ratio.get(t, 1.0)), 0) for t in _TIME_KEYS}
+    if load.kind.value == "occupancy" and occupancy_rounding is not None:
+        values = {
+            t: round_by_mode(load.sensible_w * float(ratio.get(t, 1.0)), occupancy_rounding.mode)
+            for t in _TIME_KEYS
+        }
+        latent = round_by_mode(load.latent_w, occupancy_rounding.mode)
+        heat_sensible = round_by_mode(load.sensible_w * 0.25, occupancy_rounding.mode)
+        heat_latent = round_by_mode(load.latent_w * 0.25, occupancy_rounding.mode)
+    else:
+        values = {t: round_half_up(load.sensible_w * float(ratio.get(t, 1.0)), 0) for t in _TIME_KEYS}
+        latent = round_half_up(load.latent_w, 0)
+        heat_sensible = round_half_up(load.sensible_w * 0.25, 0)
+        heat_latent = round_half_up(load.latent_w * 0.25, 0)
 
     vec = LoadVector(
         cool_9=values["9"],
         cool_12=values["12"],
         cool_14=values["14"],
         cool_16=values["16"],
-        cool_latent=round_half_up(load.latent_w, 0),
-        heat_sensible=round_half_up(load.sensible_w * 0.25, 0),
-        heat_latent=round_half_up(load.latent_w * 0.25, 0),
+        cool_latent=latent,
+        heat_sensible=heat_sensible,
+        heat_latent=heat_latent,
     )
 
     trace = CalcTrace(

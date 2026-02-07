@@ -74,7 +74,7 @@ def run_calculation(project: Project) -> CalcResult:
             (external_vectors if group == "external" else internal_vectors).append(vec)
 
         for internal_load in room_internal_map.get(room.id, []):
-            vec, trace, group = calc_internal_load(internal_load)
+            vec, trace, group = calc_internal_load(internal_load, project.metadata.rounding.occupancy)
             traces.append(trace)
             (external_vectors if group == "external" else internal_vectors).append(vec)
 
@@ -86,6 +86,7 @@ def run_calculation(project: Project) -> CalcResult:
                 winter_condition=winter,
                 outdoor=outdoor,
                 references=refs,
+                outdoor_air_rounding=project.metadata.rounding.outdoor_air,
             )
             traces.append(trace)
             (external_vectors if group == "external" else internal_vectors).append(vec)

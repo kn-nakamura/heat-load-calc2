@@ -39,6 +39,15 @@ const defaultProject: Project = {
       heat_sensible: 1.1,
       heat_latent: 1.0,
     },
+    rounding: {
+      occupancy: {
+        mode: "round",
+      },
+      outdoor_air: {
+        mode: "round",
+        step: 10,
+      },
+    },
   },
 };
 
