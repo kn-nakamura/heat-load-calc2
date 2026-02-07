@@ -168,6 +168,8 @@ class VentilationInfiltration(BaseModel):
     room_id: str
     outdoor_air_m3h: float = 0.0
     infiltration_mode: str = "none"
+    door_exposure: Literal["windward", "other"] | None = None
+    air_changes_per_hour: float | None = None
     infiltration_area_m2: float | None = None
     sash_type: str | None = None
     airtightness: str | None = None
