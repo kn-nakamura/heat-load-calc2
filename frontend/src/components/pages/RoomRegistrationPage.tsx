@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { ColDef, ValueParserParams } from "ag-grid-community";
 import { DoorOpen, SquareStack, PanelTop, Fan, Wrench } from "lucide-react";
 import GridEditor from "../GridEditor";
+import RoomInternalLoadsPanel from "../RoomInternalLoadsPanel";
 import type {
   Project,
   Room,
@@ -302,12 +303,11 @@ export default function RoomRegistrationPage({ project, onChange }: Props) {
           )}
 
           {selectedRoom && activeTab === "internal_loads" && (
-            <GridEditor
-              title={`内部発熱 (Internal Loads) - ${selectedRoom.name || selectedRoom.id}`}
-              hint="照明・人体・機器の発熱量を入力"
+            <RoomInternalLoadsPanel
+              project={project}
+              roomId={selectedRoom.id}
+              roomName={selectedRoom.name}
               rows={filterByRoom(project.internal_loads)}
-              columns={internalLoadColumns.filter((col) => col.field !== "room_id")}
-              createEmptyRow={() => ({ ...createEmptyInternalLoad(), room_id: selectedRoom.id })}
               onChange={(rows) => onChange({ ...project, internal_loads: updateRowsForRoom(project.internal_loads, rows) })}
             />
           )}
