@@ -171,6 +171,15 @@ class ProjectMetadata(BaseModel):
 class Project(BaseModel):
     id: str
     name: str
+    building_name: str | None = None
+    building_location: str | None = None
+    building_usage: str | None = None
+    building_structure: str | None = None
+    total_floor_area_m2: float | None = None
+    floors_above: int | None = None
+    floors_below: int | None = None
+    report_author: str | None = None
+    remarks: str | None = None
     unit_system: str = "SI"
     region: str
     orientation_basis: str = "north"
