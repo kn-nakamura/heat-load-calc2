@@ -79,6 +79,7 @@ export interface Glass {
   id: string;
   name: string;
   solar_gain_key?: string;
+  glass_type?: string;
   u_value_w_m2k?: number;
 }
 
