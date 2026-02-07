@@ -124,6 +124,44 @@ body {
   box-shadow: 0 8px 24px #14312a12;
 }
 
+.grid-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.grid-toolbar h3 {
+  margin: 0;
+}
+
+.grid-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.subtle-button {
+  background: #fff;
+  color: #1e3d38;
+  border-color: #7ea59c;
+}
+
+.grid-hint {
+  margin: 8px 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.grid-body {
+  height: 440px;
+  width: 100%;
+}
+
+.row-number-cell {
+  text-align: right;
+  color: #49645f;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(200px, 1fr));

@@ -1,29 +1,37 @@
 import { useMemo, useState } from "react";
-import { ColDef } from "ag-grid-community";
+import type { ColDef, ValueParserParams } from "ag-grid-community";
 import StepNav from "./components/StepNav";
 import GridEditor from "./components/GridEditor";
 import ResultPanel from "./components/ResultPanel";
 import BulkImportPanel from "./components/BulkImportPanel";
 import { exportExcel, exportJson, runCalculation, validateProject } from "./api/client";
-import type { CalcResult, DesignCondition, Opening, Project, Room, Surface, SystemEntity } from "./types";
+import type {
+  CalcResult,
+  DesignCondition,
+  Opening,
+  Project,
+  Room,
+  Surface,
+  SystemEntity
+} from "./types";
 
 const steps = [
-  "プロジェクト基本条件",
-  "設計条件",
-  "屋外条件",
-  "窓・ガラス設定",
-  "構造体設定",
-  "室登録",
-  "系統登録",
-  "負荷確認",
-  "出力"
+  "Project Basics",
+  "Design Conditions",
+  "Region Data",
+  "Openings",
+  "Surfaces",
+  "Rooms",
+  "Systems",
+  "Calculation",
+  "Export"
 ];
 
 const defaultProject: Project = {
   id: "project-1",
-  name: "新規熱負荷プロジェクト",
+  name: "New Heat Load Project",
   unit_system: "SI",
-  region: "東京",
+  region: "Tokyo",
   orientation_basis: "north",
   design_conditions: [
     { id: "dc-summer", season: "summer", indoor_temp_c: 24, indoor_rh_pct: 45 },
@@ -50,6 +58,69 @@ const defaultProject: Project = {
   }
 };
 
+const numberValueParser = (params: ValueParserParams): number | undefined => {
+  const raw = params.newValue;
+  if (raw === undefined || raw === null) {
+    return undefined;
+  }
+  if (typeof raw === "number") {
+    return Number.isFinite(raw) ? raw : undefined;
+  }
+  const value = String(raw).trim();
+  if (!value) {
+    return undefined;
+  }
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+};
+
+const createEmptyDesignCondition = () =>
+  ({
+    id: "",
+    season: "",
+    indoor_temp_c: "",
+    indoor_rh_pct: ""
+  } as unknown as DesignCondition);
+
+const createEmptyRoom = () =>
+  ({
+    id: "",
+    name: "",
+    usage: "",
+    floor: "",
+    area_m2: "",
+    ceiling_height_m: "",
+    system_id: ""
+  } as unknown as Room);
+
+const createEmptySurface = () =>
+  ({
+    id: "",
+    room_id: "",
+    kind: "",
+    orientation: "",
+    area_m2: "",
+    construction_id: ""
+  } as unknown as Surface);
+
+const createEmptyOpening = () =>
+  ({
+    id: "",
+    room_id: "",
+    surface_id: "",
+    orientation: "",
+    area_m2: "",
+    glass_id: "",
+    shading_sc: ""
+  } as unknown as Opening);
+
+const createEmptySystem = () =>
+  ({
+    id: "",
+    name: "",
+    room_ids: ""
+  } as unknown as SystemEntity);
+
 function downloadBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -74,12 +145,12 @@ export default function App() {
   const roomColumns = useMemo<ColDef<Room>[]>(
     () => [
       { field: "id", headerName: "ID" },
-      { field: "name", headerName: "室名" },
-      { field: "usage", headerName: "用途" },
-      { field: "floor", headerName: "階" },
-      { field: "area_m2", headerName: "面積[m2]" },
-      { field: "ceiling_height_m", headerName: "天井高[m]" },
-      { field: "system_id", headerName: "系統ID" }
+      { field: "name", headerName: "Room Name" },
+      { field: "usage", headerName: "Usage" },
+      { field: "floor", headerName: "Floor" },
+      { field: "area_m2", headerName: "Area [m2]", valueParser: numberValueParser },
+      { field: "ceiling_height_m", headerName: "Ceiling H [m]", valueParser: numberValueParser },
+      { field: "system_id", headerName: "System ID" }
     ],
     []
   );
@@ -87,11 +158,16 @@ export default function App() {
   const surfaceColumns = useMemo<ColDef<Surface>[]>(
     () => [
       { field: "id", headerName: "ID" },
-      { field: "room_id", headerName: "室ID" },
-      { field: "kind", headerName: "種別" },
-      { field: "orientation", headerName: "方位" },
-      { field: "area_m2", headerName: "面積[m2]" },
-      { field: "construction_id", headerName: "構造体ID" }
+      { field: "room_id", headerName: "Room ID" },
+      {
+        field: "kind",
+        headerName: "Kind",
+        cellEditor: "agSelectCellEditor",
+        cellEditorParams: { values: ["wall", "roof", "floor", "internal"] }
+      },
+      { field: "orientation", headerName: "Orientation" },
+      { field: "area_m2", headerName: "Area [m2]", valueParser: numberValueParser },
+      { field: "construction_id", headerName: "Construction ID" }
     ],
     []
   );
@@ -99,21 +175,21 @@ export default function App() {
   const openingColumns = useMemo<ColDef<Opening>[]>(
     () => [
       { field: "id", headerName: "ID" },
-      { field: "room_id", headerName: "室ID" },
-      { field: "surface_id", headerName: "面ID" },
-      { field: "orientation", headerName: "方位" },
-      { field: "area_m2", headerName: "面積[m2]" },
-      { field: "glass_id", headerName: "ガラスID" },
-      { field: "shading_sc", headerName: "SC" }
+      { field: "room_id", headerName: "Room ID" },
+      { field: "surface_id", headerName: "Surface ID" },
+      { field: "orientation", headerName: "Orientation" },
+      { field: "area_m2", headerName: "Area [m2]", valueParser: numberValueParser },
+      { field: "glass_id", headerName: "Glass ID" },
+      { field: "shading_sc", headerName: "SC", valueParser: numberValueParser }
     ],
     []
   );
 
   const systemColumns = useMemo<ColDef<SystemEntity>[]>(
     () => [
-      { field: "id", headerName: "系統ID" },
-      { field: "name", headerName: "名称" },
-      { field: "room_ids", headerName: "室ID配列(JSON)" }
+      { field: "id", headerName: "System ID" },
+      { field: "name", headerName: "Name" },
+      { field: "room_ids", headerName: "Room IDs (comma separated)" }
     ],
     []
   );
@@ -121,9 +197,14 @@ export default function App() {
   const designColumns = useMemo<ColDef<DesignCondition>[]>(
     () => [
       { field: "id", headerName: "ID" },
-      { field: "season", headerName: "季節" },
-      { field: "indoor_temp_c", headerName: "室温[℃]" },
-      { field: "indoor_rh_pct", headerName: "室内RH[%]" }
+      {
+        field: "season",
+        headerName: "Season",
+        cellEditor: "agSelectCellEditor",
+        cellEditorParams: { values: ["summer", "winter"] }
+      },
+      { field: "indoor_temp_c", headerName: "Indoor Temp [C]", valueParser: numberValueParser },
+      { field: "indoor_rh_pct", headerName: "Indoor RH [%]", valueParser: numberValueParser }
     ],
     []
   );
@@ -169,40 +250,30 @@ export default function App() {
       <main className="main-panel">
         <header>
           <h2>{steps[stepIndex]}</h2>
-          <p>手入力・グリッド編集・一括取込を前提にしたMVP画面</p>
+          <p>Spreadsheet-like web input: direct edit, copy/paste from Excel, add/delete rows.</p>
         </header>
 
-        <BulkImportPanel
-          project={project}
-          onProjectChange={setProject}
-          onIssues={(next) => setIssues(next)}
-        />
+        <BulkImportPanel project={project} onProjectChange={setProject} onIssues={(next) => setIssues(next)} />
 
         {stepIndex === 0 && (
           <section className="form-grid">
             <label>
-              プロジェクト名
-              <input
-                value={project.name}
-                onChange={(e) => setProject({ ...project, name: e.target.value })}
-              />
+              Project Name
+              <input value={project.name} onChange={(e) => setProject({ ...project, name: e.target.value })} />
             </label>
             <label>
-              地域
-              <input
-                value={project.region}
-                onChange={(e) => setProject({ ...project, region: e.target.value })}
-              />
+              Region
+              <input value={project.region} onChange={(e) => setProject({ ...project, region: e.target.value })} />
             </label>
             <label>
-              単位系
+              Unit System
               <input
                 value={project.unit_system}
                 onChange={(e) => setProject({ ...project, unit_system: e.target.value })}
               />
             </label>
             <label>
-              方位基準
+              Orientation Basis
               <input
                 value={project.orientation_basis}
                 onChange={(e) => setProject({ ...project, orientation_basis: e.target.value })}
@@ -213,51 +284,59 @@ export default function App() {
 
         {stepIndex === 1 && (
           <GridEditor
-            title="設計条件"
+            title="Design Conditions"
             rows={project.design_conditions}
             columns={designColumns}
+            createEmptyRow={createEmptyDesignCondition}
             onChange={(rows) => setProject({ ...project, design_conditions: rows })}
           />
         )}
 
         {stepIndex === 2 && (
           <section className="card">
-            <p>屋外条件は地域選択（{project.region}）に基づきバックエンド参照表から取得します。</p>
+            <p>
+              Region reference values are applied from backend tables using current region:{" "}
+              <strong>{project.region}</strong>.
+            </p>
           </section>
         )}
 
         {stepIndex === 3 && (
           <GridEditor
-            title="窓・ガラス設定"
+            title="Openings"
             rows={project.openings}
             columns={openingColumns}
+            createEmptyRow={createEmptyOpening}
             onChange={(rows) => setProject({ ...project, openings: rows })}
           />
         )}
 
         {stepIndex === 4 && (
           <GridEditor
-            title="構造体/面設定"
+            title="Surfaces"
             rows={project.surfaces}
             columns={surfaceColumns}
+            createEmptyRow={createEmptySurface}
             onChange={(rows) => setProject({ ...project, surfaces: rows })}
           />
         )}
 
         {stepIndex === 5 && (
           <GridEditor
-            title="室登録"
+            title="Rooms"
             rows={project.rooms}
             columns={roomColumns}
+            createEmptyRow={createEmptyRoom}
             onChange={(rows) => setProject({ ...project, rooms: rows })}
           />
         )}
 
         {stepIndex === 6 && (
           <GridEditor
-            title="系統登録"
+            title="Systems"
             rows={project.systems}
             columns={systemColumns}
+            createEmptyRow={createEmptySystem}
             onChange={(rows) =>
               setProject({
                 ...project,
@@ -282,7 +361,7 @@ export default function App() {
         {stepIndex === 7 && (
           <section className="card">
             <button type="button" onClick={onRunCalc} disabled={busy}>
-              {busy ? "計算中..." : "計算実行"}
+              {busy ? "Running..." : "Run Calculation"}
             </button>
             <ResultPanel result={calcResult} />
           </section>
@@ -291,18 +370,18 @@ export default function App() {
         {stepIndex === 8 && (
           <section className="card output-panel">
             <button type="button" onClick={onExportJson} disabled={busy}>
-              JSON出力
+              Export JSON
             </button>
             <button type="button" onClick={onExportExcel} disabled={busy}>
-              Excel出力
+              Export Excel
             </button>
-            <p>テンプレート差し込み方式で数式/書式を保持します。</p>
+            <p>Excel output keeps formula-based workbook behavior.</p>
           </section>
         )}
 
         {issues.length > 0 && (
           <section className="issue-panel">
-            <h3>検証メッセージ</h3>
+            <h3>Validation Messages</h3>
             <ul>
               {issues.map((issue, idx) => (
                 <li key={`${issue.level}-${idx}`}>
@@ -315,14 +394,14 @@ export default function App() {
 
         <footer className="step-actions">
           <button type="button" disabled={stepIndex === 0} onClick={() => setStepIndex((s) => s - 1)}>
-            戻る
+            Back
           </button>
           <button
             type="button"
             disabled={stepIndex === steps.length - 1}
             onClick={() => setStepIndex((s) => s + 1)}
           >
-            次へ
+            Next
           </button>
         </footer>
       </main>

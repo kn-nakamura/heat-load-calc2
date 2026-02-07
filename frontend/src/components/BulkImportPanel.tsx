@@ -42,13 +42,12 @@ export default function BulkImportPanel({ project, onProjectChange, onIssues }: 
 
   const loadCsvDatasets = async () => {
     const files = csvFiles ? Array.from(csvFiles) : [];
-    const datasets = await Promise.all(
+    return Promise.all(
       files.map(async (file) => ({
         filename: file.name,
         content: await file.text()
       }))
     );
-    return datasets;
   };
 
   const onCsvPreview = async () => {
@@ -85,27 +84,27 @@ export default function BulkImportPanel({ project, onProjectChange, onIssues }: 
 
   return (
     <section className="card import-panel">
-      <h3>一括入力 (CSV / JSON / Excelコピペ)</h3>
+      <h3>Bulk Import (CSV / JSON / Excel paste)</h3>
       <div className="import-grid">
         <article>
-          <h4>JSON取込</h4>
+          <h4>JSON Import</h4>
           <textarea
             value={jsonText}
             onChange={(e) => setJsonText(e.target.value)}
-            placeholder="project.json を貼り付け"
+            placeholder="Paste project.json content"
           />
           <button type="button" onClick={parseJsonImport}>
-            JSON適用
+            Apply JSON
           </button>
         </article>
 
         <article>
-          <h4>CSV取込</h4>
+          <h4>CSV Import</h4>
           <input type="file" multiple accept=".csv,text/csv" onChange={onCsvFiles} />
           <div className="inline-options">
             <label>
               <input type="checkbox" checked={hasHeader} onChange={(e) => setHasHeader(e.target.checked)} />
-              ヘッダーあり
+              Has header
             </label>
             <label>
               <input
@@ -113,23 +112,23 @@ export default function BulkImportPanel({ project, onProjectChange, onIssues }: 
                 checked={deleteMissing}
                 onChange={(e) => setDeleteMissing(e.target.checked)}
               />
-              未掲載IDを削除
+              Delete missing IDs
             </label>
           </div>
           <div className="btn-row">
             <button type="button" onClick={onCsvPreview}>
-              プレビュー
+              Preview
             </button>
             <button type="button" onClick={onCsvApply}>
-              適用
+              Apply
             </button>
           </div>
         </article>
 
         <article>
-          <h4>Excelコピペ (TSV)</h4>
+          <h4>Excel Paste (TSV)</h4>
           <label>
-            エンティティ
+            Entity
             <select value={entity} onChange={(e) => setEntity(e.target.value as EntityType)}>
               <option value="rooms">rooms</option>
               <option value="surfaces">surfaces</option>
@@ -143,19 +142,19 @@ export default function BulkImportPanel({ project, onProjectChange, onIssues }: 
           <textarea
             value={pasteText}
             onChange={(e) => setPasteText(e.target.value)}
-            placeholder="Excelからコピーした範囲を貼り付け"
+            placeholder="Paste table copied from Excel"
           />
           <div className="btn-row">
             <button type="button" onClick={onPastePreview}>
-              プレビュー
+              Preview
             </button>
             <button type="button" onClick={onPasteApply}>
-              適用
+              Apply
             </button>
           </div>
         </article>
       </div>
-      {diffMessage && <p className="diff-message">差分: {diffMessage}</p>}
+      {diffMessage && <p className="diff-message">Diff: {diffMessage}</p>}
     </section>
   );
 }

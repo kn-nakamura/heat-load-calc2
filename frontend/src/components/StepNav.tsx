@@ -9,8 +9,8 @@ export default function StepNav({ steps, currentStep, issuesCount, onSelectStep 
   return (
     <aside className="step-nav">
       <h1>Heat Load Calc</h1>
-      <p className="subtitle">国土交通省方式 / Web MVP</p>
-      <div className="issue-chip">未解決エラー: {issuesCount}</div>
+      <p className="subtitle">Web MVP</p>
+      <div className="issue-chip">Validation issues: {issuesCount}</div>
       <ul>
         {steps.map((step, idx) => (
           <li key={step}>

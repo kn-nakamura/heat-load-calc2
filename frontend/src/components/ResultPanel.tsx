@@ -6,12 +6,12 @@ interface ResultPanelProps {
 
 export default function ResultPanel({ result }: ResultPanelProps) {
   if (!result) {
-    return <p className="hint">計算未実行です。負荷確認ステップで実行してください。</p>;
+    return <p className="hint">No calculation result yet. Run calculation after input.</p>;
   }
 
   return (
     <section className="result-wrap">
-      <h3>主要結果</h3>
+      <h3>Totals</h3>
       <div className="summary-grid">
         {Object.entries(result.totals).map(([k, v]) => (
           <article key={k} className="summary-card">
@@ -21,12 +21,12 @@ export default function ResultPanel({ result }: ResultPanelProps) {
         ))}
       </div>
 
-      <h3>主要セル一致確認用</h3>
+      <h3>Major Cells</h3>
       <table className="major-cell-table">
         <thead>
           <tr>
-            <th>セル</th>
-            <th>値</th>
+            <th>Cell</th>
+            <th>Value</th>
           </tr>
         </thead>
         <tbody>
@@ -39,7 +39,7 @@ export default function ResultPanel({ result }: ResultPanelProps) {
         </tbody>
       </table>
 
-      <h3>計算根拠 (Trace)</h3>
+      <h3>Calculation Trace</h3>
       <div className="trace-list">
         {result.traces.map((trace, idx) => (
           <details key={`${trace.entity_id}-${idx}`}>
