@@ -1,13 +1,12 @@
-import { useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import type {
   ColDef,
   GridApi,
   GridReadyEvent,
   SelectionChangedEvent
 } from "ag-grid-community";
+import { themeQuartz } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
 import { Plus, Trash2 } from "lucide-react";
 
 interface GridEditorProps<T extends object> {
@@ -43,6 +42,8 @@ export default function GridEditor<T extends object>({
   height = "480px"
 }: GridEditorProps<T>) {
   const apiRef = useRef<GridApi<T> | null>(null);
+  const rowsRef = useRef(rows);
+  rowsRef.current = rows;
 
   const displayRows = useMemo(() => {
     const filledRows = rows.map((row) => ({ ...row }));
@@ -68,32 +69,47 @@ export default function GridEditor<T extends object>({
     return [rowNoCol, ...columns];
   }, [columns]);
 
-  const syncRowsFromGrid = (api: GridApi<T>) => {
+  const syncRowsFromGrid = useCallback((api: GridApi<T>) => {
+    const dataRowCount = rowsRef.current.length;
     const nextRows: T[] = [];
-    api.forEachNode((node) => {
+    api.forEachNode((node, index) => {
       if (!node.data) return;
-      if (!isRowEmpty(node.data as T)) nextRows.push(node.data as T);
+      // Keep rows that are within the data range (even if empty, as they were explicitly added)
+      // Only filter out empty rows from the blank placeholder area
+      if (index < dataRowCount || !isRowEmpty(node.data as T)) {
+        nextRows.push(node.data as T);
+      }
     });
     onChange(nextRows);
-  };
+  }, [onChange]);
 
   const handleGridReady = (event: GridReadyEvent<T>) => {
     apiRef.current = event.api;
   };
 
+  const pendingScrollRef = useRef<number | null>(null);
+
   const handleAddRow = () => {
+    const newRowIndex = rows.length;
     onChange([...rows, createEmptyRow()]);
+    pendingScrollRef.current = newRowIndex;
+  };
+
+  useEffect(() => {
+    if (pendingScrollRef.current === null) return;
+    const rowIndex = pendingScrollRef.current;
+    pendingScrollRef.current = null;
+    const api = apiRef.current;
+    if (!api) return;
+    // Wait for grid to process the new rowData
     requestAnimationFrame(() => {
-      const api = apiRef.current;
-      if (!api) return;
-      const rowIndex = rows.length;
       api.ensureIndexVisible(rowIndex, "bottom");
       const firstEditable = columns.find((col) => col.field)?.field;
       if (firstEditable) {
         api.startEditingCell({ rowIndex, colKey: firstEditable as string });
       }
     });
-  };
+  }, [rows.length, columns]);
 
   const handleDeleteSelectedRows = () => {
     const api = apiRef.current;
@@ -132,8 +148,9 @@ export default function GridEditor<T extends object>({
       <p className="px-5 py-2 text-xs text-slate-400 bg-slate-50/30 border-b border-slate-100">
         セルをクリックして直接編集。Excelからのコピー＆ペーストにも対応しています。
       </p>
-      <div className="ag-theme-quartz" style={{ height, width: "100%" }}>
+      <div style={{ height, width: "100%" }}>
         <AgGridReact<T>
+          theme={themeQuartz}
           rowData={displayRows}
           columnDefs={tableColumns}
           rowSelection="multiple"
