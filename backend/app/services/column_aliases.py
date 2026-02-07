@@ -63,6 +63,8 @@ ALIAS_MAPS: dict[str, dict[str, list[str]]] = {
         "room_id": ["room_id", "室id", "室ID"],
         "outdoor_air_m3h": ["outdoor_air_m3h", "外気量", "換気量"],
         "infiltration_mode": ["infiltration_mode", "侵入方式"],
+        "door_exposure": ["door_exposure", "出入口風向", "風向"],
+        "air_changes_per_hour": ["air_changes_per_hour", "換気回数", "n回/h"],
         "infiltration_area_m2": ["infiltration_area_m2", "サッシ面積"],
         "sash_type": ["sash_type", "サッシ種別"],
         "airtightness": ["airtightness", "気密度"],

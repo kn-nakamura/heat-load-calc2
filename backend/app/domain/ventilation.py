@@ -44,6 +44,12 @@ def calc_ventilation_load(
     else:
         base_flow = vent.outdoor_air_m3h
     infil = 0.0
+    if vent.infiltration_mode == "door":
+        volume_m3 = room.volume_m3
+        if volume_m3 is None and room.area_m2 and room.ceiling_height_m:
+            volume_m3 = room.area_m2 * room.ceiling_height_m
+        if vent.air_changes_per_hour and volume_m3:
+            infil = vent.air_changes_per_hour * volume_m3
     if vent.infiltration_mode == "sash" and vent.sash_type and vent.airtightness and vent.wind_speed_ms:
         sash_q = references.lookup_sash_infiltration(vent.sash_type, vent.airtightness, vent.wind_speed_ms)
         infil = sash_q * float(vent.infiltration_area_m2 or 0.0)
@@ -89,6 +95,9 @@ def calc_ventilation_load(
             "total_flow_m3h": total_flow,
             "indoor_cooling_c": indoor_cool,
             "indoor_heating_c": indoor_heat,
+            "door_exposure": vent.door_exposure,
+            "air_changes_per_hour": vent.air_changes_per_hour,
+            "room_volume_m3": room.volume_m3,
         },
         references={"sash_table": "aluminum_sash_infiltration"},
         intermediates={
