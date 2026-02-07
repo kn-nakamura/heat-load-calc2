@@ -174,6 +174,7 @@ class Project(BaseModel):
     unit_system: str = "SI"
     region: str
     orientation_basis: str = "north"
+    orientation_deg: float = Field(0.0, ge=0.0, le=360.0)
     design_conditions: list[DesignCondition] = Field(default_factory=list)
     rooms: list[Room] = Field(default_factory=list)
     surfaces: list[Surface] = Field(default_factory=list)

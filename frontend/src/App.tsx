@@ -17,6 +17,7 @@ const defaultProject: Project = {
   unit_system: "SI",
   region: "東京",
   orientation_basis: "north",
+  orientation_deg: 0,
   design_conditions: [
     { id: "dc-summer", season: "summer", indoor_temp_c: 26, indoor_rh_pct: 50 },
     { id: "dc-winter", season: "winter", indoor_temp_c: 22, indoor_rh_pct: 40 },

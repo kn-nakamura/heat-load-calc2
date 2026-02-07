@@ -97,6 +97,7 @@ export interface Project {
   unit_system: string;
   region: string;
   orientation_basis: string;
+  orientation_deg: number;
   design_conditions: DesignCondition[];
   rooms: Room[];
   surfaces: Surface[];
