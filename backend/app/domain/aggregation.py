@@ -14,9 +14,11 @@ def combine(vectors: list[LoadVector]) -> LoadVector:
 def major_cells_from_subtotals(
     external: LoadVector,
     internal: LoadVector,
+    mechanical: LoadVector,
     area_m2: float,
     correction: CorrectionFactors,
 ) -> dict[str, float | None]:
+    internal = internal.add(mechanical)
     cells: dict[str, float | None] = {}
 
     cells["N48"] = external.cool_latent if external.cool_latent != 0 else None

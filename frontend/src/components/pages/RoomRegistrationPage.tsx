@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ColDef, ValueParserParams } from "ag-grid-community";
-import { DoorOpen, SquareStack, PanelTop, Fan } from "lucide-react";
+import { DoorOpen, SquareStack, PanelTop, Fan, Wrench } from "lucide-react";
 import GridEditor from "../GridEditor";
 import type {
   Project,
@@ -8,6 +8,7 @@ import type {
   Surface,
   Opening,
   InternalLoad,
+  MechanicalLoad,
   Ventilation,
 } from "../../types";
 
@@ -34,10 +35,12 @@ const createEmptyOpening = () =>
   ({ id: "", room_id: "", surface_id: "", orientation: "", area_m2: "", glass_id: "", shading_sc: "" } as unknown as Opening);
 const createEmptyInternalLoad = () =>
   ({ id: "", room_id: "", kind: "", sensible_w: "", latent_w: "" } as unknown as InternalLoad);
+const createEmptyMechanicalLoad = () =>
+  ({ id: "", room_id: "", sensible_w: "", latent_w: "" } as unknown as MechanicalLoad);
 const createEmptyVentilation = () =>
   ({ id: "", room_id: "", outdoor_air_m3h: "", infiltration_mode: "", sash_type: "", airtightness: "", wind_speed_ms: "" } as unknown as Ventilation);
 
-type Tab = "rooms" | "surfaces" | "openings" | "internal_loads" | "ventilation";
+type Tab = "rooms" | "surfaces" | "openings" | "internal_loads" | "mechanical_loads" | "ventilation";
 
 export default function RoomRegistrationPage({ project, onChange }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("surfaces");
@@ -119,6 +122,16 @@ export default function RoomRegistrationPage({ project, onChange }: Props) {
     []
   );
 
+  const mechanicalLoadColumns = useMemo<ColDef<MechanicalLoad>[]>(
+    () => [
+      { field: "id", headerName: "ID", minWidth: 100 },
+      { field: "room_id", headerName: "室ID", minWidth: 100 },
+      { field: "sensible_w", headerName: "顕熱 [W]", valueParser: numberParser, minWidth: 110 },
+      { field: "latent_w", headerName: "潜熱 [W]", valueParser: numberParser, minWidth: 110 },
+    ],
+    []
+  );
+
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count: number }[] = [
     {
       key: "surfaces",
@@ -137,6 +150,12 @@ export default function RoomRegistrationPage({ project, onChange }: Props) {
       label: "内部発熱",
       icon: <Fan size={15} />,
       count: selectedRoomId ? project.internal_loads.filter((row) => row.room_id === selectedRoomId).length : 0,
+    },
+    {
+      key: "mechanical_loads",
+      label: "機械負荷",
+      icon: <Wrench size={15} />,
+      count: selectedRoomId ? project.mechanical_loads.filter((row) => row.room_id === selectedRoomId).length : 0,
     },
     {
       key: "ventilation",
@@ -272,6 +291,17 @@ export default function RoomRegistrationPage({ project, onChange }: Props) {
               columns={internalLoadColumns.filter((col) => col.field !== "room_id")}
               createEmptyRow={() => ({ ...createEmptyInternalLoad(), room_id: selectedRoom.id })}
               onChange={(rows) => onChange({ ...project, internal_loads: updateRowsForRoom(project.internal_loads, rows) })}
+            />
+          )}
+
+          {selectedRoom && activeTab === "mechanical_loads" && (
+            <GridEditor
+              title={`機械負荷 (Mechanical Loads) - ${selectedRoom.name || selectedRoom.id}`}
+              hint="室内機械負荷の顕熱・潜熱を入力"
+              rows={filterByRoom(project.mechanical_loads)}
+              columns={mechanicalLoadColumns.filter((col) => col.field !== "room_id")}
+              createEmptyRow={() => ({ ...createEmptyMechanicalLoad(), room_id: selectedRoom.id })}
+              onChange={(rows) => onChange({ ...project, mechanical_loads: updateRowsForRoom(project.mechanical_loads, rows) })}
             />
           )}
 

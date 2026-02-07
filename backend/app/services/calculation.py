@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from app.domain.aggregation import combine, major_cells_from_subtotals
 from app.domain.internal_loads import calc_internal_load
+from app.domain.mechanical_loads import calc_mechanical_load
 from app.domain.reference_lookup import get_reference_repository
 from app.domain.solar_gain import calc_opening_solar_gain
 from app.domain.transmission import calc_surface_load
@@ -35,6 +36,7 @@ def run_calculation(project: Project) -> CalcResult:
     room_surface_map: dict[str, list] = defaultdict(list)
     room_opening_map: dict[str, list] = defaultdict(list)
     room_internal_map: dict[str, list] = defaultdict(list)
+    room_mechanical_map: dict[str, list] = defaultdict(list)
     room_vent_map: dict[str, list] = defaultdict(list)
 
     for s in project.surfaces:
@@ -43,6 +45,8 @@ def run_calculation(project: Project) -> CalcResult:
         room_opening_map[o.room_id].append(o)
     for i in project.internal_loads:
         room_internal_map[i.room_id].append(i)
+    for m in project.mechanical_loads:
+        room_mechanical_map[m.room_id].append(m)
     for v in project.ventilation_infiltration:
         room_vent_map[v.room_id].append(v)
 
@@ -79,6 +83,12 @@ def run_calculation(project: Project) -> CalcResult:
             traces.append(trace)
             (external_vectors if group == "external" else internal_vectors).append(vec)
 
+        mechanical_vectors: list[LoadVector] = []
+        for mechanical_load in room_mechanical_map.get(room.id, []):
+            vec, trace, group = calc_mechanical_load(mechanical_load)
+            traces.append(trace)
+            (external_vectors if group == "external" else mechanical_vectors).append(vec)
+
         for vent in room_vent_map.get(room.id, []):
             vec, trace, group = calc_ventilation_load(
                 vent=vent,
@@ -94,11 +104,19 @@ def run_calculation(project: Project) -> CalcResult:
 
         external_total = combine(external_vectors)
         internal_total = combine(internal_vectors)
+        mechanical_total = combine(mechanical_vectors)
+        internal_combined = internal_total.add(mechanical_total)
 
         correction = project.metadata.correction_factors
-        major_cells = major_cells_from_subtotals(external_total, internal_total, room.area_m2, correction)
+        major_cells = major_cells_from_subtotals(
+            external_total,
+            internal_total,
+            mechanical_total,
+            room.area_m2,
+            correction,
+        )
 
-        pre = external_total.add(internal_total)
+        pre = external_total.add(internal_combined)
         post = LoadVector(
             cool_9=float(major_cells.get("R53") or 0.0),
             cool_12=float(major_cells.get("X53") or 0.0),
@@ -122,7 +140,7 @@ def run_calculation(project: Project) -> CalcResult:
                 room_id=room.id,
                 room_name=room.name,
                 external=external_total,
-                internal=internal_total,
+                internal=internal_combined,
                 pre_correction=pre,
                 post_correction=post,
                 final_totals=final_totals,

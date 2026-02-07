@@ -41,6 +41,7 @@ const defaultProject: Project = {
   constructions: [],
   glasses: [],
   internal_loads: [],
+  mechanical_loads: [],
   ventilation_infiltration: [],
   systems: [],
   metadata: {

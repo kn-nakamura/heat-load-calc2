@@ -25,6 +25,7 @@ type EntityType =
   | "constructions"
   | "glasses"
   | "internal_loads"
+  | "mechanical_loads"
   | "ventilation";
 
 interface BulkImportPanelProps {
@@ -201,6 +202,7 @@ export default function BulkImportPanel({ project, onProjectChange, onIssues }: 
                   <option value="constructions">constructions (構造体)</option>
                   <option value="glasses">glasses (ガラス)</option>
                   <option value="internal_loads">internal_loads (内部発熱)</option>
+                  <option value="mechanical_loads">mechanical_loads (機械負荷)</option>
                   <option value="ventilation">ventilation (換気)</option>
                 </select>
               </div>
