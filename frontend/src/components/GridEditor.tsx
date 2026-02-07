@@ -8,40 +8,39 @@ import type {
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import { Plus, Trash2 } from "lucide-react";
 
 interface GridEditorProps<T extends object> {
   title: string;
+  hint?: string;
   rows: T[];
   columns: ColDef<T>[];
   createEmptyRow: () => T;
   onChange: (rows: T[]) => void;
+  height?: string;
 }
 
 const EMPTY_DISPLAY_ROWS = 20;
 
 function isEmptyValue(value: unknown): boolean {
-  if (value === null || value === undefined) {
-    return true;
-  }
-  if (typeof value === "string") {
-    return value.trim().length === 0;
-  }
-  if (Array.isArray(value)) {
-    return value.length === 0;
-  }
+  if (value === null || value === undefined) return true;
+  if (typeof value === "string") return value.trim().length === 0;
+  if (Array.isArray(value)) return value.length === 0;
   return false;
 }
 
 function isRowEmpty<T extends object>(row: T): boolean {
-  return Object.values(row as Record<string, unknown>).every((value) => isEmptyValue(value));
+  return Object.values(row as Record<string, unknown>).every(isEmptyValue);
 }
 
 export default function GridEditor<T extends object>({
   title,
+  hint,
   rows,
   columns,
   createEmptyRow,
-  onChange
+  onChange,
+  height = "480px"
 }: GridEditorProps<T>) {
   const apiRef = useRef<GridApi<T> | null>(null);
 
@@ -55,16 +54,16 @@ export default function GridEditor<T extends object>({
   const tableColumns = useMemo<ColDef<T>[]>(() => {
     const rowNoCol: ColDef<T> = {
       headerName: "#",
-      width: 56,
-      minWidth: 56,
-      maxWidth: 70,
+      width: 52,
+      minWidth: 52,
+      maxWidth: 64,
       pinned: "left",
       editable: false,
       sortable: false,
       filter: false,
       resizable: false,
       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-      cellClass: "row-number-cell"
+      cellClass: "text-right text-slate-400 text-xs"
     };
     return [rowNoCol, ...columns];
   }, [columns]);
@@ -72,13 +71,8 @@ export default function GridEditor<T extends object>({
   const syncRowsFromGrid = (api: GridApi<T>) => {
     const nextRows: T[] = [];
     api.forEachNode((node) => {
-      if (!node.data) {
-        return;
-      }
-      const row = node.data as T;
-      if (!isRowEmpty(row)) {
-        nextRows.push(row);
-      }
+      if (!node.data) return;
+      if (!isRowEmpty(node.data as T)) nextRows.push(node.data as T);
     });
     onChange(nextRows);
   };
@@ -91,9 +85,7 @@ export default function GridEditor<T extends object>({
     onChange([...rows, createEmptyRow()]);
     requestAnimationFrame(() => {
       const api = apiRef.current;
-      if (!api) {
-        return;
-      }
+      if (!api) return;
       const rowIndex = rows.length;
       api.ensureIndexVisible(rowIndex, "bottom");
       const firstEditable = columns.find((col) => col.field)?.field;
@@ -105,35 +97,42 @@ export default function GridEditor<T extends object>({
 
   const handleDeleteSelectedRows = () => {
     const api = apiRef.current;
-    if (!api) {
-      return;
-    }
+    if (!api) return;
     const selectedRows = new Set(api.getSelectedRows());
     const nextRows = rows.filter((row) => !selectedRows.has(row));
     onChange(nextRows);
   };
 
-  const handleSelectionChanged = (_event: SelectionChangedEvent<T>) => {
-    // Reserved for future status display.
-  };
+  const handleSelectionChanged = (_event: SelectionChangedEvent<T>) => {};
 
   return (
-    <section className="grid-panel">
-      <div className="grid-toolbar">
-        <h3>{title}</h3>
-        <div className="grid-actions">
-          <button type="button" onClick={handleAddRow}>
-            Add Row
+    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-slate-50/50">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
+          {hint && <p className="text-xs text-slate-500 mt-0.5">{hint}</p>}
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={handleAddRow}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-sm"
+          >
+            <Plus size={14} /> 行追加
           </button>
-          <button type="button" className="subtle-button" onClick={handleDeleteSelectedRows}>
-            Delete Selected
+          <button
+            type="button"
+            onClick={handleDeleteSelectedRows}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg"
+          >
+            <Trash2 size={14} /> 選択削除
           </button>
         </div>
       </div>
-      <p className="grid-hint">
-        Click cells to edit. Multi-cell copy/paste from Excel is supported.
+      <p className="px-5 py-2 text-xs text-slate-400 bg-slate-50/30 border-b border-slate-100">
+        セルをクリックして直接編集。Excelからのコピー＆ペーストにも対応しています。
       </p>
-      <div className="ag-theme-quartz grid-body">
+      <div className="ag-theme-quartz" style={{ height, width: "100%" }}>
         <AgGridReact<T>
           rowData={displayRows}
           columnDefs={tableColumns}
@@ -144,18 +143,16 @@ export default function GridEditor<T extends object>({
             editable: true,
             resizable: true,
             sortable: true,
-            filter: true
+            filter: true,
+            flex: 1,
+            minWidth: 100
           }}
           onGridReady={handleGridReady}
           onSelectionChanged={handleSelectionChanged}
-          onCellValueChanged={(event) => {
-            syncRowsFromGrid(event.api);
-          }}
-          onPasteEnd={(event) => {
-            syncRowsFromGrid(event.api);
-          }}
+          onCellValueChanged={(event) => syncRowsFromGrid(event.api)}
+          onPasteEnd={(event) => syncRowsFromGrid(event.api)}
         />
       </div>
-    </section>
+    </div>
   );
 }
