@@ -171,10 +171,23 @@ class ProjectMetadata(BaseModel):
 class Project(BaseModel):
     id: str
     name: str
+    building_name: str | None = None
+    building_location: str | None = None
+    building_usage: str | None = None
+    building_structure: str | None = None
+    total_floor_area_m2: float | None = None
+    floors_above: int | None = None
+    floors_below: int | None = None
+    report_author: str | None = None
+    remarks: str | None = None
     unit_system: str = "SI"
     region: str
+    solar_region: str | None = None
     orientation_basis: str = "north"
     orientation_deg: float = Field(0.0, ge=0.0, le=360.0)
+    location_lat: float | None = None
+    location_lon: float | None = None
+    location_label: str | None = None
     design_conditions: list[DesignCondition] = Field(default_factory=list)
     rooms: list[Room] = Field(default_factory=list)
     surfaces: list[Surface] = Field(default_factory=list)
@@ -318,3 +331,11 @@ class ExcelExportRequest(BaseModel):
 class ReferenceTableResponse(BaseModel):
     table_name: str
     data: dict[str, Any]
+
+
+class NearestRegionResponse(BaseModel):
+    region: str
+    lat: float
+    lon: float
+    distance_km: float
+    tags: list[str] = Field(default_factory=list)
