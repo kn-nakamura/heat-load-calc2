@@ -513,20 +513,6 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
               onChange={(v) => updateField("solar_region", v)}
               options={SOLAR_REGION_OPTIONS.map((r) => ({ value: r, label: r }))}
             />
-            <SelectField
-              label="単位系 / Unit System"
-              value={project.unit_system}
-              onChange={(v) => updateField("unit_system", v)}
-              options={[
-                { value: "SI", label: "SI (国際単位系)" },
-              ]}
-            />
-            <SelectField
-              label="建物方位基準 / Orientation Basis"
-              value={project.orientation_basis}
-              onChange={(v) => updateField("orientation_basis", v)}
-              options={ORIENTATION_OPTIONS}
-            />
             <div className="md:col-span-2">
               <label className="block text-xs font-medium text-slate-600 mb-1.5">
                 方位角 [°] / Orientation Angle
