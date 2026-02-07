@@ -1,9 +1,4 @@
 {
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "moduleResolution": "Bundler",
-    "types": ["vite/client", "react", "react-dom"]
-  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
