@@ -8,7 +8,7 @@ from app.domain.reference_lookup import get_reference_repository
 from app.domain.solar_gain import calc_opening_solar_gain
 from app.domain.transmission import calc_surface_load
 from app.domain.ventilation import calc_ventilation_load
-from app.models.schemas import CalcResult, LoadVector, Project, RoomLoadSummary, SystemLoadSummary
+from app.models.schemas import CalcResult, DesignCondition, LoadVector, Project, RoomLoadSummary, SystemLoadSummary
 
 
 def _select_design_condition(project: Project, season: str):
@@ -22,6 +22,10 @@ def run_calculation(project: Project) -> CalcResult:
     refs = get_reference_repository()
     summer = _select_design_condition(project, "summer")
     winter = _select_design_condition(project, "winter")
+
+    design_condition_map: dict[str, dict[str, DesignCondition]] = defaultdict(dict)
+    for cond in project.design_conditions:
+        design_condition_map[cond.id][cond.season.value] = cond
 
     outdoor = refs.lookup_outdoor(project.region)
     solar_region = project.solar_region or project.region
@@ -47,6 +51,13 @@ def run_calculation(project: Project) -> CalcResult:
         room_vent_map[v.room_id].append(v)
 
     for room in project.rooms:
+        room_conditions = (
+            design_condition_map.get(room.design_condition_id)
+            if room.design_condition_id
+            else None
+        )
+        room_summer = room_conditions.get("summer") if room_conditions else summer
+        room_winter = room_conditions.get("winter") if room_conditions else winter
         external_vectors: list[LoadVector] = []
         internal_vectors: list[LoadVector] = []
 
@@ -54,8 +65,8 @@ def run_calculation(project: Project) -> CalcResult:
             vec, trace, group = calc_surface_load(
                 surface=surface,
                 room=room,
-                summer_condition=summer,
-                winter_condition=winter,
+                summer_condition=room_summer,
+                winter_condition=room_winter,
                 constructions=constructions,
                 references=refs,
                 region=project.region,
@@ -83,8 +94,8 @@ def run_calculation(project: Project) -> CalcResult:
             vec, trace, group = calc_ventilation_load(
                 vent=vent,
                 room=room,
-                summer_condition=summer,
-                winter_condition=winter,
+                summer_condition=room_summer,
+                winter_condition=room_winter,
                 outdoor=outdoor,
                 references=refs,
                 outdoor_air_rounding=project.metadata.rounding.outdoor_air,
