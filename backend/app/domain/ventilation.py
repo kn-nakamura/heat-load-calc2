@@ -63,7 +63,15 @@ def calc_ventilation_load(
 
     indoor_state = moist_air_state(indoor_cool, indoor_rh)
     outdoor_state = moist_air_state(float(outdoor.get("cooling_drybulb_c", outdoor_temp["14"])), outdoor_rh)
-    latent = round_half_up(max(outdoor_state["enthalpy_kj_per_kgda"] - indoor_state["enthalpy_kj_per_kgda"], 0.0) * total_flow / 3.6, 0)
+    humidity_ratio_in = indoor_state["humidity_ratio"]
+    humidity_ratio_out = outdoor_state["humidity_ratio"]
+    humidity_ratio_delta = max(humidity_ratio_out - humidity_ratio_in, 0.0)
+    enthalpy_delta = max(outdoor_state["enthalpy_kj_per_kgda"] - indoor_state["enthalpy_kj_per_kgda"], 0.0)
+    total_enthalpy = enthalpy_delta * total_flow / 3.6
+    latent_unrounded = 833.0 * total_flow / 3.6 * humidity_ratio_delta
+    sensible_design_unrounded = max(total_enthalpy - latent_unrounded, 0.0)
+    latent = round_half_up(latent_unrounded, 0)
+    sensible["14"] = round_half_up(sensible_design_unrounded, 0)
 
     heat_delta = max(indoor_heat - float(outdoor.get("heating_drybulb_c", 0.0)), 0.0)
     heat_sensible = round_half_up(1.006 * total_flow / 3.6 * heat_delta, 0)
@@ -95,6 +103,13 @@ def calc_ventilation_load(
             "outdoor_temp_series": outdoor_temp,
             "indoor_state": indoor_state,
             "outdoor_state": outdoor_state,
+            "humidity_ratio_in": humidity_ratio_in,
+            "humidity_ratio_out": humidity_ratio_out,
+            "humidity_ratio_delta": humidity_ratio_delta,
+            "cooling_enthalpy_delta_kj_per_kgda": enthalpy_delta,
+            "cooling_total_enthalpy_kj": total_enthalpy,
+            "cooling_latent_unrounded_kj": latent_unrounded,
+            "cooling_sensible_design_unrounded_kj": sensible_design_unrounded,
         },
         output=vec.model_dump(),
     )
