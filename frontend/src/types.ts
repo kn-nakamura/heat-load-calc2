@@ -107,6 +107,7 @@ export interface Project {
   region: string;
   solar_region: string;
   orientation_basis: string;
+  orientation_deg: number;
   location_lat: number | null;
   location_lon: number | null;
   location_label: string;

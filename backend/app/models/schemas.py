@@ -184,6 +184,7 @@ class Project(BaseModel):
     region: str
     solar_region: str | None = None
     orientation_basis: str = "north"
+    orientation_deg: float = Field(0.0, ge=0.0, le=360.0)
     location_lat: float | None = None
     location_lon: float | None = None
     location_label: str | None = None

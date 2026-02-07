@@ -197,6 +197,11 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
     });
   };
 
+  const updateOrientationDeg = (value: number) => {
+    const clamped = Math.min(360, Math.max(0, value));
+    onChange({ ...project, orientation_deg: clamped });
+  };
+
   const summerDc = project.design_conditions.find((d) => d.season === "summer");
   const winterDc = project.design_conditions.find((d) => d.season === "winter");
 
@@ -443,6 +448,36 @@ export default function DesignConditionsPage({ project, onChange }: Props) {
               onChange={(v) => updateField("orientation_basis", v)}
               options={ORIENTATION_OPTIONS}
             />
+            <div className="md:col-span-2">
+              <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                方位角 [°] / Orientation Angle
+              </label>
+              <div className="flex flex-col gap-2">
+                <input
+                  type="range"
+                  min={0}
+                  max={360}
+                  step={1}
+                  value={project.orientation_deg}
+                  onChange={(e) => updateOrientationDeg(Number(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex items-center gap-3">
+                  <input
+                    type="number"
+                    min={0}
+                    max={360}
+                    step={1}
+                    value={project.orientation_deg}
+                    onChange={(e) => updateOrientationDeg(Number(e.target.value))}
+                    className="w-32 h-9 px-3 text-sm border border-slate-300 rounded-lg bg-white text-slate-800"
+                  />
+                  <span className="text-xs text-slate-500">
+                    北面からの時計回り角度（0°=北、90°=東、180°=南、270°=西）
+                  </span>
+                </div>
+              </div>
+            </div>
             <TextareaField
               label="備考"
               value={project.remarks}

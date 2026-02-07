@@ -27,6 +27,7 @@ const defaultProject: Project = {
   region: "東京",
   solar_region: "東京",
   orientation_basis: "north",
+  orientation_deg: 0,
   location_lat: null,
   location_lon: null,
   location_label: "",
