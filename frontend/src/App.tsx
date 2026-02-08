@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import StepNav, { STEPS } from "./components/StepNav";
 import BulkImportPanel from "./components/BulkImportPanel";
@@ -10,6 +10,9 @@ import RoomRegistrationPage from "./components/pages/RoomRegistrationPage";
 import SystemRegistrationPage from "./components/pages/SystemRegistrationPage";
 import LoadCheckPage from "./components/pages/LoadCheckPage";
 import type { CalcResult, Project } from "./types";
+
+const STORAGE_KEY = "heat-load-calc2-project";
+const STEP_KEY = "heat-load-calc2-step";
 
 const defaultProject: Project = {
   id: "project-1",
@@ -66,13 +69,80 @@ const defaultProject: Project = {
   },
 };
 
+const mergeProjectDefaults = (candidate: Partial<Project>) => ({
+  ...defaultProject,
+  ...candidate,
+  metadata: {
+    ...defaultProject.metadata,
+    ...candidate.metadata,
+    correction_factors: {
+      ...defaultProject.metadata.correction_factors,
+      ...candidate.metadata?.correction_factors,
+    },
+    rounding: {
+      ...defaultProject.metadata.rounding,
+      ...candidate.metadata?.rounding,
+      occupancy: {
+        ...defaultProject.metadata.rounding.occupancy,
+        ...candidate.metadata?.rounding?.occupancy,
+      },
+      outdoor_air: {
+        ...defaultProject.metadata.rounding.outdoor_air,
+        ...candidate.metadata?.rounding?.outdoor_air,
+      },
+    },
+  },
+});
+
+const loadStoredProject = (): Project => {
+  if (typeof window === "undefined") {
+    return defaultProject;
+  }
+  const stored = window.localStorage.getItem(STORAGE_KEY);
+  if (!stored) {
+    return defaultProject;
+  }
+  try {
+    const parsed = JSON.parse(stored);
+    if (parsed && typeof parsed === "object") {
+      return mergeProjectDefaults(parsed as Partial<Project>);
+    }
+  } catch {
+    return defaultProject;
+  }
+  return defaultProject;
+};
+
+const loadStoredStepIndex = (): number => {
+  if (typeof window === "undefined") {
+    return 0;
+  }
+  const stored = window.localStorage.getItem(STEP_KEY);
+  if (!stored) {
+    return 0;
+  }
+  const parsed = Number(stored);
+  if (Number.isFinite(parsed) && parsed >= 0 && parsed < STEPS.length) {
+    return parsed;
+  }
+  return 0;
+};
+
 export default function App() {
-  const [stepIndex, setStepIndex] = useState(0);
-  const [project, setProject] = useState<Project>(defaultProject);
+  const [stepIndex, setStepIndex] = useState(loadStoredStepIndex);
+  const [project, setProject] = useState<Project>(loadStoredProject);
   const [calcResult, setCalcResult] = useState<CalcResult | null>(null);
   const [issues, setIssues] = useState<Array<{ message: string; level: string }>>([]);
 
   const currentStep = STEPS[stepIndex];
+
+  useEffect(() => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
+  }, [project]);
+
+  useEffect(() => {
+    window.localStorage.setItem(STEP_KEY, stepIndex.toString());
+  }, [stepIndex]);
 
   const renderPage = () => {
     switch (stepIndex) {
