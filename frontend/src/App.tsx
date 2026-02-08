@@ -204,6 +204,13 @@ export default function App() {
 
             {/* Step navigation buttons */}
             <div className="flex items-center gap-2">
+              <BulkImportPanel
+                project={project}
+                onProjectChange={setProject}
+                onIssues={setIssues}
+                variant="menu"
+                triggerLabel="データインポート"
+              />
               <button
                 type="button"
                 disabled={stepIndex === 0}
@@ -255,13 +262,6 @@ export default function App() {
 
         {/* Page content */}
         <div className="flex-1 px-4 py-6 sm:px-6 lg:px-8 space-y-6 overflow-y-auto">
-          {/* Bulk import panel (collapsible) */}
-          <BulkImportPanel
-            project={project}
-            onProjectChange={setProject}
-            onIssues={setIssues}
-          />
-
           {/* Step-specific content */}
           {renderPage()}
         </div>
