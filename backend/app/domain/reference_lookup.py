@@ -19,6 +19,10 @@ class ReferenceRepository:
         return self._read_json("design_outdoor_conditions.json")
 
     @lru_cache(maxsize=1)
+    def design_indoor(self) -> dict:
+        return self._read_json("design_indoor_conditions.json")
+
+    @lru_cache(maxsize=1)
     def etd(self) -> dict:
         return self._read_json("execution_temperature_difference.json")
 
@@ -32,21 +36,73 @@ class ReferenceRepository:
 
     @lru_cache(maxsize=1)
     def region_coordinates(self) -> dict:
-        return self._read_json("region_coordinates.json")
+        try:
+            return self._read_json("region_coordinates.json")
+        except FileNotFoundError:
+            return self._read_json("location_data.json")
 
     @lru_cache(maxsize=1)
     def others(self) -> dict:
         return self._read_json("others_tables.json")
+
+    @lru_cache(maxsize=1)
+    def glass_properties(self) -> dict:
+        return self._read_json("glass_properties_sc_u_value.json")
+
+    @lru_cache(maxsize=1)
+    def glass_sunlit_area_ratio(self) -> dict:
+        return self._read_json("glass_sunlit_area_ratio_numbers.json")
+
+    @lru_cache(maxsize=1)
+    def lighting_power_density(self) -> dict:
+        return self._read_json("lighting_power_density.json")
+
+    @lru_cache(maxsize=1)
+    def occupancy_density(self) -> dict:
+        return self._read_json("occupancy_density_and_heat_gain.json")
+
+    @lru_cache(maxsize=1)
+    def material_thermal_constants(self) -> dict:
+        return self._read_json("material_thermal_constants.json")
+
+    @lru_cache(maxsize=1)
+    def heating_ground_temperature(self) -> dict:
+        return self._read_json("heating_ground_temperature.json")
+
+    @lru_cache(maxsize=1)
+    def heating_orientation_factors(self) -> dict:
+        return self._read_json("heating_orientation_factors.json")
+
+    @lru_cache(maxsize=1)
+    def location_data(self) -> dict:
+        return self._read_json("location_data.json")
+
+    @lru_cache(maxsize=1)
+    def location_data_regions(self) -> dict:
+        return self._read_json("location_data_regions.json")
 
     def lookup_outdoor(self, region: str) -> dict:
         records = self.design_outdoor().get("records", [])
         match = next((r for r in records if r.get("city") == region), None)
         return match or (records[0] if records else {})
 
-    def lookup_etd(self, region: str, orientation: str, hour: str) -> float:
-        region_map = self.etd().get("regions", {}).get(region, {})
-        data = region_map.get(orientation) or region_map.get("N") or region_map.get("水平") or {}
-        return float(data.get(str(hour), 0.0))
+    def lookup_etd(self, region: str, orientation: str, hour: str, wall_type: str = "Ⅰ", indoor_temp: str = "28") -> float:
+        region_data = self.etd().get("regions", {}).get(region, {})
+        temp_data = region_data.get(indoor_temp, {})
+        wall_data = temp_data.get(wall_type, {})
+        # Check directional data first
+        dir_data = wall_data.get("方位別", {}).get(orientation, {})
+        if dir_data:
+            return float(dir_data.get(str(hour), 0.0))
+        # Check shadow
+        if orientation == "日陰":
+            shadow_data = wall_data.get("日陰", {})
+            return float(shadow_data.get(str(hour), 0.0))
+        # Check horizontal
+        if orientation == "水平":
+            horiz_data = wall_data.get("水平", {})
+            return float(horiz_data.get(str(hour), 0.0))
+        return 0.0
 
     def lookup_solar_gain(self, region: str, orientation: str, hour: str) -> float:
         region_map = self.solar().get("regions", {}).get(region, {})
@@ -70,6 +126,12 @@ class ReferenceRepository:
         return float(rec.get(str(nearest), 0.0))
 
     def lookup_orientation_factor_for_heating(self, orientation: str) -> float:
+        data = self.heating_orientation_factors()
+        records = data.get("records", [])
+        for rec in records:
+            if rec.get("direction") == orientation:
+                return float(rec.get("factor", 1.0))
+        # Fallback to others_tables
         table = self.others().get("heating_orientation_factors", {})
         return float(table.get(orientation, 1.0))
 

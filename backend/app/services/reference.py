@@ -5,19 +5,28 @@ from app.domain.reference_lookup import get_reference_repository
 
 def get_reference_table(table_name: str) -> dict:
     repo = get_reference_repository()
-    if table_name == "design_outdoor_conditions":
-        return repo.design_outdoor()
-    if table_name == "execution_temperature_difference":
-        return repo.etd()
-    if table_name == "standard_solar_gain":
-        return repo.solar()
-    if table_name == "region_coordinates":
-        return repo.region_coordinates()
-    if table_name == "aluminum_sash_infiltration":
-        return repo.sash()
-    if table_name == "others_tables":
-        return repo.others()
-    raise KeyError(f"Unsupported table_name: {table_name}")
+    table_map = {
+        "design_outdoor_conditions": repo.design_outdoor,
+        "design_indoor_conditions": repo.design_indoor,
+        "execution_temperature_difference": repo.etd,
+        "standard_solar_gain": repo.solar,
+        "region_coordinates": repo.region_coordinates,
+        "aluminum_sash_infiltration": repo.sash,
+        "others_tables": repo.others,
+        "glass_properties": repo.glass_properties,
+        "glass_sunlit_area_ratio": repo.glass_sunlit_area_ratio,
+        "lighting_power_density": repo.lighting_power_density,
+        "occupancy_density": repo.occupancy_density,
+        "material_thermal_constants": repo.material_thermal_constants,
+        "heating_ground_temperature": repo.heating_ground_temperature,
+        "heating_orientation_factors": repo.heating_orientation_factors,
+        "location_data": repo.location_data,
+        "location_data_regions": repo.location_data_regions,
+    }
+    loader = table_map.get(table_name)
+    if loader is None:
+        raise KeyError(f"Unsupported table_name: {table_name}")
+    return loader()
 
 
 def get_nearest_region(lat: float, lon: float, tag: str | None = None) -> dict:
