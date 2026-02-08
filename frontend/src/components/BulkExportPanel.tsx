@@ -87,9 +87,9 @@ export default function BulkExportPanel({
         aria-label={triggerLabel}
         className={
           variant === "menu"
-          {isExpanded ? "閉じる" : null}
-            : "w-full flex items-center justify-between px-5 py-3 hover:bg-slate-50/50 transition-colors"
-        }
+        {isExpanded ? (
+          <span className="text-xs text-slate-400 hidden sm:inline">閉じる</span>
+        ) : null}
       >
         <div className="flex items-center gap-2">
           <Upload size={16} className="text-slate-500" />
