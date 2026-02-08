@@ -31,6 +31,8 @@ export default function BulkExportPanel({
   calcResult,
   variant = "panel",
   triggerLabel = "データエクスポート",
+  isOpen,
+  onToggle,
 }: BulkExportPanelProps) {
   const [isExpandedState, setIsExpandedState] = useState(false);
   const [busy, setBusy] = useState(false);

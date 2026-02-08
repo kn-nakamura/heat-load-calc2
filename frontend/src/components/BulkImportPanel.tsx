@@ -52,6 +52,8 @@ export default function BulkImportPanel({
   onIssues,
   variant = "panel",
   triggerLabel = "データインポート",
+  isOpen,
+  onToggle,
 }: BulkImportPanelProps) {
   const [isExpandedState, setIsExpandedState] = useState(false);
   const [activeMode, setActiveMode] = useState<ImportMode>("json");
