@@ -36,10 +36,7 @@ const defaultProject: Project = {
   location_lat: null,
   location_lon: null,
   location_label: "",
-  design_conditions: [
-    { id: "dc-summer", season: "summer", indoor_temp_c: 26, indoor_rh_pct: 50 },
-    { id: "dc-winter", season: "winter", indoor_temp_c: 22, indoor_rh_pct: 40 },
-  ],
+  design_conditions: [],
   rooms: [],
   surfaces: [],
   openings: [],

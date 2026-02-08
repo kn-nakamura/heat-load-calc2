@@ -83,11 +83,19 @@ class RoundingSettings(BaseModel):
 
 
 class DesignCondition(BaseModel):
-    id: str
-    season: Season
-    indoor_temp_c: float
-    indoor_rh_pct: float
-    schedule_profile_id: str | None = None
+    id: str  # condition_name
+    summer_drybulb_c: float = 0.0
+    summer_rh_pct: float = 0.0
+    summer_wetbulb_c: float = 0.0
+    summer_dewpoint_c: float = 0.0
+    summer_enthalpy_kj_per_kgda: float = 0.0
+    summer_abs_humidity_kg_per_kgda: float = 0.0
+    winter_drybulb_c: float = 0.0
+    winter_rh_pct: float = 0.0
+    winter_wetbulb_c: float = 0.0
+    winter_dewpoint_c: float = 0.0
+    winter_enthalpy_kj_per_kgda: float = 0.0
+    winter_abs_humidity_kg_per_kgda: float = 0.0
 
 
 class Room(BaseModel):
@@ -136,19 +144,35 @@ class Opening(BaseModel):
     preset_load: LoadVector | None = None
 
 
+class ConstructionLayer(BaseModel):
+    layer_no: int
+    material_name: str
+    thickness_mm: float | None = None
+    thermal_conductivity: float | None = None  # W/(m·K)
+    thermal_resistance: float | None = None  # m²·K/W
+
+
 class ConstructionAssembly(BaseModel):
     id: str
     name: str
-    u_value_w_m2k: float
     wall_type: str | None = None
+    layers: list[ConstructionLayer] = Field(default_factory=list)
+    ao_summer: float | None = None
+    ao_winter: float | None = None
+    ai: float | None = None
+    total_resistance: float | None = None
+    u_value_w_m2k: float | None = None
+    u_value_override: float | None = None
     notes: str | None = None
 
 
 class GlassSpec(BaseModel):
     id: str
-    name: str
-    solar_gain_key: str | None = None
+    glass_code: str | None = None
     glass_type: str | None = None
+    glass_description: str | None = None
+    blind_type: str | None = None
+    sc: float | None = None
     u_value_w_m2k: float | None = None
 
 

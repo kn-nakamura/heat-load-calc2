@@ -17,7 +17,12 @@ def _surface_area(surface: Surface) -> float:
 
 def _u_value(surface: Surface, constructions: dict[str, ConstructionAssembly]) -> float:
     if surface.construction_id and surface.construction_id in constructions:
-        return constructions[surface.construction_id].u_value_w_m2k
+        c = constructions[surface.construction_id]
+        if c.u_value_override is not None:
+            return c.u_value_override
+        if c.u_value_w_m2k is not None:
+            return c.u_value_w_m2k
+        return 1.0
     return 1.0
 
 
@@ -48,8 +53,8 @@ def calc_surface_load(
     area = _surface_area(surface)
     u_val = _u_value(surface, constructions)
     orientation = surface.orientation or "N"
-    indoor_summer = summer_condition.indoor_temp_c if summer_condition else 26.0
-    indoor_winter = winter_condition.indoor_temp_c if winter_condition else 20.0
+    indoor_summer = summer_condition.summer_drybulb_c if summer_condition else 26.0
+    indoor_winter = winter_condition.winter_drybulb_c if winter_condition else 20.0
     adjacent_temp = surface.adjacent_temp_c
     adjacent_r = surface.adjacent_r_factor
 

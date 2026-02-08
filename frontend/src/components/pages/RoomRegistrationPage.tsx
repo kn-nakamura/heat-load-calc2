@@ -56,6 +56,11 @@ export default function RoomRegistrationPage({ project, onChange }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("surfaces");
   const [selectedRoomId, setSelectedRoomId] = useState<string | undefined>();
 
+  const conditionIds = useMemo(
+    () => project.design_conditions.map((dc) => dc.id),
+    [project.design_conditions]
+  );
+
   const roomColumns = useMemo<ColDef<Room>[]>(
     () => [
       { field: "id", headerName: "ID", minWidth: 100 },
@@ -64,9 +69,16 @@ export default function RoomRegistrationPage({ project, onChange }: Props) {
       { field: "floor", headerName: "階", minWidth: 80 },
       { field: "area_m2", headerName: "床面積 [m²]", valueParser: numberParser, minWidth: 120 },
       { field: "ceiling_height_m", headerName: "天井高 [m]", valueParser: numberParser, minWidth: 110 },
+      {
+        field: "design_condition_id",
+        headerName: "屋内条件",
+        minWidth: 140,
+        cellEditor: "agSelectCellEditor",
+        cellEditorParams: { values: conditionIds },
+      },
       { field: "system_id", headerName: "系統ID", minWidth: 100 },
     ],
-    []
+    [conditionIds]
   );
 
   const surfaceColumns = useMemo<ColDef<Surface>[]>(

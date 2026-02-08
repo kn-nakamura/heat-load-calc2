@@ -12,21 +12,25 @@ from app.domain.ventilation import calc_ventilation_load
 from app.models.schemas import CalcResult, DesignCondition, LoadVector, Project, RoomLoadSummary, SystemLoadSummary
 
 
-def _select_design_condition(project: Project, season: str):
+def _find_design_condition(project: Project, condition_id: str | None) -> DesignCondition | None:
+    if not condition_id:
+        return None
     for cond in project.design_conditions:
-        if cond.season.value == season:
+        if cond.id == condition_id:
             return cond
     return None
 
 
 def run_calculation(project: Project) -> CalcResult:
     refs = get_reference_repository()
-    summer = _select_design_condition(project, "summer")
-    winter = _select_design_condition(project, "winter")
 
-    design_condition_map: dict[str, dict[str, DesignCondition]] = defaultdict(dict)
+    # Build condition map by id
+    condition_map: dict[str, DesignCondition] = {}
     for cond in project.design_conditions:
-        design_condition_map[cond.id][cond.season.value] = cond
+        condition_map[cond.id] = cond
+
+    # Use first condition as default if available
+    default_condition = project.design_conditions[0] if project.design_conditions else None
 
     outdoor = refs.lookup_outdoor(project.region)
     solar_region = project.solar_region or project.region
@@ -55,26 +59,22 @@ def run_calculation(project: Project) -> CalcResult:
         room_vent_map[v.room_id].append(v)
 
     for room in project.rooms:
-        room_conditions = (
-            design_condition_map.get(room.design_condition_id)
-            if room.design_condition_id
-            else None
-        )
-        room_summer = room_conditions.get("summer") if room_conditions else summer
-        room_winter = room_conditions.get("winter") if room_conditions else winter
+        # Look up the unified design condition for this room
+        room_condition = condition_map.get(room.design_condition_id or "") or default_condition
 
-        # 新しい構造: 外皮、内部、外気を分離
+        # The new unified DesignCondition is passed as both summer and winter
+        # Domain modules now access summer_drybulb_c, winter_drybulb_c etc. directly
+
         envelope_by_orientation: dict[str, LoadVector] = defaultdict(lambda: LoadVector())
         internal_vectors: list[LoadVector] = []
         ventilation_vectors: list[LoadVector] = []
 
-        # 表面負荷（方位別に集計）
         for surface in room_surface_map.get(room.id, []):
             vec, trace, group = calc_surface_load(
                 surface=surface,
                 room=room,
-                summer_condition=room_summer,
-                winter_condition=room_winter,
+                summer_condition=room_condition,
+                winter_condition=room_condition,
                 constructions=constructions,
                 references=refs,
                 region=project.region,
@@ -84,43 +84,39 @@ def run_calculation(project: Project) -> CalcResult:
             orientation = surface.orientation or "N"
             envelope_by_orientation[orientation] = envelope_by_orientation[orientation].add(vec)
 
-        # 開口負荷（方位別に集計）
         for opening in room_opening_map.get(room.id, []):
             vec, trace, group = calc_opening_solar_gain(
                 opening=opening,
                 glasses=glasses,
                 references=refs,
                 region=solar_region,
-                design_condition=summer,
+                design_condition=room_condition,
                 outdoor=outdoor,
             )
             traces.append(trace)
             orientation = opening.orientation or "N"
             envelope_by_orientation[orientation] = envelope_by_orientation[orientation].add(vec)
 
-        # 内部負荷（暖房モード: 暖房から除外）
         for internal_load in room_internal_map.get(room.id, []):
             vec, trace, group = calc_internal_load(
                 internal_load,
                 project.metadata.rounding.occupancy,
-                heat_mode=True  # 暖房モード
+                heat_mode=True
             )
             traces.append(trace)
             internal_vectors.append(vec)
 
-        # 機械負荷（暖房モード: 暖房から除外）
         for mechanical_load in room_mechanical_map.get(room.id, []):
             vec, trace, group = calc_mechanical_load(mechanical_load, heat_mode=True)
             traces.append(trace)
             internal_vectors.append(vec)
 
-        # 換気負荷（潜熱含む）
         for vent in room_vent_map.get(room.id, []):
             vec, trace, group = calc_ventilation_load(
                 vent=vent,
                 room=room,
-                summer_condition=room_summer,
-                winter_condition=room_winter,
+                summer_condition=room_condition,
+                winter_condition=room_condition,
                 outdoor=outdoor,
                 references=refs,
                 outdoor_air_rounding=project.metadata.rounding.outdoor_air,
@@ -128,12 +124,10 @@ def run_calculation(project: Project) -> CalcResult:
             traces.append(trace)
             ventilation_vectors.append(vec)
 
-        # 集計
         envelope_total = sum(envelope_by_orientation.values(), LoadVector())
         internal_total = combine(internal_vectors)
         ventilation_total = combine(ventilation_vectors)
 
-        # 冷房: 全て合算
         cooling_total = envelope_total.add(internal_total).add(ventilation_total)
 
         correction = project.metadata.correction_factors
