@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
-import { ChevronLeft, ChevronRight, Download, FolderOpen } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, FolderOpen, PlusCircle } from "lucide-react";
 import StepNav, { STEPS } from "./components/StepNav";
 import BulkExportPanel from "./components/BulkExportPanel";
 import BulkImportPanel from "./components/BulkImportPanel";
@@ -148,6 +148,26 @@ export default function App() {
     window.localStorage.setItem(STEP_KEY, stepIndex.toString());
   }, [stepIndex]);
 
+  const createNewProject = () =>
+    mergeProjectDefaults({
+      id: `project-${Date.now()}`,
+      name: "新規プロジェクト",
+    });
+
+  const handleCreateProject = () => {
+    const confirmed = window.confirm(
+      "新規作成すると現在のデータは消えてしまいます。先にファイルを保存してください。新規作成しますか？"
+    );
+    if (!confirmed) {
+      return;
+    }
+    setProject(createNewProject());
+    setCalcResult(null);
+    setIssues([]);
+    setStepIndex(0);
+    setOpenMenu(null);
+  };
+
   const handleSave = () => {
     const payload = JSON.stringify(project, null, 2);
     const blob = new Blob([payload], { type: "application/json" });
@@ -276,19 +296,17 @@ export default function App() {
                 type="button"
                 onClick={handleOpenClick}
                 aria-label="データを開く"
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+                className="inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
               >
                 <FolderOpen size={16} />
-                <span className="hidden sm:inline">開く</span>
               </button>
               <button
                 type="button"
                 onClick={handleSave}
                 aria-label="データ保存（ダウンロード）"
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+                className="inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
               >
                 <Download size={16} />
-                <span className="hidden sm:inline">保存</span>
               </button>
               <button
                 type="button"
@@ -307,6 +325,14 @@ export default function App() {
               >
                 次へ
                 <ChevronRight size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={handleCreateProject}
+                aria-label="新規作成"
+                className="inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-emerald-600 bg-white border border-emerald-200 hover:bg-emerald-50 rounded-lg transition-all"
+              >
+                <PlusCircle size={18} />
               </button>
             </div>
           </div>
