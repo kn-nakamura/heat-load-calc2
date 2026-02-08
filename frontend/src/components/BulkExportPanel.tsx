@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Upload, FileJson, FileSpreadsheet } from "lucide-react";
 import type { CalcResult, Project } from "../types";
 import { exportExcel, exportJson } from "../api/client";
@@ -8,6 +8,8 @@ interface BulkExportPanelProps {
   calcResult: CalcResult | null;
   variant?: "menu" | "panel";
   triggerLabel?: string;
+  isOpen?: boolean;
+  onToggle?: (open: boolean) => void;
 }
 
 function downloadBlob(blob: Blob, filename: string) {
@@ -29,9 +31,27 @@ export default function BulkExportPanel({
   calcResult,
   variant = "panel",
   triggerLabel = "データエクスポート",
+  isOpen,
+  onToggle,
 }: BulkExportPanelProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpandedState, setIsExpandedState] = useState(false);
   const [busy, setBusy] = useState(false);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const isExpanded = isOpen ?? isExpandedState;
+  const setExpanded = onToggle ?? setIsExpandedState;
+
+  useEffect(() => {
+    if (!isExpanded) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+        setExpanded(false);
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isExpanded, setExpanded]);
 
   const handleExportJson = async () => {
     setBusy(true);
@@ -56,14 +76,14 @@ export default function BulkExportPanel({
 
   const panelClasses =
     variant === "menu"
-      ? "absolute right-0 top-full mt-2 w-[min(92vw,360px)] bg-white rounded-xl border border-slate-200 shadow-lg overflow-hidden z-20"
+      ? "absolute left-0 top-full mt-2 w-[min(92vw,360px)] bg-white rounded-xl border border-slate-200 shadow-lg overflow-hidden z-20 sm:left-auto sm:right-0"
       : "bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden";
 
   return (
-    <div className={variant === "menu" ? "relative" : ""}>
+    <div ref={panelRef} className={variant === "menu" ? "relative" : ""}>
       <button
         type="button"
-        onClick={() => setIsExpanded((prev) => !prev)}
+        onClick={() => setExpanded(!isExpanded)}
         aria-label={triggerLabel}
         className={
           variant === "menu"

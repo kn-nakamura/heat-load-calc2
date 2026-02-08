@@ -134,6 +134,7 @@ export default function App() {
   const [project, setProject] = useState<Project>(loadStoredProject);
   const [calcResult, setCalcResult] = useState<CalcResult | null>(null);
   const [issues, setIssues] = useState<Array<{ message: string; level: string }>>([]);
+  const [openMenu, setOpenMenu] = useState<"import" | "export" | null>(null);
 
   const currentStep = STEPS[stepIndex];
 
@@ -215,12 +216,16 @@ export default function App() {
                 onIssues={setIssues}
                 variant="menu"
                 triggerLabel="データインポート"
+                isOpen={openMenu === "import"}
+                onToggle={(nextOpen) => setOpenMenu(nextOpen ? "import" : null)}
               />
               <BulkExportPanel
                 project={project}
                 calcResult={calcResult}
                 variant="menu"
                 triggerLabel="データエクスポート"
+                isOpen={openMenu === "export"}
+                onToggle={(nextOpen) => setOpenMenu(nextOpen ? "export" : null)}
               />
               <button
                 type="button"
