@@ -85,6 +85,7 @@ export default function BulkExportPanel({
         type="button"
         onClick={() => setExpanded(!isExpanded)}
         aria-label={triggerLabel}
+        title={triggerLabel}
         className={
           variant === "menu"
             ? "inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
-import { ChevronLeft, ChevronRight, Download, FolderOpen, PlusCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, FolderOpen, PlusCircle } from "lucide-react";
 import StepNav, { STEPS } from "./components/StepNav";
 import BulkExportPanel from "./components/BulkExportPanel";
 import BulkImportPanel from "./components/BulkImportPanel";
@@ -296,6 +296,7 @@ export default function App() {
                 type="button"
                 onClick={handleOpenClick}
                 aria-label="データを開く"
+                title="データを開く"
                 className="inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
               >
                 <FolderOpen size={16} />
@@ -304,9 +305,10 @@ export default function App() {
                 type="button"
                 onClick={handleSave}
                 aria-label="データ保存（ダウンロード）"
-                className="inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+                title="データ保存（ダウンロード）"
+                className="inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-emerald-600 bg-white border border-emerald-200 hover:bg-emerald-50 rounded-lg transition-all"
               >
-                <Download size={16} />
+                <Save size={16} />
               </button>
               <button
                 type="button"
@@ -330,6 +332,7 @@ export default function App() {
                 type="button"
                 onClick={handleCreateProject}
                 aria-label="新規作成"
+                title="新規作成"
                 className="inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-emerald-600 bg-white border border-emerald-200 hover:bg-emerald-50 rounded-lg transition-all"
               >
                 <PlusCircle size={18} />
