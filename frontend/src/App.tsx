@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
-import { ChevronLeft, ChevronRight, Download, FolderOpen } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, FolderOpen, Plus } from "lucide-react";
 import StepNav, { STEPS } from "./components/StepNav";
 import BulkExportPanel from "./components/BulkExportPanel";
 import BulkImportPanel from "./components/BulkImportPanel";
@@ -96,6 +96,11 @@ const mergeProjectDefaults = (candidate: Partial<Project>) => ({
   },
 });
 
+const createNewProject = (): Project => ({
+  ...defaultProject,
+  id: `project-${Date.now()}`,
+});
+
 const loadStoredProject = (): Project => {
   if (typeof window === "undefined") {
     return defaultProject;
@@ -147,6 +152,20 @@ export default function App() {
   useEffect(() => {
     window.localStorage.setItem(STEP_KEY, stepIndex.toString());
   }, [stepIndex]);
+
+  const handleNewProject = () => {
+    const confirmed = window.confirm(
+      "新規作成を行うと現在のデータが消えてしまいます。先にファイルを保存してください。続行しますか？"
+    );
+    if (!confirmed) {
+      return;
+    }
+    setProject(createNewProject());
+    setCalcResult(null);
+    setIssues([]);
+    setStepIndex(0);
+    setOpenMenu(null);
+  };
 
   const handleSave = () => {
     const payload = JSON.stringify(project, null, 2);
@@ -272,6 +291,15 @@ export default function App() {
                 onChange={handleOpenFile}
                 className="hidden"
               />
+              <button
+                type="button"
+                onClick={handleNewProject}
+                aria-label="新規作成"
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+              >
+                <Plus size={16} />
+                <span className="hidden sm:inline">新規作成</span>
+              </button>
               <button
                 type="button"
                 onClick={handleOpenClick}
