@@ -1,0 +1,238 @@
+{
+  "metadata": {
+    "version": "mvp-0.3",
+    "source_file": "Thermal Load Data.xlsx",
+    "source_sheet": "表2-3_単位面積あたりの照明器具の消費電力",
+    "generated_at": "2026-02-08T12:10:29.293880+00:00"
+  },
+  "records": [
+    {
+      "design_illuminance_lux": 750.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "事務室、上級室、設計室、製図室",
+      "power_w_per_m2": 19.0,
+      "work_no": 1
+    },
+    {
+      "design_illuminance_lux": 750.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "ルーパー有",
+      "room_examples": "事務室、上級室、設計室、製図室",
+      "power_w_per_m2": 20.0,
+      "work_no": 2
+    },
+    {
+      "design_illuminance_lux": 750.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "アクリルカバー有",
+      "room_examples": "事務室、上級室、設計室、製図室",
+      "power_w_per_m2": 28.0,
+      "work_no": 3
+    },
+    {
+      "design_illuminance_lux": 500.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "電子計算機室、会議室、講堂、厨房、監視室、制御室",
+      "power_w_per_m2": 12.0,
+      "work_no": 4
+    },
+    {
+      "design_illuminance_lux": 500.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "ルーパー有",
+      "room_examples": "電子計算機室、会議室、講堂、厨房、監視室、制御室",
+      "power_w_per_m2": 13.0,
+      "work_no": 5
+    },
+    {
+      "design_illuminance_lux": 500.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "アクリルカバー有",
+      "room_examples": "電子計算機室、会議室、講堂、厨房、監視室、制御室",
+      "power_w_per_m2": 19.0,
+      "work_no": 6
+    },
+    {
+      "design_illuminance_lux": 300.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "受付、食堂",
+      "power_w_per_m2": 7.0,
+      "work_no": 7
+    },
+    {
+      "design_illuminance_lux": 300.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "ルーパー有",
+      "room_examples": "受付、食堂",
+      "power_w_per_m2": 8.0,
+      "work_no": 8
+    },
+    {
+      "design_illuminance_lux": 300.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "アクリルカバー有",
+      "room_examples": "受付、食堂",
+      "power_w_per_m2": 11.0,
+      "work_no": 9
+    },
+    {
+      "design_illuminance_lux": 200.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "電気室、機械室、書庫、湯沸室、便所、洗面所、更衣室",
+      "power_w_per_m2": 5.0,
+      "work_no": 10
+    },
+    {
+      "design_illuminance_lux": 200.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "ルーパー有",
+      "room_examples": "電気室、機械室、書庫、湯沸室、便所、洗面所、更衣室",
+      "power_w_per_m2": 5.0,
+      "work_no": 11
+    },
+    {
+      "design_illuminance_lux": 200.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "アクリルカバー有",
+      "room_examples": "電気室、機械室、書庫、湯沸室、便所、洗面所、更衣室",
+      "power_w_per_m2": 8.0,
+      "work_no": 12
+    },
+    {
+      "design_illuminance_lux": 150.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "階段室",
+      "power_w_per_m2": 4.0,
+      "work_no": 13
+    },
+    {
+      "design_illuminance_lux": 150.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "ルーパー有",
+      "room_examples": "階段室",
+      "power_w_per_m2": 4.0,
+      "work_no": 14
+    },
+    {
+      "design_illuminance_lux": 150.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "アクリルカバー有",
+      "room_examples": "階段室",
+      "power_w_per_m2": 6.0,
+      "work_no": 15
+    },
+    {
+      "design_illuminance_lux": 100.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "玄関ホール、廊下、倉庫",
+      "power_w_per_m2": 2.0,
+      "work_no": 16
+    },
+    {
+      "design_illuminance_lux": 100.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "ルーパー有",
+      "room_examples": "玄関ホール、廊下、倉庫",
+      "power_w_per_m2": 3.0,
+      "work_no": 17
+    },
+    {
+      "design_illuminance_lux": 100.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "アクリルカバー有",
+      "room_examples": "玄関ホール、廊下、倉庫",
+      "power_w_per_m2": 4.0,
+      "work_no": 18
+    },
+    {
+      "design_illuminance_lux": 75.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "車庫",
+      "power_w_per_m2": 2.0,
+      "work_no": 19
+    },
+    {
+      "design_illuminance_lux": 75.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "ルーパー有",
+      "room_examples": "車庫",
+      "power_w_per_m2": 2.0,
+      "work_no": 20
+    },
+    {
+      "design_illuminance_lux": 75.0,
+      "lighting_type": "蛍光灯",
+      "lighting_subtype": "アクリルカバー有",
+      "room_examples": "車庫",
+      "power_w_per_m2": 3.0,
+      "work_no": 21
+    },
+    {
+      "design_illuminance_lux": 750.0,
+      "lighting_type": "LED照明",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "事務室、上級室、設計室、製図室",
+      "power_w_per_m2": 14.0,
+      "work_no": 22
+    },
+    {
+      "design_illuminance_lux": 500.0,
+      "lighting_type": "LED照明",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "会議室",
+      "power_w_per_m2": 10.0,
+      "work_no": 23
+    },
+    {
+      "design_illuminance_lux": 300.0,
+      "lighting_type": "LED照明",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "受付、食堂",
+      "power_w_per_m2": 6.0,
+      "work_no": 24
+    },
+    {
+      "design_illuminance_lux": 200.0,
+      "lighting_type": "LED照明",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "電気室、機械室、書庫、湯沸室、便所、洗面所、更衣室",
+      "power_w_per_m2": 4.0,
+      "work_no": 25
+    },
+    {
+      "design_illuminance_lux": 150.0,
+      "lighting_type": "LED照明",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "階段室",
+      "power_w_per_m2": 3.0,
+      "work_no": 26
+    },
+    {
+      "design_illuminance_lux": 100.0,
+      "lighting_type": "LED照明",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "玄関ホール、廊下、倉庫",
+      "power_w_per_m2": 2.0,
+      "work_no": 27
+    },
+    {
+      "design_illuminance_lux": 75.0,
+      "lighting_type": "LED照明",
+      "lighting_subtype": "下面開放形",
+      "room_examples": "車庫",
+      "power_w_per_m2": 1.0,
+      "work_no": 28
+    }
+  ],
+  "units": {
+    "design_illuminance_lux": "lx",
+    "power_w_per_m2": "W/m²"
+  }
+}

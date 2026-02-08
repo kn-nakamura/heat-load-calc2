@@ -1,0 +1,695 @@
+{
+  "metadata": {
+    "version": "mvp-0.3",
+    "source_file": "Thermal Load Data.xlsx",
+    "source_sheet": "表1-5_材料の熱定数",
+    "generated_at": "2026-02-08T12:10:29.293880+00:00"
+  },
+  "records": [
+    {
+      "material_no": 1,
+      "category": "一般材料",
+      "material_name": "鋼",
+      "thermal_conductivity_w_per_mk": 55.0,
+      "volumetric_heat_capacity_kj_per_m3k": 3600.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 2,
+      "category": "一般材料",
+      "material_name": "アルミニウム",
+      "thermal_conductivity_w_per_mk": 210.0,
+      "volumetric_heat_capacity_kj_per_m3k": 2400.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 3,
+      "category": "一般材料",
+      "material_name": "銅",
+      "thermal_conductivity_w_per_mk": 370.0,
+      "volumetric_heat_capacity_kj_per_m3k": 3200.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 4,
+      "category": "一般材料",
+      "material_name": "ステンレス鋼",
+      "thermal_conductivity_w_per_mk": 15.0,
+      "volumetric_heat_capacity_kj_per_m3k": 3500.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 21,
+      "category": "一般材料",
+      "material_name": "岩石",
+      "thermal_conductivity_w_per_mk": 3.1,
+      "volumetric_heat_capacity_kj_per_m3k": 2400.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 22,
+      "category": "土壌",
+      "material_name": "土壌",
+      "thermal_conductivity_w_per_mk": 1.0,
+      "volumetric_heat_capacity_kj_per_m3k": 3300.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 41,
+      "category": "一般材料",
+      "material_name": "コンクリート",
+      "thermal_conductivity_w_per_mk": 1.6,
+      "volumetric_heat_capacity_kj_per_m3k": 2000.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 42,
+      "category": "一般材料",
+      "material_name": "軽量コンクリート（軽量1種）",
+      "thermal_conductivity_w_per_mk": 0.8,
+      "volumetric_heat_capacity_kj_per_m3k": 1900.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 43,
+      "category": "一般材料",
+      "material_name": "軽量コンクリート（軽量2種）",
+      "thermal_conductivity_w_per_mk": 0.5,
+      "volumetric_heat_capacity_kj_per_m3k": 1600.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 44,
+      "category": "一般材料",
+      "material_name": "気泡コンクリート（ALC）",
+      "thermal_conductivity_w_per_mk": 0.19,
+      "volumetric_heat_capacity_kj_per_m3k": 660.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 45,
+      "category": "一般材料",
+      "material_name": "コンクリートブロック（重量）",
+      "thermal_conductivity_w_per_mk": 1.1,
+      "volumetric_heat_capacity_kj_per_m3k": 1800.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 46,
+      "category": "一般材料",
+      "material_name": "コンクリートブロック（軽量）",
+      "thermal_conductivity_w_per_mk": 0.53,
+      "volumetric_heat_capacity_kj_per_m3k": 1600.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 47,
+      "category": "一般材料",
+      "material_name": "セメント・モルタル",
+      "thermal_conductivity_w_per_mk": 1.5,
+      "volumetric_heat_capacity_kj_per_m3k": 1600.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 48,
+      "category": "一般材料",
+      "material_name": "押出成型セメント板",
+      "thermal_conductivity_w_per_mk": 0.47,
+      "volumetric_heat_capacity_kj_per_m3k": 2100.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 61,
+      "category": "一般材料",
+      "material_name": "せっこうプラスタ―",
+      "thermal_conductivity_w_per_mk": 0.6,
+      "volumetric_heat_capacity_kj_per_m3k": 1600.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 62,
+      "category": "一般材料",
+      "material_name": "せっこうボード",
+      "thermal_conductivity_w_per_mk": 0.22,
+      "volumetric_heat_capacity_kj_per_m3k": 830.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 63,
+      "category": "一般材料",
+      "material_name": "硬質せっこうボード",
+      "thermal_conductivity_w_per_mk": 0.36,
+      "volumetric_heat_capacity_kj_per_m3k": 1320.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 64,
+      "category": "一般材料",
+      "material_name": "しっくい",
+      "thermal_conductivity_w_per_mk": 0.74,
+      "volumetric_heat_capacity_kj_per_m3k": 1400.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 65,
+      "category": "一般材料",
+      "material_name": "土壁",
+      "thermal_conductivity_w_per_mk": 0.69,
+      "volumetric_heat_capacity_kj_per_m3k": 1100.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 66,
+      "category": "一般材料",
+      "material_name": "ガラス",
+      "thermal_conductivity_w_per_mk": 1.0,
+      "volumetric_heat_capacity_kj_per_m3k": 1900.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 67,
+      "category": "一般材料",
+      "material_name": "タイル",
+      "thermal_conductivity_w_per_mk": 1.3,
+      "volumetric_heat_capacity_kj_per_m3k": 2000.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 68,
+      "category": "一般材料",
+      "material_name": "れんが",
+      "thermal_conductivity_w_per_mk": 0.64,
+      "volumetric_heat_capacity_kj_per_m3k": 1400.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 69,
+      "category": "一般材料",
+      "material_name": "かわら",
+      "thermal_conductivity_w_per_mk": 1.0,
+      "volumetric_heat_capacity_kj_per_m3k": 1500.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 70,
+      "category": "一般材料",
+      "material_name": "ロックウール化粧吸音板",
+      "thermal_conductivity_w_per_mk": 0.064,
+      "volumetric_heat_capacity_kj_per_m3k": 294.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 71,
+      "category": "一般材料",
+      "material_name": "火山性ガラス質複合板",
+      "thermal_conductivity_w_per_mk": 0.13,
+      "volumetric_heat_capacity_kj_per_m3k": 679.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 72,
+      "category": "一般材料",
+      "material_name": "ケイ酸カルシウム板 0.8mm",
+      "thermal_conductivity_w_per_mk": 0.18,
+      "volumetric_heat_capacity_kj_per_m3k": 690.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 73,
+      "category": "一般材料",
+      "material_name": "ケイ酸カルシウム板 1.0mm",
+      "thermal_conductivity_w_per_mk": 0.24,
+      "volumetric_heat_capacity_kj_per_m3k": 1000.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 81,
+      "category": "一般材料",
+      "material_name": "天然木材",
+      "thermal_conductivity_w_per_mk": 0.12,
+      "volumetric_heat_capacity_kj_per_m3k": 520.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 82,
+      "category": "一般材料",
+      "material_name": "合板",
+      "thermal_conductivity_w_per_mk": 0.16,
+      "volumetric_heat_capacity_kj_per_m3k": 720.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 83,
+      "category": "一般材料",
+      "material_name": "タタミボード",
+      "thermal_conductivity_w_per_mk": 0.056,
+      "volumetric_heat_capacity_kj_per_m3k": 450.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 84,
+      "category": "一般材料",
+      "material_name": "シージングボード",
+      "thermal_conductivity_w_per_mk": 0.067,
+      "volumetric_heat_capacity_kj_per_m3k": 630.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 85,
+      "category": "一般材料",
+      "material_name": "A級インシュレーションボード",
+      "thermal_conductivity_w_per_mk": 0.058,
+      "volumetric_heat_capacity_kj_per_m3k": 540.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 86,
+      "category": "一般材料",
+      "material_name": "パーティクルボード",
+      "thermal_conductivity_w_per_mk": 0.17,
+      "volumetric_heat_capacity_kj_per_m3k": 720.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 87,
+      "category": "一般材料",
+      "material_name": "木毛セメント板",
+      "thermal_conductivity_w_per_mk": 0.13,
+      "volumetric_heat_capacity_kj_per_m3k": 1100.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 88,
+      "category": "一般材料",
+      "material_name": "木片セメント板",
+      "thermal_conductivity_w_per_mk": 0.15,
+      "volumetric_heat_capacity_kj_per_m3k": 1000.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 89,
+      "category": "一般材料",
+      "material_name": "ハードファイバーボード（ハードボード）",
+      "thermal_conductivity_w_per_mk": 0.17,
+      "volumetric_heat_capacity_kj_per_m3k": 1230.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 90,
+      "category": "一般材料",
+      "material_name": "ミディアムデンシティファイバーボード（MDF）",
+      "thermal_conductivity_w_per_mk": 0.12,
+      "volumetric_heat_capacity_kj_per_m3k": 820.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 101,
+      "category": "一般材料",
+      "material_name": "ビニル系床材",
+      "thermal_conductivity_w_per_mk": 0.19,
+      "volumetric_heat_capacity_kj_per_m3k": 1500.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 102,
+      "category": "一般材料",
+      "material_name": "FRP",
+      "thermal_conductivity_w_per_mk": 0.26,
+      "volumetric_heat_capacity_kj_per_m3k": 1900.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 103,
+      "category": "一般材料",
+      "material_name": "アスファルト類",
+      "thermal_conductivity_w_per_mk": 0.11,
+      "volumetric_heat_capacity_kj_per_m3k": 920.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 104,
+      "category": "一般材料",
+      "material_name": "畳床",
+      "thermal_conductivity_w_per_mk": 0.15,
+      "volumetric_heat_capacity_kj_per_m3k": 290.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 105,
+      "category": "一般材料",
+      "material_name": "建材畳床（?型50mm厚）",
+      "thermal_conductivity_w_per_mk": 0.052,
+      "volumetric_heat_capacity_kj_per_m3k": 208.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 106,
+      "category": "一般材料",
+      "material_name": "建材畳床（K、N型50mm厚）",
+      "thermal_conductivity_w_per_mk": 0.034,
+      "volumetric_heat_capacity_kj_per_m3k": 40.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 107,
+      "category": "一般材料",
+      "material_name": "カーペット類",
+      "thermal_conductivity_w_per_mk": 0.08,
+      "volumetric_heat_capacity_kj_per_m3k": 320.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 121,
+      "category": "断熱材",
+      "material_name": "グラスウール断熱材 10K相当",
+      "thermal_conductivity_w_per_mk": 0.05,
+      "volumetric_heat_capacity_kj_per_m3k": 8.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 122,
+      "category": "断熱材",
+      "material_name": "グラスウール断熱材 16K相当",
+      "thermal_conductivity_w_per_mk": 0.045,
+      "volumetric_heat_capacity_kj_per_m3k": 13.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 123,
+      "category": "断熱材",
+      "material_name": "グラスウール断熱材 20K相当",
+      "thermal_conductivity_w_per_mk": 0.042,
+      "volumetric_heat_capacity_kj_per_m3k": 17.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 124,
+      "category": "断熱材",
+      "material_name": "グラスウール断熱材 24K相当",
+      "thermal_conductivity_w_per_mk": 0.038,
+      "volumetric_heat_capacity_kj_per_m3k": 20.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 125,
+      "category": "断熱材",
+      "material_name": "グラスウール断熱材 32K相当",
+      "thermal_conductivity_w_per_mk": 0.036,
+      "volumetric_heat_capacity_kj_per_m3k": 27.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 126,
+      "category": "断熱材",
+      "material_name": "高性能グラスウール断熱材 16K相当",
+      "thermal_conductivity_w_per_mk": 0.038,
+      "volumetric_heat_capacity_kj_per_m3k": 13.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 127,
+      "category": "断熱材",
+      "material_name": "高性能グラスウール断熱材 24K相当",
+      "thermal_conductivity_w_per_mk": 0.036,
+      "volumetric_heat_capacity_kj_per_m3k": 20.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 128,
+      "category": "断熱材",
+      "material_name": "高性能グラスウール断熱材 32K相当",
+      "thermal_conductivity_w_per_mk": 0.035,
+      "volumetric_heat_capacity_kj_per_m3k": 27.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 129,
+      "category": "断熱材",
+      "material_name": "高性能グラスウール断熱材 40K相当",
+      "thermal_conductivity_w_per_mk": 0.034,
+      "volumetric_heat_capacity_kj_per_m3k": 34.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 130,
+      "category": "断熱材",
+      "material_name": "高性能グラスウール断熱材 48K相当",
+      "thermal_conductivity_w_per_mk": 0.033,
+      "volumetric_heat_capacity_kj_per_m3k": 40.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 131,
+      "category": "断熱材",
+      "material_name": "吹込み用グラスウール 13K相当",
+      "thermal_conductivity_w_per_mk": 0.052,
+      "volumetric_heat_capacity_kj_per_m3k": 11.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 132,
+      "category": "断熱材",
+      "material_name": "吹込み用グラスウール 18K相当",
+      "thermal_conductivity_w_per_mk": 0.052,
+      "volumetric_heat_capacity_kj_per_m3k": 15.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 133,
+      "category": "断熱材",
+      "material_name": "吹込み用グラスウール 30K相当",
+      "thermal_conductivity_w_per_mk": 0.04,
+      "volumetric_heat_capacity_kj_per_m3k": 25.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 134,
+      "category": "断熱材",
+      "material_name": "吹込み用グラスウール 35K相当",
+      "thermal_conductivity_w_per_mk": 0.04,
+      "volumetric_heat_capacity_kj_per_m3k": 29.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 141,
+      "category": "断熱材",
+      "material_name": "吹付けロックウール",
+      "thermal_conductivity_w_per_mk": 0.064,
+      "volumetric_heat_capacity_kj_per_m3k": 412.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 142,
+      "category": "断熱材",
+      "material_name": "ロックウール断熱材（マット）",
+      "thermal_conductivity_w_per_mk": 0.038,
+      "volumetric_heat_capacity_kj_per_m3k": 34.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 143,
+      "category": "断熱材",
+      "material_name": "ロックウール断熱材（フェルト）",
+      "thermal_conductivity_w_per_mk": 0.038,
+      "volumetric_heat_capacity_kj_per_m3k": 34.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 144,
+      "category": "断熱材",
+      "material_name": "ロックウール断熱材（ボード）",
+      "thermal_conductivity_w_per_mk": 0.036,
+      "volumetric_heat_capacity_kj_per_m3k": 67.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 145,
+      "category": "断熱材",
+      "material_name": "吹込み用ロックウール 25K相当",
+      "thermal_conductivity_w_per_mk": 0.047,
+      "volumetric_heat_capacity_kj_per_m3k": 21.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 146,
+      "category": "断熱材",
+      "material_name": "吹込み用ロックウール 65K相当",
+      "thermal_conductivity_w_per_mk": 0.039,
+      "volumetric_heat_capacity_kj_per_m3k": 55.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 161,
+      "category": "断熱材",
+      "material_name": "吹込み用セルローズファイバー 25K",
+      "thermal_conductivity_w_per_mk": 0.04,
+      "volumetric_heat_capacity_kj_per_m3k": 47.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 162,
+      "category": "断熱材",
+      "material_name": "吹込み用セルローズファイバー 45K",
+      "thermal_conductivity_w_per_mk": 0.04,
+      "volumetric_heat_capacity_kj_per_m3k": 85.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 163,
+      "category": "断熱材",
+      "material_name": "吹込み用セルローズファイバー 55K",
+      "thermal_conductivity_w_per_mk": 0.04,
+      "volumetric_heat_capacity_kj_per_m3k": 103.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 181,
+      "category": "断熱材",
+      "material_name": "押出法ポリスチレンフォーム　保温板　1種",
+      "thermal_conductivity_w_per_mk": 0.04,
+      "volumetric_heat_capacity_kj_per_m3k": 32.5,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 182,
+      "category": "断熱材",
+      "material_name": "押出法ポリスチレンフォーム　保温板　2種",
+      "thermal_conductivity_w_per_mk": 0.034,
+      "volumetric_heat_capacity_kj_per_m3k": 36.4,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 183,
+      "category": "断熱材",
+      "material_name": "押出法ポリスチレンフォーム　保温板　3種",
+      "thermal_conductivity_w_per_mk": 0.028,
+      "volumetric_heat_capacity_kj_per_m3k": 40.3,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 184,
+      "category": "断熱材",
+      "material_name": "A種ポリエチレンフォーム　保温板　1種2号",
+      "thermal_conductivity_w_per_mk": 0.042,
+      "volumetric_heat_capacity_kj_per_m3k": 13.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 185,
+      "category": "断熱材",
+      "material_name": "A種ポリエチレンフォーム　保温板　2種",
+      "thermal_conductivity_w_per_mk": 0.038,
+      "volumetric_heat_capacity_kj_per_m3k": 46.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 186,
+      "category": "断熱材",
+      "material_name": "ビーズ法ポリスチレンフォーム　保温板　特号",
+      "thermal_conductivity_w_per_mk": 0.034,
+      "volumetric_heat_capacity_kj_per_m3k": 35.1,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 187,
+      "category": "断熱材",
+      "material_name": "ビーズ法ポリスチレンフォーム　保温板　1号",
+      "thermal_conductivity_w_per_mk": 0.036,
+      "volumetric_heat_capacity_kj_per_m3k": 39.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 188,
+      "category": "断熱材",
+      "material_name": "ビーズ法ポリスチレンフォーム　保温板　2号",
+      "thermal_conductivity_w_per_mk": 0.037,
+      "volumetric_heat_capacity_kj_per_m3k": 32.5,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 189,
+      "category": "断熱材",
+      "material_name": "ビーズ法ポリスチレンフォーム　保温板　3号",
+      "thermal_conductivity_w_per_mk": 0.04,
+      "volumetric_heat_capacity_kj_per_m3k": 26.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 190,
+      "category": "断熱材",
+      "material_name": "ビーズ法ポリスチレンフォーム　保温板　4号",
+      "thermal_conductivity_w_per_mk": 0.043,
+      "volumetric_heat_capacity_kj_per_m3k": 19.5,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 201,
+      "category": "断熱材",
+      "material_name": "硬質ウレタンフォーム　保温板　2種1号",
+      "thermal_conductivity_w_per_mk": 0.023,
+      "volumetric_heat_capacity_kj_per_m3k": 60.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 202,
+      "category": "断熱材",
+      "material_name": "硬質ウレタンフォーム　保温板　2種2号",
+      "thermal_conductivity_w_per_mk": 0.024,
+      "volumetric_heat_capacity_kj_per_m3k": 43.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 203,
+      "category": "断熱材",
+      "material_name": "吹付け硬質ウレタンフォームA種1",
+      "thermal_conductivity_w_per_mk": 0.034,
+      "volumetric_heat_capacity_kj_per_m3k": 61.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 204,
+      "category": "断熱材",
+      "material_name": "吹付け硬質ウレタンフォームA種3",
+      "thermal_conductivity_w_per_mk": 0.04,
+      "volumetric_heat_capacity_kj_per_m3k": 26.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 221,
+      "category": "断熱材",
+      "material_name": "フェノールフォーム　保温板　1種1号",
+      "thermal_conductivity_w_per_mk": 0.022,
+      "volumetric_heat_capacity_kj_per_m3k": 77.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 222,
+      "category": "断熱材",
+      "material_name": "フェノールフォーム　保温板　1種2号",
+      "thermal_conductivity_w_per_mk": 0.022,
+      "volumetric_heat_capacity_kj_per_m3k": 43.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.0
+    },
+    {
+      "material_no": 301,
+      "category": "中間空気層",
+      "material_name": "密閉中空層",
+      "thermal_conductivity_w_per_mk": 0.0,
+      "volumetric_heat_capacity_kj_per_m3k": 0.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.15
+    },
+    {
+      "material_no": 302,
+      "category": "中間空気層",
+      "material_name": "非密閉中空層",
+      "thermal_conductivity_w_per_mk": 0.0,
+      "volumetric_heat_capacity_kj_per_m3k": 0.0,
+      "thermal_constant_gamma_a_m2k_per_w": 0.09
+    }
+  ],
+  "units": {
+    "thermal_conductivity_w_per_mk": "W/(m·K)",
+    "volumetric_heat_capacity_kj_per_m3k": "kJ/(m³·K)",
+    "thermal_constant_gamma_a_m2k_per_w": "m²·K/W"
+  }
+}

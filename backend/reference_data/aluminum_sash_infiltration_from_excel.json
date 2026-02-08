@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "version": "mvp-0.2",
-    "source_file": "bundled_reference_data",
-    "source_sheet": "n/a",
-    "generated_at": "2026-02-07T03:36:34.404426+00:00"
+    "version": "mvp-0.3",
+    "source_file": "Thermal Load Data.xlsx",
+    "source_sheet": "表3-3_アルミサッシのすきま風の量",
+    "generated_at": "2026-02-08T12:10:29.293880+00:00"
   },
   "records": [
     {
@@ -169,7 +169,7 @@
       "10": 9.0
     },
     {
-      "sash_type": "住宅用",
+      "sash_type": "住宅用 - 引違い",
       "airtightness": "A",
       "2": 1.1,
       "4": 2.3,
@@ -178,7 +178,7 @@
       "10": 5.9
     },
     {
-      "sash_type": "住宅用",
+      "sash_type": "住宅用 - 引違い",
       "airtightness": "B",
       "2": 2.8,
       "4": 6.4,
@@ -187,7 +187,7 @@
       "10": 19.0
     },
     {
-      "sash_type": "住宅用",
+      "sash_type": "住宅用 - 引違い",
       "airtightness": "C",
       "2": 5.0,
       "4": 10.5,
@@ -196,7 +196,7 @@
       "10": 27.0
     },
     {
-      "sash_type": "住宅用",
+      "sash_type": "住宅用 - BL形、防音",
       "airtightness": "A",
       "2": 0.06,
       "4": 0.11,
@@ -205,7 +205,7 @@
       "10": 0.24
     },
     {
-      "sash_type": "住宅用",
+      "sash_type": "住宅用 - BL形、防音",
       "airtightness": "B",
       "2": 0.13,
       "4": 0.28,
@@ -214,7 +214,7 @@
       "10": 0.86
     },
     {
-      "sash_type": "住宅用",
+      "sash_type": "住宅用 - BL形、防音",
       "airtightness": "C",
       "2": 1.1,
       "4": 2.3,
@@ -224,6 +224,7 @@
     }
   ],
   "units": {
-    "q": "m3/(m2.h)"
+    "wind_speed_m_per_s": "m/s",
+    "infiltration_m3_per_m2_h": "m³/(m²·h)"
   }
 }

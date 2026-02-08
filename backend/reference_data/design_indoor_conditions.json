@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "version": "mvp-0.3",
+    "source_file": "Thermal Load Data.xlsx",
+    "source_sheet": "表1-1_設計用屋内条件",
+    "generated_at": "2026-02-08T12:10:29.293880+00:00"
+  },
+  "records": [
+    {
+      "condition_name": "一般設計用（１）",
+      "summer": {
+        "drybulb_c": 26.0,
+        "wetbulb_c": 18.7,
+        "dewpoint_c": 14.8,
+        "rh_pct": 50.0,
+        "enthalpy_kj_per_kgda": 52.9,
+        "abs_humidity_kg_per_kgda": 0.0105
+      },
+      "winter": {
+        "drybulb_c": 19.0,
+        "wetbulb_c": 11.7,
+        "dewpoint_c": 5.1,
+        "rh_pct": 40.0,
+        "enthalpy_kj_per_kgda": 32.9,
+        "abs_humidity_kg_per_kgda": 0.0054
+      }
+    },
+    {
+      "condition_name": "一般設計用（２）",
+      "summer": {
+        "drybulb_c": 28.0,
+        "wetbulb_c": 20.4,
+        "dewpoint_c": 16.6,
+        "rh_pct": 50.0,
+        "enthalpy_kj_per_kgda": 58.3,
+        "abs_humidity_kg_per_kgda": 0.0118
+      },
+      "winter": {
+        "drybulb_c": 22.0,
+        "wetbulb_c": 13.9,
+        "dewpoint_c": 7.8,
+        "rh_pct": 40.0,
+        "enthalpy_kj_per_kgda": 38.9,
+        "abs_humidity_kg_per_kgda": 0.0066
+      }
+    },
+    {
+      "condition_name": "コンピューター室",
+      "summer": {
+        "drybulb_c": 24.0,
+        "wetbulb_c": 18.7,
+        "dewpoint_c": 14.8,
+        "rh_pct": 45.0,
+        "enthalpy_kj_per_kgda": 45.6,
+        "abs_humidity_kg_per_kgda": 0.0085
+      },
+      "winter": {
+        "drybulb_c": 17.0,
+        "wetbulb_c": 10.0,
+        "dewpoint_c": 4.1,
+        "rh_pct": 40.0,
+        "enthalpy_kj_per_kgda": 29.2,
+        "abs_humidity_kg_per_kgda": 0.0048
+      }
+    }
+  ],
+  "units": {
+    "temperature_c": "°C",
+    "relative_humidity_pct": "%",
+    "enthalpy_kj_per_kgda": "kJ/kg(DA)",
+    "abs_humidity_kg_per_kgda": "kg/kg(DA)"
+  }
+}

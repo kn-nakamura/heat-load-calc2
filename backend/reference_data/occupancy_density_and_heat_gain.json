@@ -1,0 +1,79 @@
+{
+  "metadata": {
+    "version": "mvp-0.3",
+    "source_file": "Thermal Load Data.xlsx",
+    "source_sheet": "表2-4_室内の人員密度及び人体の発熱量",
+    "generated_at": "2026-02-08T12:10:29.293880+00:00"
+  },
+  "records": [
+    {
+      "room_name": "事務室（28度）",
+      "people_density_per_m2": 0.15,
+      "room_temp_c": 28.0,
+      "sensible_w_per_person": 55.0,
+      "latent_w_per_person": 66.0,
+      "work_no": 1
+    },
+    {
+      "room_name": "会議室（28度）",
+      "people_density_per_m2": 0.5,
+      "room_temp_c": 28.0,
+      "sensible_w_per_person": 55.0,
+      "latent_w_per_person": 62.0,
+      "work_no": 2
+    },
+    {
+      "room_name": "講堂（28度）",
+      "people_density_per_m2": 0.7,
+      "room_temp_c": 28.0,
+      "sensible_w_per_person": 51.0,
+      "latent_w_per_person": 47.0,
+      "work_no": 3
+    },
+    {
+      "room_name": "食堂（28度）",
+      "people_density_per_m2": 0.8,
+      "room_temp_c": 28.0,
+      "sensible_w_per_person": 65.0,
+      "latent_w_per_person": 81.0,
+      "work_no": 4
+    },
+    {
+      "room_name": "事務室（26度）",
+      "people_density_per_m2": 0.15,
+      "room_temp_c": 26.0,
+      "sensible_w_per_person": 69.0,
+      "latent_w_per_person": 53.0,
+      "work_no": 5
+    },
+    {
+      "room_name": "会議室（26度）",
+      "people_density_per_m2": 0.5,
+      "room_temp_c": 26.0,
+      "sensible_w_per_person": 67.0,
+      "latent_w_per_person": 49.0,
+      "work_no": 6
+    },
+    {
+      "room_name": "講堂（26度）",
+      "people_density_per_m2": 0.7,
+      "room_temp_c": 26.0,
+      "sensible_w_per_person": 64.0,
+      "latent_w_per_person": 34.0,
+      "work_no": 7
+    },
+    {
+      "room_name": "食堂（26度）",
+      "people_density_per_m2": 0.8,
+      "room_temp_c": 26.0,
+      "sensible_w_per_person": 79.0,
+      "latent_w_per_person": 67.0,
+      "work_no": 8
+    }
+  ],
+  "units": {
+    "people_density_per_m2": "person/m²",
+    "room_temp_c": "°C",
+    "w_per_person": "W/person"
+  }
+}

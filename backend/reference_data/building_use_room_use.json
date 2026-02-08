@@ -1,0 +1,4844 @@
+{
+  "metadata": {
+    "version": "mvp-0.3",
+    "source_file": "Thermal Load Data.xlsx",
+    "source_sheet": "建物用途_室用途",
+    "generated_at": "2026-02-08T12:10:29.293880+00:00"
+  },
+  "records": [
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "バー",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "ラウンジ",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "レストラン",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "印刷室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "宴会場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "屋内駐車場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "会議室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "機械室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "客室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "客室内の浴室等",
+      "room_use_abbr": "客室内浴室等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "結婚式場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "更衣室又は倉庫",
+      "room_use_abbr": "更衣室・倉庫",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "社員食堂",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "終日利用されるフロント",
+      "room_use_abbr": "フロント(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "終日利用されるロビー",
+      "room_use_abbr": "ロビー(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "終日利用される喫煙室",
+      "room_use_abbr": "喫煙室(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "終日利用される共用部の便所",
+      "room_use_abbr": "便所(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "終日利用される事務室",
+      "room_use_abbr": "事務室(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "終日利用される廊下",
+      "room_use_abbr": "廊下(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "食品庫等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "厨房",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "店舗",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "電気室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "湯沸室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "日中のみ利用されるフロント",
+      "room_use_abbr": "フロント(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "日中のみ利用されるロビー",
+      "room_use_abbr": "ロビー(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "日中のみ利用される喫煙室",
+      "room_use_abbr": "喫煙室(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "日中のみ利用される共用部の便所11",
+      "room_use_abbr": "便所(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "日中のみ利用される事務室",
+      "room_use_abbr": "事務室(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "日中のみ利用される廊下",
+      "room_use_abbr": "廊下(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "ホテル等",
+      "room_use_name": "廃棄物保管場所等",
+      "room_use_abbr": "ごみ置場等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "バー",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "フロント",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "レストランの客室",
+      "room_use_abbr": "レストラン客室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "ロビー",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "印刷室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "屋内駐車場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "機械室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "喫煙室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "喫茶店の客室",
+      "room_use_abbr": "喫茶店客室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "軽食店の客室",
+      "room_use_abbr": "軽食店客室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "更衣室又は倉庫",
+      "room_use_abbr": "更衣室・倉庫",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "事務室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "食品庫等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "厨房",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "電気室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "湯沸室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "廃棄物保管場所等",
+      "room_use_abbr": "ごみ置場等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "便所",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "飲食店等",
+      "room_use_name": "廊下",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "ロビー",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "印刷室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "屋内駐車場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "機械室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "喫煙室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "研究室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "更衣室又は倉庫",
+      "room_use_abbr": "更衣室・倉庫",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "講堂又は体育館",
+      "room_use_abbr": "講堂・体育館",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "高等学校の教室",
+      "room_use_abbr": "高校教室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "事務室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "実験室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "実習室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "宿直室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "小中学校の教室",
+      "room_use_abbr": "小中学校教室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "小中学校又は高等学校の食堂",
+      "room_use_abbr": "小中高校食堂",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "職員室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "食品庫等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "厨房",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "大学の教室",
+      "room_use_abbr": "大学教室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "大学の食堂",
+      "room_use_abbr": "大学食堂",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "電気室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "電子計算機器演習室",
+      "room_use_abbr": "コンピュータ室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "湯沸室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "廃棄物保管場所等",
+      "room_use_abbr": "ごみ置場等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "便所",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "学校等",
+      "room_use_name": "廊下",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "ロビー",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "屋外廊下",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "屋内駐車場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "屋内廊下",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "管理人室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "機械室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "集会室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "電気室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "共同住宅",
+      "room_use_name": "廃棄物保管場所等",
+      "room_use_abbr": "ごみ置場等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "工場等",
+      "room_use_name": "屋外駐車場又は駐輪場",
+      "room_use_abbr": "屋外駐車駐輪場",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "工場等",
+      "room_use_name": "倉庫",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "ロビー",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "印刷室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "屋内駐車場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "会議室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "機械室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "喫煙室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "喫茶室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "更衣室又は倉庫",
+      "room_use_abbr": "更衣室・倉庫",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "事務室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "社員食堂",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "食品庫等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "厨房",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "中央監視室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "電気室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "電子計算機器事務室",
+      "room_use_abbr": "電算事務室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "湯沸室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "廃棄物保管場所等",
+      "room_use_abbr": "ごみ置場等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "便所",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "事務所等",
+      "room_use_name": "廊下",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "アスレチック場のロビー",
+      "room_use_abbr": "アスレチック場ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "アスレチック場の運動室",
+      "room_use_abbr": "アスレチック場運動室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "アスレチック場の喫煙室",
+      "room_use_abbr": "アスレチック場喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "アスレチック場の便所",
+      "room_use_abbr": "アスレチック場便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "カラオケボックス",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "ぱちんこ屋",
+      "room_use_abbr": "パチンコ屋",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "ボーリング場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "レクリエーション用スケート場",
+      "room_use_abbr": "スケート場(レク)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "レクリエーション用体育館",
+      "room_use_abbr": "体育館(レク)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "一般競技用スケート場",
+      "room_use_abbr": "スケート場(一般)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "一般競技用体育館",
+      "room_use_abbr": "体育館(一般)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "印刷室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "映画館のロビー",
+      "room_use_abbr": "映画館ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "映画館の喫煙室",
+      "room_use_abbr": "映画館喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "映画館の客席",
+      "room_use_abbr": "映画館観客席",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "映画館の便所",
+      "room_use_abbr": "映画館便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "屋内駐車場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "機械室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競技場のロビー",
+      "room_use_abbr": "競技場ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競技場の喫煙室",
+      "room_use_abbr": "競技場喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競技場の客席",
+      "room_use_abbr": "競技場応援席",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競技場の便所",
+      "room_use_abbr": "競技場便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競馬場又は競輪場のロビー",
+      "room_use_abbr": "競馬競輪場ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競馬場又は競輪場の喫煙室",
+      "room_use_abbr": "競馬競輪場喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競馬場又は競輪場の客席",
+      "room_use_abbr": "競馬競輪場観客席",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競馬場又は競輪場の券売場",
+      "room_use_abbr": "競馬競輪場券売場",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競馬場又は競輪場の店舗",
+      "room_use_abbr": "競馬競輪場店舗",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "競馬場又は競輪場の便所",
+      "room_use_abbr": "競馬競輪場便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "劇場のロビー",
+      "room_use_abbr": "劇場ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "劇場の楽屋",
+      "room_use_abbr": "劇場楽屋",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "劇場の喫煙室",
+      "room_use_abbr": "劇場喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "劇場の客席",
+      "room_use_abbr": "劇場観客席",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "劇場の舞台",
+      "room_use_abbr": "劇場舞台",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "劇場の便所",
+      "room_use_abbr": "劇場便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "公式競技用スケート場",
+      "room_use_abbr": "スケート場(公式)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "公式競技用体育館",
+      "room_use_abbr": "体育館(公式)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "公衆浴場のロビー",
+      "room_use_abbr": "公衆浴場ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "公衆浴場の喫煙室",
+      "room_use_abbr": "公衆浴場喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "公衆浴場の休憩室",
+      "room_use_abbr": "公衆浴場休憩室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "公衆浴場の脱衣所",
+      "room_use_abbr": "公衆浴場脱衣室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "公衆浴場の便所",
+      "room_use_abbr": "公衆浴場便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "公衆浴場の浴室",
+      "room_use_abbr": "公衆浴場浴室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "社寺のロビー",
+      "room_use_abbr": "社寺ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "社寺の喫煙室",
+      "room_use_abbr": "社寺喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "社寺の便所",
+      "room_use_abbr": "社寺便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "社寺の本殿",
+      "room_use_abbr": "社寺本殿",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "食品庫等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "図書館のロビー",
+      "room_use_abbr": "図書館ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "図書館の喫煙室",
+      "room_use_abbr": "図書館喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "図書館の図書室",
+      "room_use_abbr": "図書館図書室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "図書館の便所",
+      "room_use_abbr": "図書館便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "厨房",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "電気室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "湯沸室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "廃棄物保管場所等",
+      "room_use_abbr": "ごみ置場等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "博物館のロビー",
+      "room_use_abbr": "博物館ロビー",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "博物館の喫煙室",
+      "room_use_abbr": "博物館喫煙室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "博物館の展示室",
+      "room_use_abbr": "博物館展示室",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "集会所等",
+      "room_use_name": "博物館の便所",
+      "room_use_abbr": "博物館便所",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "レストラン",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "印刷室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "屋内駐車場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "解剖室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "看護職員室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "機械室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "検査室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "更衣室又は倉庫",
+      "room_use_abbr": "更衣室・倉庫",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "事務室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "手術室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "終日利用されるロビー",
+      "room_use_abbr": "ロビー(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "終日利用される喫煙室",
+      "room_use_abbr": "喫煙室(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "終日利用される共用部の便所",
+      "room_use_abbr": "便所(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "終日利用される廊下",
+      "room_use_abbr": "廊下(終日)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "集中治療室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "食品庫等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "診察室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "厨房",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "待合室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "電気室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "湯沸室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "日中のみ利用されるロビー",
+      "room_use_abbr": "ロビー(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "日中のみ利用される喫煙室",
+      "room_use_abbr": "喫煙室(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "日中のみ利用される共用部の便所",
+      "room_use_abbr": "便所(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "日中のみ利用される廊下",
+      "room_use_abbr": "廊下(日中)",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "廃棄物保管場所等",
+      "room_use_abbr": "ごみ置場等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "病室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "病院等",
+      "room_use_name": "浴室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "スーパーマーケットの売場",
+      "room_use_abbr": "スーパー売場",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "ロビー",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "印刷室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "屋内駐車場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "荷さばき場",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "機械室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "喫煙室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "更衣室又は倉庫",
+      "room_use_abbr": "更衣室・倉庫",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "●"
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "事務室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "食品庫等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "厨房",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "専門店の売場",
+      "room_use_abbr": "専門店売場",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "大型店の売場",
+      "room_use_abbr": "大型店売場",
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "ventilation": {
+          "enabled": false,
+          "mark": null
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "hot_water": {
+          "enabled": true,
+          "mark": "○"
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "電気室",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "●"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "湯沸室等",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "廃棄物保管場所等",
+      "room_use_abbr": "ごみ置場等",
+      "targets": {
+        "air_conditioning": {
+          "enabled": false,
+          "mark": null
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    },
+    {
+      "building_use": "物販店舗等",
+      "room_use_name": "便所",
+      "room_use_abbr": null,
+      "targets": {
+        "air_conditioning": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "ventilation": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "lighting": {
+          "enabled": true,
+          "mark": "○"
+        },
+        "hot_water": {
+          "enabled": false,
+          "mark": null
+        }
+      }
+    }
+  ],
+  "units": {
+    "enabled": "boolean",
+    "mark": "○/●/null"
+  }
+}

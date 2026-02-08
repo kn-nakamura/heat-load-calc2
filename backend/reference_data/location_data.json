@@ -1,0 +1,414 @@
+{
+  "metadata": {
+    "version": "mvp-0.3",
+    "source_file": "Thermal Load Data.xlsx",
+    "source_sheet": "表1-6_地点データ",
+    "generated_at": "2026-02-08T12:10:29.293880+00:00"
+  },
+  "records": [
+    {
+      "city": "稚内",
+      "latitude_deg": 45.415664,
+      "longitude_deg": 141.673082
+    },
+    {
+      "city": "旭川",
+      "latitude_deg": 43.770636,
+      "longitude_deg": 142.364819
+    },
+    {
+      "city": "留萌",
+      "latitude_deg": 43.940987,
+      "longitude_deg": 141.637012
+    },
+    {
+      "city": "札幌",
+      "latitude_deg": 43.05546,
+      "longitude_deg": 141.340956
+    },
+    {
+      "city": "寿都",
+      "latitude_deg": 42.790979,
+      "longitude_deg": 140.22898
+    },
+    {
+      "city": "網走",
+      "latitude_deg": 44.020632,
+      "longitude_deg": 144.273398
+    },
+    {
+      "city": "根室",
+      "latitude_deg": 43.330076,
+      "longitude_deg": 145.58279
+    },
+    {
+      "city": "釧路",
+      "latitude_deg": 42.984854,
+      "longitude_deg": 144.381356
+    },
+    {
+      "city": "帯広",
+      "latitude_deg": 42.923899,
+      "longitude_deg": 143.196103
+    },
+    {
+      "city": "浦河",
+      "latitude_deg": 42.168516,
+      "longitude_deg": 142.76812
+    },
+    {
+      "city": "函館",
+      "latitude_deg": 41.768793,
+      "longitude_deg": 140.72881
+    },
+    {
+      "city": "青森",
+      "latitude_deg": 40.822072,
+      "longitude_deg": 140.747365
+    },
+    {
+      "city": "秋田",
+      "latitude_deg": 39.720008,
+      "longitude_deg": 140.102564
+    },
+    {
+      "city": "盛岡",
+      "latitude_deg": 39.702053,
+      "longitude_deg": 141.154484
+    },
+    {
+      "city": "宮古",
+      "latitude_deg": 39.64142,
+      "longitude_deg": 141.95714
+    },
+    {
+      "city": "仙台",
+      "latitude_deg": 38.269076,
+      "longitude_deg": 140.870403
+    },
+    {
+      "city": "酒田",
+      "latitude_deg": 38.914433,
+      "longitude_deg": 139.836515
+    },
+    {
+      "city": "山形",
+      "latitude_deg": 38.255439,
+      "longitude_deg": 140.339602
+    },
+    {
+      "city": "福島",
+      "latitude_deg": 37.760834,
+      "longitude_deg": 140.474728
+    },
+    {
+      "city": "小名浜",
+      "latitude_deg": 36.9412337,
+      "longitude_deg": 140.8734393
+    },
+    {
+      "city": "水戸",
+      "latitude_deg": 36.366503,
+      "longitude_deg": 140.470996
+    },
+    {
+      "city": "宇都宮",
+      "latitude_deg": 36.555112,
+      "longitude_deg": 139.882807
+    },
+    {
+      "city": "前橋",
+      "latitude_deg": 36.389482,
+      "longitude_deg": 139.063428
+    },
+    {
+      "city": "熊谷",
+      "latitude_deg": 36.14731,
+      "longitude_deg": 139.388645
+    },
+    {
+      "city": "東京",
+      "latitude_deg": 35.670651,
+      "longitude_deg": 139.771861
+    },
+    {
+      "city": "大島",
+      "latitude_deg": 33.927595,
+      "longitude_deg": 132.195234
+    },
+    {
+      "city": "八丈島",
+      "latitude_deg": 33.103,
+      "longitude_deg": 139.8035
+    },
+    {
+      "city": "銚子",
+      "latitude_deg": 35.734681,
+      "longitude_deg": 140.826641
+    },
+    {
+      "city": "横浜",
+      "latitude_deg": 35.508404,
+      "longitude_deg": 139.68254
+    },
+    {
+      "city": "相川",
+      "latitude_deg": 38.015552,
+      "longitude_deg": 138.227014
+    },
+    {
+      "city": "新潟",
+      "latitude_deg": 37.916243,
+      "longitude_deg": 139.218588
+    },
+    {
+      "city": "高田",
+      "latitude_deg": 37.147848,
+      "longitude_deg": 138.23608
+    },
+    {
+      "city": "富山",
+      "latitude_deg": 36.695952,
+      "longitude_deg": 137.213677
+    },
+    {
+      "city": "輪島",
+      "latitude_deg": 37.39059,
+      "longitude_deg": 136.899196
+    },
+    {
+      "city": "金沢",
+      "latitude_deg": 36.561325,
+      "longitude_deg": 136.656205
+    },
+    {
+      "city": "長野",
+      "latitude_deg": 36.64855,
+      "longitude_deg": 138.194243
+    },
+    {
+      "city": "軽井沢",
+      "latitude_deg": 36.349663,
+      "longitude_deg": 138.590665
+    },
+    {
+      "city": "松本",
+      "latitude_deg": 36.238038,
+      "longitude_deg": 137.972034
+    },
+    {
+      "city": "飯田",
+      "latitude_deg": 35.514978,
+      "longitude_deg": 137.821447
+    },
+    {
+      "city": "甲府",
+      "latitude_deg": 35.66228,
+      "longitude_deg": 138.568202
+    },
+    {
+      "city": "静岡",
+      "latitude_deg": 34.97514,
+      "longitude_deg": 138.383243
+    },
+    {
+      "city": "浜松",
+      "latitude_deg": 34.710896,
+      "longitude_deg": 137.72594
+    },
+    {
+      "city": "名古屋",
+      "latitude_deg": 35.166486,
+      "longitude_deg": 136.946434
+    },
+    {
+      "city": "高山",
+      "latitude_deg": 36.146124,
+      "longitude_deg": 137.252173
+    },
+    {
+      "city": "岐阜",
+      "latitude_deg": 35.423298,
+      "longitude_deg": 136.760654
+    },
+    {
+      "city": "津",
+      "latitude_deg": 34.718596,
+      "longitude_deg": 136.505698
+    },
+    {
+      "city": "尾鷲",
+      "latitude_deg": 34.070799,
+      "longitude_deg": 136.190995
+    },
+    {
+      "city": "福井",
+      "latitude_deg": 36.064067,
+      "longitude_deg": 136.219494
+    },
+    {
+      "city": "敦賀",
+      "latitude_deg": 35.645244,
+      "longitude_deg": 136.055441
+    },
+    {
+      "city": "彦根",
+      "latitude_deg": 35.274461,
+      "longitude_deg": 136.259623
+    },
+    {
+      "city": "京都",
+      "latitude_deg": 35.041053,
+      "longitude_deg": 135.753983
+    },
+    {
+      "city": "大阪",
+      "latitude_deg": 34.701279,
+      "longitude_deg": 135.52809
+    },
+    {
+      "city": "神戸",
+      "latitude_deg": 34.720228,
+      "longitude_deg": 135.265455
+    },
+    {
+      "city": "奈良",
+      "latitude_deg": 34.685087,
+      "longitude_deg": 135.805
+    },
+    {
+      "city": "和歌山",
+      "latitude_deg": 34.230511,
+      "longitude_deg": 135.170808
+    },
+    {
+      "city": "潮岬",
+      "latitude_deg": 33.4376129,
+      "longitude_deg": 135.7543983
+    },
+    {
+      "city": "岡山",
+      "latitude_deg": 34.65534,
+      "longitude_deg": 133.919813
+    },
+    {
+      "city": "広島",
+      "latitude_deg": 34.386245,
+      "longitude_deg": 132.455018
+    },
+    {
+      "city": "西郷",
+      "latitude_deg": 35.4417,
+      "longitude_deg": 132.8122
+    },
+    {
+      "city": "松江",
+      "latitude_deg": 35.46806,
+      "longitude_deg": 133.048375
+    },
+    {
+      "city": "浜田",
+      "latitude_deg": 34.899303,
+      "longitude_deg": 132.079783
+    },
+    {
+      "city": "鳥取",
+      "latitude_deg": 35.501133,
+      "longitude_deg": 134.235091
+    },
+    {
+      "city": "下関",
+      "latitude_deg": 33.957831,
+      "longitude_deg": 130.941459
+    },
+    {
+      "city": "徳島",
+      "latitude_deg": 34.07027,
+      "longitude_deg": 134.554844
+    },
+    {
+      "city": "高松",
+      "latitude_deg": 34.342788,
+      "longitude_deg": 134.046574
+    },
+    {
+      "city": "松山",
+      "latitude_deg": 33.839157,
+      "longitude_deg": 132.765575
+    },
+    {
+      "city": "高知",
+      "latitude_deg": 33.559587,
+      "longitude_deg": 133.529279
+    },
+    {
+      "city": "室戸岬",
+      "latitude_deg": 33.326954,
+      "longitude_deg": 134.196071
+    },
+    {
+      "city": "足摺",
+      "latitude_deg": 32.8269383,
+      "longitude_deg": 132.9545962
+    },
+    {
+      "city": "福岡",
+      "latitude_deg": 33.617746,
+      "longitude_deg": 130.417391
+    },
+    {
+      "city": "大分",
+      "latitude_deg": 33.239558,
+      "longitude_deg": 131.609272
+    },
+    {
+      "city": "厳原",
+      "latitude_deg": 34.203209,
+      "longitude_deg": 129.286081
+    },
+    {
+      "city": "長崎",
+      "latitude_deg": 32.750286,
+      "longitude_deg": 129.877667
+    },
+    {
+      "city": "福江",
+      "latitude_deg": 32.6956089,
+      "longitude_deg": 128.8499499
+    },
+    {
+      "city": "佐賀",
+      "latitude_deg": 33.263482,
+      "longitude_deg": 130.300858
+    },
+    {
+      "city": "熊本",
+      "latitude_deg": 32.803225,
+      "longitude_deg": 130.708191
+    },
+    {
+      "city": "宮崎",
+      "latitude_deg": 31.907674,
+      "longitude_deg": 131.420241
+    },
+    {
+      "city": "鹿児島",
+      "latitude_deg": 31.596554,
+      "longitude_deg": 130.557116
+    },
+    {
+      "city": "名瀬",
+      "latitude_deg": 28.399052,
+      "longitude_deg": 129.495011
+    },
+    {
+      "city": "那覇",
+      "latitude_deg": 26.212312,
+      "longitude_deg": 127.679157
+    }
+  ],
+  "units": {
+    "latitude_deg": "deg",
+    "longitude_deg": "deg"
+  }
+}

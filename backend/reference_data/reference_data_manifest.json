@@ -1,0 +1,168 @@
+{
+  "generated_at": "2026-02-08T12:10:29.293880+00:00",
+  "source_excel": "Thermal Load Data.xlsx",
+  "files": [
+    {
+      "file": "aluminum_sash_infiltration_from_excel.json",
+      "source_sheet": "表3-3_アルミサッシのすきま風の量",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 24
+    },
+    {
+      "file": "building_use_room_use.json",
+      "source_sheet": "建物用途_室用途",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 210
+    },
+    {
+      "file": "design_indoor_conditions.json",
+      "source_sheet": "表1-1_設計用屋内条件",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 3
+    },
+    {
+      "file": "design_outdoor_conditions_from_excel.json",
+      "source_sheet": "表2-6_設計用屋外条件",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 80
+    },
+    {
+      "file": "execution_temperature_difference_from_excel.json",
+      "source_sheet": "表2-8_実行温度差ETD",
+      "top_level_keys": [
+        "metadata",
+        "regions",
+        "legacy_default_28c_walltype_I",
+        "units"
+      ],
+      "count": 6
+    },
+    {
+      "file": "glass_properties_sc_u_value.json",
+      "source_sheet": "表2-9_各種ガラスの遮へい係数SC、熱通過率K",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 26
+    },
+    {
+      "file": "glass_sunlit_area_ratio_numbers.json",
+      "source_sheet": "表2-11_ガラス面日照面積率算定用数値",
+      "top_level_keys": [
+        "metadata",
+        "regions",
+        "units"
+      ],
+      "count": 6
+    },
+    {
+      "file": "heating_ground_temperature.json",
+      "source_sheet": "表3-2_暖房設計用地中温度",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 23
+    },
+    {
+      "file": "heating_orientation_factors_from_excel.json",
+      "source_sheet": "表3-1_方位係数",
+      "top_level_keys": [
+        "metadata",
+        "heating_orientation_factors",
+        "units"
+      ],
+      "count": 13
+    },
+    {
+      "file": "lighting_power_density.json",
+      "source_sheet": "表2-3_単位面積あたりの照明器具の消費電力",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 28
+    },
+    {
+      "file": "location_data.json",
+      "source_sheet": "表1-6_地点データ",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 80
+    },
+    {
+      "file": "location_data_regions.json",
+      "source_sheet": "表1-7_地点データ2",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 6
+    },
+    {
+      "file": "material_thermal_constants.json",
+      "source_sheet": "表1-5_材料の熱定数",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 85
+    },
+    {
+      "file": "occupancy_density_and_heat_gain.json",
+      "source_sheet": "表2-4_室内の人員密度及び人体の発熱量",
+      "top_level_keys": [
+        "metadata",
+        "records",
+        "units"
+      ],
+      "count": 8
+    },
+    {
+      "file": "others_tables_from_excel.json",
+      "source_sheet": "表3-1_方位係数",
+      "top_level_keys": [
+        "metadata",
+        "heating_orientation_factors",
+        "temperature_correction",
+        "units"
+      ],
+      "count": 14
+    },
+    {
+      "file": "standard_solar_gain_from_excel.json",
+      "source_sheet": "表2-10_ガラス面標準日射熱取得、太陽高度、太陽方位",
+      "top_level_keys": [
+        "metadata",
+        "regions",
+        "units"
+      ],
+      "count": 6
+    }
+  ]
+}

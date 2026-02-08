@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "version": "mvp-0.3",
+    "source_file": "Thermal Load Data.xlsx",
+    "source_sheet": "表1-7_地点データ2",
+    "generated_at": "2026-02-08T12:10:29.293880+00:00"
+  },
+  "records": [
+    {
+      "city": "札幌",
+      "latitude_deg": 43.05546,
+      "longitude_deg": 141.340956
+    },
+    {
+      "city": "仙台",
+      "latitude_deg": 38.269076,
+      "longitude_deg": 140.870403
+    },
+    {
+      "city": "東京",
+      "latitude_deg": 35.670651,
+      "longitude_deg": 139.771861
+    },
+    {
+      "city": "大阪",
+      "latitude_deg": 34.701279,
+      "longitude_deg": 135.52809
+    },
+    {
+      "city": "福岡",
+      "latitude_deg": 33.617746,
+      "longitude_deg": 130.417391
+    },
+    {
+      "city": "那覇",
+      "latitude_deg": 26.212312,
+      "longitude_deg": 127.679157
+    }
+  ],
+  "units": {
+    "latitude_deg": "deg",
+    "longitude_deg": "deg"
+  }
+}
