@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save } from "lucide-react";
 import StepNav, { STEPS } from "./components/StepNav";
+import BulkExportPanel from "./components/BulkExportPanel";
 import BulkImportPanel from "./components/BulkImportPanel";
 import DesignConditionsPage from "./components/pages/DesignConditionsPage";
 import RegionDataPage from "./components/pages/RegionDataPage";
@@ -144,6 +145,10 @@ export default function App() {
     window.localStorage.setItem(STEP_KEY, stepIndex.toString());
   }, [stepIndex]);
 
+  const handleSave = () => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
+  };
+
   const renderPage = () => {
     switch (stepIndex) {
       case 0:
@@ -211,6 +216,21 @@ export default function App() {
                 variant="menu"
                 triggerLabel="データインポート"
               />
+              <BulkExportPanel
+                project={project}
+                calcResult={calcResult}
+                variant="menu"
+                triggerLabel="データエクスポート"
+              />
+              <button
+                type="button"
+                onClick={handleSave}
+                aria-label="データ保存"
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+              >
+                <Save size={16} />
+                <span className="hidden sm:inline">保存</span>
+              </button>
               <button
                 type="button"
                 disabled={stepIndex === 0}
