@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import {
-  Upload,
+  Download,
   FileJson,
   FileText,
   ClipboardPaste,
@@ -116,6 +116,7 @@ export default function BulkImportPanel({
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
+        aria-label={triggerLabel}
         className={
           variant === "menu"
             ? "inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
@@ -123,19 +124,23 @@ export default function BulkImportPanel({
         }
       >
         <div className="flex items-center gap-2">
-          <Upload size={16} className="text-slate-500" />
+          <Download size={16} className="text-slate-500" />
           <span className={variant === "menu" ? "text-sm" : "text-sm font-medium text-slate-700"}>
-            {variant === "menu" ? triggerLabel : "一括取込 (Bulk Import)"}
+            <span className={variant === "menu" ? "hidden sm:inline" : ""}>
+              {variant === "menu" ? triggerLabel : "一括取込 (Bulk Import)"}
+            </span>
           </span>
           {variant === "menu" ? null : (
             <span className="text-xs text-slate-400">CSV / JSON / Excel Paste</span>
           )}
         </div>
-        {isExpanded ? (
-          <ChevronUp size={16} className="text-slate-400" />
-        ) : (
-          <ChevronDown size={16} className="text-slate-400" />
-        )}
+        <span className="hidden sm:inline">
+          {isExpanded ? (
+            <ChevronUp size={16} className="text-slate-400" />
+          ) : (
+            <ChevronDown size={16} className="text-slate-400" />
+          )}
+        </span>
       </button>
 
       {isExpanded && (
