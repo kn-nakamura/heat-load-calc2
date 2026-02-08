@@ -6,7 +6,7 @@ from app.models.schemas import Project, ValidationIssue, ValidationLevel
 
 
 def _duplicate_issues(entity_name: str, items: list, key: str = "id") -> list[ValidationIssue]:
-    values = [getattr(item, key) for item in items]
+    values = [getattr(item, key) for item in items if getattr(item, key)]
     counts = Counter(values)
     duplicates = [v for v, c in counts.items() if c > 1]
     issues: list[ValidationIssue] = []

@@ -98,7 +98,12 @@ export default function GridEditor<T extends object>({
         nextRows.push(node.data as T);
       }
     });
-    onChange(nextRows);
+    // Filter out rows where the 'id' field is empty or missing
+    const filteredRows = nextRows.filter((row) => {
+      const id = (row as Record<string, unknown>).id;
+      return id && typeof id === 'string' && id.trim().length > 0;
+    });
+    onChange(filteredRows);
   }, [onChange]);
 
   const handleGridReady = (event: GridReadyEvent<T>) => {
