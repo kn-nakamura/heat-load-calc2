@@ -139,28 +139,28 @@ export default function BulkImportPanel({
         aria-label={triggerLabel}
         className={
           variant === "menu"
-            ? "inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+            ? "inline-flex items-center justify-center px-2.5 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
             : "w-full flex items-center justify-between px-5 py-3 hover:bg-slate-50/50 transition-colors"
         }
       >
         <div className="flex items-center gap-2">
           <Download size={16} className="text-slate-500" />
-          <span className={variant === "menu" ? "text-sm" : "text-sm font-medium text-slate-700"}>
-            <span className={variant === "menu" ? "hidden sm:inline" : ""}>
-              {variant === "menu" ? triggerLabel : "一括取込 (Bulk Import)"}
-            </span>
-          </span>
           {variant === "menu" ? null : (
-            <span className="text-xs text-slate-400">CSV / JSON / Excel Paste</span>
+            <>
+              <span className="text-sm font-medium text-slate-700">一括取込 (Bulk Import)</span>
+              <span className="text-xs text-slate-400">CSV / JSON / Excel Paste</span>
+            </>
           )}
         </div>
-        <span className="hidden sm:inline">
-          {isExpanded ? (
-            <ChevronUp size={16} className="text-slate-400" />
-          ) : (
-            <ChevronDown size={16} className="text-slate-400" />
-          )}
-        </span>
+        {variant === "menu" ? null : (
+          <span className="hidden sm:inline">
+            {isExpanded ? (
+              <ChevronUp size={16} className="text-slate-400" />
+            ) : (
+              <ChevronDown size={16} className="text-slate-400" />
+            )}
+          </span>
+        )}
       </button>
 
       {isExpanded && (
