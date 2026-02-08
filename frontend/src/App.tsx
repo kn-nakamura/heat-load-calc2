@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, Save } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
+import { ChevronLeft, ChevronRight, Download, FolderOpen } from "lucide-react";
 import StepNav, { STEPS } from "./components/StepNav";
 import BulkExportPanel from "./components/BulkExportPanel";
 import BulkImportPanel from "./components/BulkImportPanel";
@@ -135,6 +136,7 @@ export default function App() {
   const [calcResult, setCalcResult] = useState<CalcResult | null>(null);
   const [issues, setIssues] = useState<Array<{ message: string; level: string }>>([]);
   const [openMenu, setOpenMenu] = useState<"import" | "export" | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const currentStep = STEPS[stepIndex];
 
@@ -147,7 +149,43 @@ export default function App() {
   }, [stepIndex]);
 
   const handleSave = () => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
+    const payload = JSON.stringify(project, null, 2);
+    const blob = new Blob([payload], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${project.name || "heat-load-project"}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
+
+  const handleOpenClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleOpenFile = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result));
+        if (parsed && typeof parsed === "object") {
+          setProject(mergeProjectDefaults(parsed as Partial<Project>));
+        }
+      } catch {
+        setIssues((prev) => [
+          ...prev,
+          { message: "ファイルの読み込みに失敗しました。JSON形式のデータをご確認ください。", level: "warning" },
+        ]);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = "";
   };
 
   const renderPage = () => {
@@ -227,13 +265,29 @@ export default function App() {
                 isOpen={openMenu === "export"}
                 onToggle={(nextOpen) => setOpenMenu(nextOpen ? "export" : null)}
               />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="application/json"
+                onChange={handleOpenFile}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={handleOpenClick}
+                aria-label="データを開く"
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
+              >
+                <FolderOpen size={16} />
+                <span className="hidden sm:inline">開く</span>
+              </button>
               <button
                 type="button"
                 onClick={handleSave}
-                aria-label="データ保存"
+                aria-label="データ保存（ダウンロード）"
                 className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-all"
               >
-                <Save size={16} />
+                <Download size={16} />
                 <span className="hidden sm:inline">保存</span>
               </button>
               <button
