@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   Download,
   FileJson,
@@ -34,6 +34,8 @@ interface BulkImportPanelProps {
   onIssues: (issues: Array<{ level: string; message: string }>) => void;
   variant?: "panel" | "menu";
   triggerLabel?: string;
+  isOpen?: boolean;
+  onToggle?: (open: boolean) => void;
 }
 
 type ImportMode = "json" | "csv" | "paste";
@@ -51,7 +53,7 @@ export default function BulkImportPanel({
   variant = "panel",
   triggerLabel = "データインポート",
 }: BulkImportPanelProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpandedState, setIsExpandedState] = useState(false);
   const [activeMode, setActiveMode] = useState<ImportMode>("json");
   const [jsonText, setJsonText] = useState("");
   const [pasteText, setPasteText] = useState("");
@@ -60,6 +62,22 @@ export default function BulkImportPanel({
   const [deleteMissing, setDeleteMissing] = useState(false);
   const [csvFiles, setCsvFiles] = useState<FileList | null>(null);
   const [diffMessage, setDiffMessage] = useState("");
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const isExpanded = isOpen ?? isExpandedState;
+  const setExpanded = onToggle ?? setIsExpandedState;
+
+  useEffect(() => {
+    if (!isExpanded) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+        setExpanded(false);
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isExpanded, setExpanded]);
 
   const parseJsonImport = async () => {
     const parsed = JSON.parse(jsonText);
@@ -108,14 +126,14 @@ export default function BulkImportPanel({
 
   const panelClasses =
     variant === "menu"
-      ? "absolute right-0 top-full mt-2 w-[min(92vw,720px)] bg-white rounded-xl border border-slate-200 shadow-lg overflow-hidden z-20"
+      ? "absolute left-0 top-full mt-2 w-[min(92vw,720px)] bg-white rounded-xl border border-slate-200 shadow-lg overflow-hidden z-20 sm:left-auto sm:right-0"
       : "bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden";
 
   return (
-    <div className={variant === "menu" ? "relative" : ""}>
+    <div ref={panelRef} className={variant === "menu" ? "relative" : ""}>
       <button
         type="button"
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => setExpanded(!isExpanded)}
         aria-label={triggerLabel}
         className={
           variant === "menu"
