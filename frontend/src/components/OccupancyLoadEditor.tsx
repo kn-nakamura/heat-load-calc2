@@ -1,9 +1,10 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ColDef, GridApi } from "ag-grid-community";
 import { themeQuartz } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { Plus, Trash2 } from "lucide-react";
 import type { InternalLoad, Project } from "../types";
+import api from "../api/client";
 
 interface Props {
   project: Project;
@@ -11,22 +12,14 @@ interface Props {
   onChange: (rows: InternalLoad[]) => void;
 }
 
-// Standard values from Table 2-7 for occupancy (per person)
-const STANDARD_SENSIBLE_HEAT = [
-  { label: "60 W/人（軽作業）", value: 60 },
-  { label: "80 W/人", value: 80 },
-  { label: "100 W/人（標準）", value: 100 },
-  { label: "120 W/人", value: 120 },
-  { label: "140 W/人（重作業）", value: 140 },
-];
-
-const STANDARD_LATENT_HEAT = [
-  { label: "20 W/人（低湿度）", value: 20 },
-  { label: "40 W/人", value: 40 },
-  { label: "50 W/人（標準）", value: 50 },
-  { label: "60 W/人", value: 60 },
-  { label: "80 W/人（高湿度）", value: 80 },
-];
+interface OccupancyDensityRecord {
+  room_name: string;
+  people_density_per_m2: number;
+  room_temp_c: number;
+  sensible_w_per_person: number;
+  latent_w_per_person: number;
+  work_no: number;
+}
 
 const calculateHeat = (count: number | undefined, perPerson: number | undefined): number => {
   if (!count || !perPerson) return 0;
@@ -35,6 +28,31 @@ const calculateHeat = (count: number | undefined, perPerson: number | undefined)
 
 export default function OccupancyLoadEditor({ project, rows, onChange }: Props) {
   const apiRef = useRef<GridApi<InternalLoad> | null>(null);
+  const [referenceData, setReferenceData] = useState<OccupancyDensityRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    const fetchReference = async () => {
+      try {
+        const response = await api.get("/reference/occupancy_density");
+        const records = (response.data as { data: { records: OccupancyDensityRecord[] } }).data.records;
+        if (!cancelled) {
+          setReferenceData(records);
+        }
+      } catch (err) {
+        console.error("Failed to fetch occupancy density reference data:", err);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+    fetchReference();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const columns = useMemo<ColDef<InternalLoad>[]>(
     () => [
@@ -55,11 +73,6 @@ export default function OccupancyLoadEditor({ project, rows, onChange }: Props) 
         field: "sensible_per_person_w",
         headerName: "顕熱/人 [W]",
         minWidth: 130,
-        cellEditor: "agSelectCellEditor",
-        cellEditorParams: {
-          values: STANDARD_SENSIBLE_HEAT.map((item) => item.value),
-          valueListMaxHeight: 200,
-        },
         valueParser: (params) => {
           const value = params.newValue;
           if (value === undefined || value === null) return undefined;
@@ -89,11 +102,6 @@ export default function OccupancyLoadEditor({ project, rows, onChange }: Props) 
         field: "latent_per_person_w",
         headerName: "潜熱/人 [W]",
         minWidth: 130,
-        cellEditor: "agSelectCellEditor",
-        cellEditorParams: {
-          values: STANDARD_LATENT_HEAT.map((item) => item.value),
-          valueListMaxHeight: 200,
-        },
         valueParser: (params) => {
           const value = params.newValue;
           if (value === undefined || value === null) return undefined;
@@ -133,28 +141,27 @@ export default function OccupancyLoadEditor({ project, rows, onChange }: Props) 
         sensible_w: 0,
         latent_w: 0,
         occupancy_count: 1,
-        sensible_per_person_w: 100,
-        latent_per_person_w: 50,
+        sensible_per_person_w: undefined,
+        latent_per_person_w: undefined,
       },
     ]);
   };
 
   const handleDeleteSelectedRows = () => {
-    const api = apiRef.current;
-    if (!api) return;
-    const selectedRows = new Set(api.getSelectedRows());
+    const gridApi = apiRef.current;
+    if (!gridApi) return;
+    const selectedRows = new Set(gridApi.getSelectedRows());
     const nextRows = rows.filter((row) => !selectedRows.has(row));
     onChange(nextRows);
   };
 
   const handleCellValueChanged = () => {
-    const api = apiRef.current;
-    if (!api) return;
+    const gridApi = apiRef.current;
+    if (!gridApi) return;
     const nextRows: InternalLoad[] = [];
-    api.forEachNode((node) => {
+    gridApi.forEachNode((node) => {
       if (!node.data) return;
       const data = node.data as InternalLoad;
-      // Auto-calculate sensible_w and latent_w based on occupancy count
       if (data.occupancy_count) {
         data.sensible_w = calculateHeat(data.occupancy_count, data.sensible_per_person_w);
         data.latent_w = calculateHeat(data.occupancy_count, data.latent_per_person_w);
@@ -229,6 +236,7 @@ export default function OccupancyLoadEditor({ project, rows, onChange }: Props) 
             ...columns,
           ]}
           rowSelection="multiple"
+          suppressMovableColumns={true}
           singleClickEdit
           stopEditingWhenCellsLoseFocus
           defaultColDef={{
@@ -244,6 +252,45 @@ export default function OccupancyLoadEditor({ project, rows, onChange }: Props) 
           }}
           onCellValueChanged={handleCellValueChanged}
         />
+      </div>
+
+      {/* Reference table */}
+      <div className="border-t border-slate-200">
+        <div className="px-5 py-3 bg-slate-50/50 border-b border-slate-100">
+          <h4 className="text-xs font-semibold text-slate-700">
+            参考：人員密度基準値
+          </h4>
+        </div>
+        {loading ? (
+          <div className="px-5 py-4 text-xs text-slate-400">読み込み中...</div>
+        ) : referenceData.length === 0 ? (
+          <div className="px-5 py-4 text-xs text-slate-400">参考データがありません。</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="bg-slate-50 text-slate-600">
+                  <th className="px-4 py-2 text-left font-medium border-b border-slate-100">ID</th>
+                  <th className="px-4 py-2 text-right font-medium border-b border-slate-100">人員密度 [人/m²]</th>
+                  <th className="px-4 py-2 text-right font-medium border-b border-slate-100">室温 [°C]</th>
+                  <th className="px-4 py-2 text-right font-medium border-b border-slate-100">顕熱 [W/人]</th>
+                  <th className="px-4 py-2 text-right font-medium border-b border-slate-100">潜熱 [W/人]</th>
+                </tr>
+              </thead>
+              <tbody>
+                {referenceData.map((record) => (
+                  <tr key={record.room_name} className="hover:bg-slate-50/50">
+                    <td className="px-4 py-1.5 text-slate-700 border-b border-slate-50">{record.room_name}</td>
+                    <td className="px-4 py-1.5 text-right text-slate-600 border-b border-slate-50">{record.people_density_per_m2}</td>
+                    <td className="px-4 py-1.5 text-right text-slate-600 border-b border-slate-50">{record.room_temp_c}</td>
+                    <td className="px-4 py-1.5 text-right text-slate-600 border-b border-slate-50">{record.sensible_w_per_person}</td>
+                    <td className="px-4 py-1.5 text-right text-slate-600 border-b border-slate-50">{record.latent_w_per_person}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -21,19 +21,6 @@ interface GridEditorProps<T extends object> {
   onSelectionChange?: (rows: T[]) => void;
 }
 
-const EMPTY_DISPLAY_ROWS = 20;
-
-function isEmptyValue(value: unknown): boolean {
-  if (value === null || value === undefined) return true;
-  if (typeof value === "string") return value.trim().length === 0;
-  if (Array.isArray(value)) return value.length === 0;
-  return false;
-}
-
-function isRowEmpty<T extends object>(row: T): boolean {
-  return Object.values(row as Record<string, unknown>).every(isEmptyValue);
-}
-
 export default function GridEditor<T extends object>({
   title,
   hint,
@@ -46,15 +33,6 @@ export default function GridEditor<T extends object>({
   onSelectionChange
 }: GridEditorProps<T>) {
   const apiRef = useRef<GridApi<T> | null>(null);
-  const rowsRef = useRef(rows);
-  rowsRef.current = rows;
-
-  const displayRows = useMemo(() => {
-    const filledRows = rows.map((row) => ({ ...row }));
-    const blankCount = Math.max(EMPTY_DISPLAY_ROWS - filledRows.length, 2);
-    const blanks = Array.from({ length: blankCount }, () => createEmptyRow());
-    return [...filledRows, ...blanks];
-  }, [createEmptyRow, rows]);
 
   const tableColumns = useMemo<ColDef<T>[]>(() => {
     const checkboxCol: ColDef<T> = {
@@ -88,22 +66,15 @@ export default function GridEditor<T extends object>({
   }, [columns]);
 
   const syncRowsFromGrid = useCallback((api: GridApi<T>) => {
-    const dataRowCount = rowsRef.current.length;
     const nextRows: T[] = [];
-    api.forEachNode((node, index) => {
+    api.forEachNode((node) => {
       if (!node.data) return;
-      // Keep rows that are within the data range (even if empty, as they were explicitly added)
-      // Only filter out empty rows from the blank placeholder area
-      if (index < dataRowCount || !isRowEmpty(node.data as T)) {
+      const id = (node.data as Record<string, unknown>).id;
+      if (id && typeof id === 'string' && id.trim().length > 0) {
         nextRows.push(node.data as T);
       }
     });
-    // Filter out rows where the 'id' field is empty or missing
-    const filteredRows = nextRows.filter((row) => {
-      const id = (row as Record<string, unknown>).id;
-      return id && typeof id === 'string' && id.trim().length > 0;
-    });
-    onChange(filteredRows);
+    onChange(nextRows);
   }, [onChange]);
 
   const handleGridReady = (event: GridReadyEvent<T>) => {
@@ -177,9 +148,10 @@ export default function GridEditor<T extends object>({
       <div style={{ height, width: "100%" }}>
         <AgGridReact<T>
           theme={themeQuartz}
-          rowData={displayRows}
+          rowData={rows}
           columnDefs={tableColumns}
           rowSelection={rowSelection}
+          suppressMovableColumns={true}
           singleClickEdit
           stopEditingWhenCellsLoseFocus
           defaultColDef={{

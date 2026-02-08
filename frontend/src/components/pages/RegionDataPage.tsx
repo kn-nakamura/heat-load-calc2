@@ -7,23 +7,45 @@ interface Props {
   project: Project;
 }
 
+/* ---------- Outdoor conditions (new schema: hourly for ALL fields) ---------- */
+
 interface OutdoorRecord {
   city: string;
-  cooling_drybulb_c?: number;
-  daily_max_c?: number;
-  temp_9_c?: number;
-  temp_12_c?: number;
-  temp_14_c?: number;
-  temp_16_c?: number;
-  wetbulb_c?: number;
-  abs_humidity_g_per_kgda?: number;
-  cooling_rh_pct?: number;
-  enthalpy_kj_per_kgda?: number;
-  max_monthly_c?: number;
-  wind_dir?: string;
+  cooling_drybulb_daily_max_c?: number;
+  cooling_drybulb_9_c?: number;
+  cooling_drybulb_12_c?: number;
+  cooling_drybulb_14_c?: number;
+  cooling_drybulb_16_c?: number;
+  cooling_wetbulb_daily_max_c?: number;
+  cooling_wetbulb_9_c?: number;
+  cooling_wetbulb_12_c?: number;
+  cooling_wetbulb_14_c?: number;
+  cooling_wetbulb_16_c?: number;
+  cooling_abs_humidity_9_g_per_kgda?: number;
+  cooling_abs_humidity_12_g_per_kgda?: number;
+  cooling_abs_humidity_14_g_per_kgda?: number;
+  cooling_abs_humidity_16_g_per_kgda?: number;
+  cooling_rh_9_pct?: number;
+  cooling_rh_12_pct?: number;
+  cooling_rh_14_pct?: number;
+  cooling_rh_16_pct?: number;
+  cooling_enthalpy_9_kj_per_kgda?: number;
+  cooling_enthalpy_12_kj_per_kgda?: number;
+  cooling_enthalpy_14_kj_per_kgda?: number;
+  cooling_enthalpy_16_kj_per_kgda?: number;
+  max_monthly_mean_daily_max_c?: number;
+  cooling_prevailing_wind_dir?: string;
   heating_drybulb_c?: number;
+  heating_wetbulb_c?: number;
+  heating_abs_humidity_g_per_kgda?: number;
+  heating_rh_pct?: number;
+  heating_enthalpy_kj_per_kgda?: number;
+  min_monthly_mean_daily_min_c?: number;
+  heating_prevailing_wind_dir?: string;
   [key: string]: unknown;
 }
+
+/* ---------- Solar data ---------- */
 
 interface SolarPosition {
   solar_altitude_deg: Record<string, number>;
@@ -32,7 +54,28 @@ interface SolarPosition {
 
 type OrientationTable = Record<string, Record<string, number>>;
 
+/* ---------- ETD data (new nested schema) ---------- */
+
+interface EtdDirectionData {
+  "9": number;
+  "12": number;
+  "14": number;
+  "16": number;
+}
+
+interface EtdWallTypeData {
+  "日陰": EtdDirectionData;
+  "水平": EtdDirectionData;
+  "方位別": Record<string, EtdDirectionData>;
+}
+
+type EtdIndoorTempData = Record<string, EtdWallTypeData>;
+type EtdRegionData = Record<string, EtdIndoorTempData>;
+
+/* ---------- Constants ---------- */
+
 const TIME_SLOTS = ["9", "12", "14", "16"] as const;
+
 const ORIENTATION_ORDER = [
   "水平",
   "N",
@@ -51,6 +94,13 @@ const ORIENTATION_ORDER = [
   "WNW",
   "NW",
   "NNW",
+] as const;
+
+const COMPASS_ORDER = [
+  "N", "NNE", "NE", "ENE",
+  "E", "ESE", "SE", "SSE",
+  "S", "SSW", "SW", "WSW",
+  "W", "WNW", "NW", "NNW",
 ] as const;
 
 const SURFACE_AZIMUTH_DEG: Record<string, number | null> = {
@@ -73,6 +123,8 @@ const SURFACE_AZIMUTH_DEG: Record<string, number | null> = {
   NNW: 157.5,
 };
 
+const WALL_TYPES = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ", "Ⅵ"] as const;
+
 const TABS = [
   { key: "outdoor", label: "設計用外気条件", sublabel: "Outdoor" },
   { key: "solar_gain", label: "標準日射熱取得", sublabel: "Solar Gain" },
@@ -84,14 +136,20 @@ const TABS = [
 
 type TabKey = (typeof TABS)[number]["key"];
 
+/* ========================================================================== */
+
 export default function RegionDataPage({ project }: Props) {
   const [outdoorData, setOutdoorData] = useState<OutdoorRecord | null>(null);
   const [solarGainData, setSolarGainData] = useState<OrientationTable | null>(null);
   const [solarPositionData, setSolarPositionData] = useState<SolarPosition | null>(null);
-  const [etdData, setEtdData] = useState<OrientationTable | null>(null);
+  const [etdRegionData, setEtdRegionData] = useState<EtdRegionData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabKey>("outdoor");
+
+  /* ETD selectors */
+  const [etdWallType, setEtdWallType] = useState<string>("Ⅰ");
+  const [etdIndoorTemp, setEtdIndoorTemp] = useState<string>("28");
 
   useEffect(() => {
     const fetchRegionData = async () => {
@@ -103,18 +161,30 @@ export default function RegionDataPage({ project }: Props) {
           api.get(`/reference/standard_solar_gain`),
           api.get(`/reference/execution_temperature_difference`),
         ]);
-        // Response: { table_name, data: { metadata, records: [...] } }
+
+        /* Outdoor conditions */
         const outdoorTableData = outdoorRes.data?.data;
         const outdoorRecords: OutdoorRecord[] = outdoorTableData?.records || [];
         const outdoorMatch = outdoorRecords.find((r) => r.city === project.region);
         setOutdoorData(outdoorMatch ?? null);
 
+        /* Solar gain & position */
         const solarTable = solarRes.data?.data;
         setSolarGainData(solarTable?.regions?.[project.region] ?? null);
         setSolarPositionData(solarTable?.solar_position?.[project.region] ?? null);
 
+        /* ETD (new nested structure) */
         const etdTable = etdRes.data?.data;
-        setEtdData(etdTable?.regions?.[project.region] ?? null);
+        const regionEtd = etdTable?.regions?.[project.region] ?? null;
+        setEtdRegionData(regionEtd);
+
+        /* Set default indoor temp to first available key */
+        if (regionEtd) {
+          const temps = Object.keys(regionEtd);
+          if (temps.length > 0 && !temps.includes(etdIndoorTemp)) {
+            setEtdIndoorTemp(temps[0]);
+          }
+        }
       } catch {
         setError("Failed to fetch region data. Please ensure the backend server is running.");
       } finally {
@@ -122,59 +192,75 @@ export default function RegionDataPage({ project }: Props) {
       }
     };
     if (project.region) fetchRegionData();
-  }, [project.region]);
+  }, [project.region]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Build hourly table rows from the data
-  const hourlyRows = outdoorData
+  /* ---- Outdoor conditions: build comprehensive table rows ---- */
+  const outdoorHourlyRows = outdoorData
     ? [
         {
           label: "乾球温度 [°C]",
-          h9: outdoorData.temp_9_c,
-          h12: outdoorData.temp_12_c,
-          h14: outdoorData.temp_14_c,
-          h16: outdoorData.temp_16_c,
+          dailyMax: outdoorData.cooling_drybulb_daily_max_c,
+          h9: outdoorData.cooling_drybulb_9_c,
+          h12: outdoorData.cooling_drybulb_12_c,
+          h14: outdoorData.cooling_drybulb_14_c,
+          h16: outdoorData.cooling_drybulb_16_c,
           winter: outdoorData.heating_drybulb_c,
         },
         {
+          label: "湿球温度 [°C]",
+          dailyMax: outdoorData.cooling_wetbulb_daily_max_c,
+          h9: outdoorData.cooling_wetbulb_9_c,
+          h12: outdoorData.cooling_wetbulb_12_c,
+          h14: outdoorData.cooling_wetbulb_14_c,
+          h16: outdoorData.cooling_wetbulb_16_c,
+          winter: outdoorData.heating_wetbulb_c,
+        },
+        {
           label: "絶対湿度 [g/kg(DA)]",
-          h9: outdoorData.abs_humidity_g_per_kgda,
-          h12: outdoorData.abs_humidity_g_per_kgda,
-          h14: outdoorData.abs_humidity_g_per_kgda,
-          h16: outdoorData.abs_humidity_g_per_kgda,
-          winter: undefined,
+          dailyMax: undefined,
+          h9: outdoorData.cooling_abs_humidity_9_g_per_kgda,
+          h12: outdoorData.cooling_abs_humidity_12_g_per_kgda,
+          h14: outdoorData.cooling_abs_humidity_14_g_per_kgda,
+          h16: outdoorData.cooling_abs_humidity_16_g_per_kgda,
+          winter: outdoorData.heating_abs_humidity_g_per_kgda,
         },
         {
           label: "相対湿度 [%]",
-          h9: outdoorData.cooling_rh_pct,
-          h12: undefined,
-          h14: undefined,
-          h16: undefined,
-          winter: undefined,
+          dailyMax: undefined,
+          h9: outdoorData.cooling_rh_9_pct,
+          h12: outdoorData.cooling_rh_12_pct,
+          h14: outdoorData.cooling_rh_14_pct,
+          h16: outdoorData.cooling_rh_16_pct,
+          winter: outdoorData.heating_rh_pct,
         },
         {
           label: "比エンタルピー [kJ/kg(DA)]",
-          h9: outdoorData.enthalpy_kj_per_kgda,
-          h12: undefined,
-          h14: undefined,
-          h16: undefined,
-          winter: undefined,
-        },
-        {
-          label: "湿球温度 [°C]",
-          h9: outdoorData.wetbulb_c,
-          h12: undefined,
-          h14: undefined,
-          h16: undefined,
-          winter: undefined,
+          dailyMax: undefined,
+          h9: outdoorData.cooling_enthalpy_9_kj_per_kgda,
+          h12: outdoorData.cooling_enthalpy_12_kj_per_kgda,
+          h14: outdoorData.cooling_enthalpy_14_kj_per_kgda,
+          h16: outdoorData.cooling_enthalpy_16_kj_per_kgda,
+          winter: outdoorData.heating_enthalpy_kj_per_kgda,
         },
       ]
     : [];
 
+  /* ---- ETD: resolve current selection ---- */
+  const etdIndoorTempData: EtdIndoorTempData | null =
+    etdRegionData?.[etdIndoorTemp] ?? null;
+  const etdCurrentData: EtdWallTypeData | null =
+    etdIndoorTempData?.[etdWallType] ?? null;
+  const etdAvailableTemps = etdRegionData ? Object.keys(etdRegionData).sort() : [];
+  const etdAvailableWallTypes = etdIndoorTempData
+    ? WALL_TYPES.filter((wt) => wt in etdIndoorTempData)
+    : [];
+
+  /* ---- Solar / apparent solar orientation keys ---- */
   const orientationKeys = solarGainData
     ? ORIENTATION_ORDER.filter((key) => key in solarGainData)
-    : etdData
-      ? ORIENTATION_ORDER.filter((key) => key in etdData)
-      : ORIENTATION_ORDER;
+    : ORIENTATION_ORDER;
+
+  /* ============================== RENDER ============================== */
 
   return (
     <div className="space-y-6">
@@ -212,6 +298,7 @@ export default function RegionDataPage({ project }: Props) {
 
           {!loading && (
             <div className="space-y-6">
+              {/* ---- Tab bar ---- */}
               <div className="flex flex-wrap gap-2">
                 {TABS.map((tab) => {
                   const isActive = activeTab === tab.key;
@@ -241,6 +328,9 @@ export default function RegionDataPage({ project }: Props) {
                 })}
               </div>
 
+              {/* ============================================================ */}
+              {/* OUTDOOR CONDITIONS TAB                                       */}
+              {/* ============================================================ */}
               {activeTab === "outdoor" && (
                 <div className="space-y-6">
                   {!outdoorData && (
@@ -249,6 +339,7 @@ export default function RegionDataPage({ project }: Props) {
 
                   {outdoorData && (
                     <>
+                      {/* Summary cards */}
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div className="p-4 bg-gradient-to-br from-orange-50 to-amber-50/50 border border-orange-200/60 rounded-xl">
                           <div className="flex items-center gap-2 mb-3">
@@ -256,12 +347,8 @@ export default function RegionDataPage({ project }: Props) {
                             <h4 className="text-sm font-semibold text-orange-800">夏期設計条件 (Summer)</h4>
                           </div>
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <DataCell label="乾球温度 (日最高)" value={outdoorData.daily_max_c} unit="°C" />
-                            <DataCell label="冷房設計温度" value={outdoorData.cooling_drybulb_c} unit="°C" />
-                            <DataCell label="最多風向" value={outdoorData.wind_dir} />
-                            <DataCell label="湿球温度" value={outdoorData.wetbulb_c} unit="°C" />
-                            <DataCell label="相対湿度" value={outdoorData.cooling_rh_pct} unit="%" />
-                            <DataCell label="比エンタルピー" value={outdoorData.enthalpy_kj_per_kgda} unit="kJ/kg" />
+                            <DataCell label="最多風向" value={outdoorData.cooling_prevailing_wind_dir} />
+                            <DataCell label="月平均日最高気温の最大" value={outdoorData.max_monthly_mean_daily_max_c} unit="°C" />
                           </div>
                         </div>
 
@@ -270,37 +357,64 @@ export default function RegionDataPage({ project }: Props) {
                             <Snowflake size={16} className="text-blue-500" />
                             <h4 className="text-sm font-semibold text-blue-800">冬期設計条件 (Winter)</h4>
                           </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <DataCell label="暖房設計温度" value={outdoorData.heating_drybulb_c} unit="°C" />
-                            <DataCell label="絶対湿度" value={outdoorData.abs_humidity_g_per_kgda} unit="g/kg" />
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <DataCell label="最多風向" value={outdoorData.heating_prevailing_wind_dir} />
+                            <DataCell label="月平均日最低気温の最小" value={outdoorData.min_monthly_mean_daily_min_c} unit="°C" />
                           </div>
                         </div>
                       </div>
 
+                      {/* Comprehensive hourly table */}
                       <div>
-                        <h4 className="text-sm font-semibold text-slate-700 mb-3">設計用外気条件 (各時刻)</h4>
+                        <h4 className="text-sm font-semibold text-slate-700 mb-3">
+                          設計用外気条件 (各時刻)
+                        </h4>
                         <div className="overflow-x-auto">
                           <table className="w-full text-sm border-collapse">
                             <thead>
                               <tr className="bg-slate-50">
-                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">項目</th>
+                                <th
+                                  rowSpan={2}
+                                  className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium align-bottom"
+                                >
+                                  項目
+                                </th>
+                                <th
+                                  colSpan={5}
+                                  className="text-center px-3 py-2 border border-slate-200 text-orange-700 font-medium bg-orange-50/50"
+                                >
+                                  夏期
+                                </th>
+                                <th
+                                  rowSpan={2}
+                                  className="text-center px-3 py-2 border border-slate-200 text-blue-700 font-medium bg-blue-50/50 align-bottom"
+                                >
+                                  冬期
+                                </th>
+                              </tr>
+                              <tr className="bg-slate-50">
+                                <th className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-orange-50/50">
+                                  日最高
+                                </th>
                                 {["9時", "12時", "14時", "16時"].map((h) => (
                                   <th
                                     key={h}
                                     className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-orange-50/50"
                                   >
-                                    夏期 {h}
+                                    {h}
                                   </th>
                                 ))}
-                                <th className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium bg-blue-50/50">
-                                  冬期
-                                </th>
                               </tr>
                             </thead>
                             <tbody>
-                              {hourlyRows.map((row) => (
+                              {outdoorHourlyRows.map((row) => (
                                 <tr key={row.label} className="hover:bg-slate-50/50">
-                                  <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">{row.label}</td>
+                                  <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium whitespace-nowrap">
+                                    {row.label}
+                                  </td>
+                                  <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
+                                    {row.dailyMax != null ? row.dailyMax : "-"}
+                                  </td>
                                   <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
                                     {row.h9 != null ? row.h9 : "-"}
                                   </td>
@@ -313,7 +427,7 @@ export default function RegionDataPage({ project }: Props) {
                                   <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
                                     {row.h16 != null ? row.h16 : "-"}
                                   </td>
-                                  <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums">
+                                  <td className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums bg-blue-50/20">
                                     {row.winter != null ? row.winter : "-"}
                                   </td>
                                 </tr>
@@ -323,6 +437,7 @@ export default function RegionDataPage({ project }: Props) {
                         </div>
                       </div>
 
+                      {/* Raw JSON accordion */}
                       <details className="group">
                         <summary className="cursor-pointer text-xs text-slate-400 hover:text-slate-600 transition-colors">
                           生データを表示 (Raw JSON)
@@ -336,6 +451,9 @@ export default function RegionDataPage({ project }: Props) {
                 </div>
               )}
 
+              {/* ============================================================ */}
+              {/* SOLAR GAIN TAB (unchanged)                                   */}
+              {/* ============================================================ */}
               {activeTab === "solar_gain" && (
                 <div className="space-y-4">
                   {!solarGainData && (
@@ -351,7 +469,7 @@ export default function RegionDataPage({ project }: Props) {
                         <table className="w-full text-sm border-collapse">
                           <thead>
                             <tr className="bg-slate-50">
-                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">方位</th>
+                              <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">方位</th>
                               {TIME_SLOTS.map((h) => (
                                 <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium">
                                   {h}時
@@ -381,6 +499,9 @@ export default function RegionDataPage({ project }: Props) {
                 </div>
               )}
 
+              {/* ============================================================ */}
+              {/* SOLAR ALTITUDE TAB (unchanged)                               */}
+              {/* ============================================================ */}
               {activeTab === "solar_altitude" && (
                 <div className="space-y-4">
                   {!solarPositionData && (
@@ -418,6 +539,9 @@ export default function RegionDataPage({ project }: Props) {
                 </div>
               )}
 
+              {/* ============================================================ */}
+              {/* SOLAR AZIMUTH TAB (unchanged)                                */}
+              {/* ============================================================ */}
               {activeTab === "solar_azimuth" && (
                 <div className="space-y-4">
                   {!solarPositionData && (
@@ -455,6 +579,9 @@ export default function RegionDataPage({ project }: Props) {
                 </div>
               )}
 
+              {/* ============================================================ */}
+              {/* APPARENT SOLAR TAB (unchanged)                               */}
+              {/* ============================================================ */}
               {activeTab === "apparent_solar" && (
                 <div className="space-y-6">
                   {!solarPositionData && (
@@ -552,44 +679,141 @@ export default function RegionDataPage({ project }: Props) {
                 </div>
               )}
 
+              {/* ============================================================ */}
+              {/* ETD TAB (rewritten for nested structure)                     */}
+              {/* ============================================================ */}
               {activeTab === "etd" && (
                 <div className="space-y-4">
-                  {!etdData && <EmptyState message={`${project.region} の相当外気温度差ETDデータが見つかりません。`} />}
-                  {etdData && (
+                  {!etdRegionData && (
+                    <EmptyState message={`${project.region} の相当外気温度差ETDデータが見つかりません。`} />
+                  )}
+                  {etdRegionData && (
                     <>
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-semibold text-slate-700">相当外気温度差ETD</h4>
-                        <span className="text-xs text-slate-400">単位: °C</span>
+                      {/* Selectors row */}
+                      <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm font-medium text-slate-700">室温:</label>
+                          <select
+                            value={etdIndoorTemp}
+                            onChange={(e) => setEtdIndoorTemp(e.target.value)}
+                            className="text-sm border border-slate-300 rounded-lg px-3 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          >
+                            {etdAvailableTemps.map((t) => (
+                              <option key={t} value={t}>
+                                {t}°C
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm font-medium text-slate-700">壁体タイプ:</label>
+                          <div className="flex gap-1">
+                            {etdAvailableWallTypes.map((wt) => {
+                              const isSelected = etdWallType === wt;
+                              return (
+                                <button
+                                  key={wt}
+                                  type="button"
+                                  onClick={() => setEtdWallType(wt)}
+                                  className={[
+                                    "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
+                                    isSelected
+                                      ? "bg-primary-600 text-white shadow-sm"
+                                      : "bg-white text-slate-600 border border-slate-300 hover:bg-slate-50",
+                                  ].join(" ")}
+                                >
+                                  {wt}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <span className="text-xs text-slate-400 ml-auto">単位: °C</span>
                       </div>
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-sm border-collapse">
-                          <thead>
-                            <tr className="bg-slate-50">
-                              <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">方位</th>
-                              {TIME_SLOTS.map((h) => (
-                                <th key={h} className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium">
-                                  {h}時
+
+                      {/* ETD table */}
+                      {!etdCurrentData && (
+                        <EmptyState
+                          message={`壁体タイプ ${etdWallType} / 室温 ${etdIndoorTemp}°C のETDデータが見つかりません。`}
+                        />
+                      )}
+                      {etdCurrentData && (
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm border-collapse">
+                            <thead>
+                              <tr className="bg-slate-50">
+                                <th className="text-left px-3 py-2 border border-slate-200 text-slate-600 font-medium">
+                                  方位
                                 </th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {orientationKeys.map((orientation) => (
-                              <tr key={orientation} className="hover:bg-slate-50/50">
-                                <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">{orientation}</td>
+                                {TIME_SLOTS.map((h) => (
+                                  <th
+                                    key={h}
+                                    className="text-right px-3 py-2 border border-slate-200 text-slate-600 font-medium"
+                                  >
+                                    {h}時
+                                  </th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {/* 日陰 (shade) row */}
+                              <tr className="hover:bg-slate-50/50 bg-slate-50/30">
+                                <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">
+                                  日陰
+                                </td>
                                 {TIME_SLOTS.map((slot) => (
                                   <td
-                                    key={`${orientation}-${slot}`}
+                                    key={`shade-${slot}`}
                                     className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums"
                                   >
-                                    {formatNumber(etdData[orientation]?.[slot], 0)}
+                                    {formatNumber(
+                                      (etdCurrentData["日陰"] as EtdDirectionData)?.[slot],
+                                      1
+                                    )}
                                   </td>
                                 ))}
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                              {/* 水平 (horizontal) row */}
+                              <tr className="hover:bg-slate-50/50">
+                                <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">
+                                  水平
+                                </td>
+                                {TIME_SLOTS.map((slot) => (
+                                  <td
+                                    key={`horiz-${slot}`}
+                                    className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums"
+                                  >
+                                    {formatNumber(
+                                      (etdCurrentData["水平"] as EtdDirectionData)?.[slot],
+                                      1
+                                    )}
+                                  </td>
+                                ))}
+                              </tr>
+                              {/* Compass direction rows from 方位別 */}
+                              {COMPASS_ORDER.map((dir) => {
+                                const dirData = etdCurrentData["方位別"]?.[dir];
+                                if (!dirData) return null;
+                                return (
+                                  <tr key={dir} className="hover:bg-slate-50/50">
+                                    <td className="px-3 py-2 border border-slate-200 text-slate-700 font-medium">
+                                      {dir}
+                                    </td>
+                                    {TIME_SLOTS.map((slot) => (
+                                      <td
+                                        key={`${dir}-${slot}`}
+                                        className="text-right px-3 py-2 border border-slate-200 text-slate-600 tabular-nums"
+                                      >
+                                        {formatNumber(dirData[slot], 1)}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
@@ -601,6 +825,10 @@ export default function RegionDataPage({ project }: Props) {
     </div>
   );
 }
+
+/* ========================================================================== */
+/* Helper components & functions                                              */
+/* ========================================================================== */
 
 function DataCell({ label, value, unit }: { label: string; value: unknown; unit?: string }) {
   return (

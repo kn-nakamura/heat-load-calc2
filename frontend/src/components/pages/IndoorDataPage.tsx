@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ColDef, ValueParserParams } from "ag-grid-community";
 import { Thermometer, Fan } from "lucide-react";
 import GridEditor from "../GridEditor";
 import LightingLoadEditor from "../LightingLoadEditor";
 import OccupancyLoadEditor from "../OccupancyLoadEditor";
 import type { Project, DesignCondition, InternalLoad, MechanicalLoad } from "../../types";
+import api from "../../api/client";
 
 interface Props {
   project: Project;
@@ -21,13 +22,52 @@ const numberParser = (params: ValueParserParams): number | undefined => {
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
-const createEmptyCondition = () =>
-  ({
-    id: "",
-    season: "",
-    indoor_temp_c: "",
-    indoor_rh_pct: "",
-  } as unknown as DesignCondition);
+const createEmptyCondition = (): DesignCondition => ({
+  id: "",
+  summer_drybulb_c: 0,
+  summer_rh_pct: 0,
+  summer_wetbulb_c: 0,
+  summer_dewpoint_c: 0,
+  summer_enthalpy_kj_per_kgda: 0,
+  summer_abs_humidity_kg_per_kgda: 0,
+  winter_drybulb_c: 0,
+  winter_rh_pct: 0,
+  winter_wetbulb_c: 0,
+  winter_dewpoint_c: 0,
+  winter_enthalpy_kj_per_kgda: 0,
+  winter_abs_humidity_kg_per_kgda: 0,
+});
+
+interface ApiSeasonData {
+  drybulb_c: number;
+  rh_pct: number;
+  wetbulb_c: number;
+  dewpoint_c: number;
+  enthalpy_kj_per_kgda: number;
+  abs_humidity_kg_per_kgda: number;
+}
+
+interface ApiRecord {
+  condition_name: string;
+  summer: ApiSeasonData;
+  winter: ApiSeasonData;
+}
+
+const mapApiRecordToDesignCondition = (record: ApiRecord): DesignCondition => ({
+  id: record.condition_name,
+  summer_drybulb_c: record.summer.drybulb_c,
+  summer_rh_pct: record.summer.rh_pct,
+  summer_wetbulb_c: record.summer.wetbulb_c,
+  summer_dewpoint_c: record.summer.dewpoint_c,
+  summer_enthalpy_kj_per_kgda: record.summer.enthalpy_kj_per_kgda,
+  summer_abs_humidity_kg_per_kgda: record.summer.abs_humidity_kg_per_kgda,
+  winter_drybulb_c: record.winter.drybulb_c,
+  winter_rh_pct: record.winter.rh_pct,
+  winter_wetbulb_c: record.winter.wetbulb_c,
+  winter_dewpoint_c: record.winter.dewpoint_c,
+  winter_enthalpy_kj_per_kgda: record.winter.enthalpy_kj_per_kgda,
+  winter_abs_humidity_kg_per_kgda: record.winter.abs_humidity_kg_per_kgda,
+});
 
 const createEmptyInternalLoad = () =>
   ({ id: "", room_id: "", kind: "", sensible_w: "", latent_w: "" } as unknown as InternalLoad);
@@ -35,7 +75,6 @@ const createEmptyInternalLoad = () =>
 const createEmptyMechanicalLoad = () =>
   ({ id: "", room_id: "", sensible_w: "", latent_w: "" } as unknown as MechanicalLoad);
 
-// Generate auto ID based on load kind
 const generateLoadId = (kind: "lighting" | "occupancy" | "equipment"): string => {
   const prefixMap = {
     lighting: "qE",
@@ -51,28 +90,54 @@ type LoadTab = "lighting" | "occupancy" | "equipment" | "mechanical";
 
 export default function IndoorDataPage({ project, onChange }: Props) {
   const [activeTab, setActiveTab] = useState<LoadTab>("lighting");
+  const fetchedRef = useRef(false);
+
+  // Fetch design indoor conditions from API on mount
+  useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    // Only populate if project has no design conditions yet
+    if (project.design_conditions.length > 0) return;
+
+    api
+      .get<{ data: { records: ApiRecord[] } }>("/reference/design_indoor_conditions")
+      .then((response) => {
+        const records = response.data.data.records;
+        const conditions = records.map(mapApiRecordToDesignCondition);
+        if (conditions.length > 0) {
+          onChange({ ...project, design_conditions: conditions });
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch design indoor conditions:", err);
+      });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const conditionColumns = useMemo<ColDef<DesignCondition>[]>(
     () => [
-      { field: "id", headerName: "ID", minWidth: 120 },
+      { field: "id", headerName: "ID(条件名)", minWidth: 160, pinned: "left" },
       {
-        field: "season",
-        headerName: "期間 / Season",
-        cellEditor: "agSelectCellEditor",
-        cellEditorParams: { values: ["summer", "winter"] },
-        minWidth: 130,
+        headerName: "夏期",
+        children: [
+          { field: "summer_drybulb_c", headerName: "乾球温度 [°C]", valueParser: numberParser, minWidth: 120 },
+          { field: "summer_rh_pct", headerName: "相対湿度 [%]", valueParser: numberParser, minWidth: 120 },
+          { field: "summer_wetbulb_c", headerName: "湿球温度 [°C]", valueParser: numberParser, minWidth: 120 },
+          { field: "summer_dewpoint_c", headerName: "露点温度 [°C]", valueParser: numberParser, minWidth: 120 },
+          { field: "summer_enthalpy_kj_per_kgda", headerName: "比エンタルピー [kJ/kgDA]", valueParser: numberParser, minWidth: 160 },
+          { field: "summer_abs_humidity_kg_per_kgda", headerName: "絶対湿度 [kg/kgDA]", valueParser: numberParser, minWidth: 150 },
+        ],
       },
       {
-        field: "indoor_temp_c",
-        headerName: "乾球温度 [°C]",
-        valueParser: numberParser,
-        minWidth: 130,
-      },
-      {
-        field: "indoor_rh_pct",
-        headerName: "相対湿度 [%]",
-        valueParser: numberParser,
-        minWidth: 130,
+        headerName: "冬期",
+        children: [
+          { field: "winter_drybulb_c", headerName: "乾球温度 [°C]", valueParser: numberParser, minWidth: 120 },
+          { field: "winter_rh_pct", headerName: "相対湿度 [%]", valueParser: numberParser, minWidth: 120 },
+          { field: "winter_wetbulb_c", headerName: "湿球温度 [°C]", valueParser: numberParser, minWidth: 120 },
+          { field: "winter_dewpoint_c", headerName: "露点温度 [°C]", valueParser: numberParser, minWidth: 120 },
+          { field: "winter_enthalpy_kj_per_kgda", headerName: "比エンタルピー [kJ/kgDA]", valueParser: numberParser, minWidth: 160 },
+          { field: "winter_abs_humidity_kg_per_kgda", headerName: "絶対湿度 [kg/kgDA]", valueParser: numberParser, minWidth: 150 },
+        ],
       },
     ],
     []
@@ -123,42 +188,10 @@ export default function IndoorDataPage({ project, onChange }: Props) {
           <h3 className="text-sm font-semibold text-slate-800">設計用屋内条件</h3>
           <span className="text-xs text-slate-400">Indoor Design Conditions</span>
         </div>
-        <div className="p-5">
-          <p className="text-xs text-slate-500 mb-4">
+        <div className="px-5 pt-3 pb-1">
+          <p className="text-xs text-slate-500">
             各室の夏期・冬期における室内設計温湿度を設定します。下のグリッドで直接編集するか、Excelからコピー＆ペーストできます。
           </p>
-
-          {project.design_conditions.length > 0 && (
-            <div className="grid grid-cols-2 gap-4 mb-5">
-              {project.design_conditions
-                .filter((dc) => dc.season && dc.indoor_temp_c != null)
-                .map((dc) => (
-                  <div
-                    key={dc.id}
-                    className={`p-3 rounded-lg border ${
-                      dc.season === "summer"
-                        ? "bg-orange-50/50 border-orange-200/50"
-                        : "bg-blue-50/50 border-blue-200/50"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className={`w-2 h-2 rounded-full ${
-                          dc.season === "summer" ? "bg-orange-400" : "bg-blue-400"
-                        }`}
-                      />
-                      <span className="text-xs font-medium text-slate-700">
-                        {dc.season === "summer" ? "夏期" : "冬期"} ({dc.id})
-                      </span>
-                    </div>
-                    <div className="flex gap-4 text-sm">
-                      <span className="text-slate-600">{dc.indoor_temp_c}°C</span>
-                      <span className="text-slate-600">{dc.indoor_rh_pct}%RH</span>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          )}
         </div>
       </section>
 

@@ -27,10 +27,19 @@ export interface RoundingSettings {
 }
 
 export interface DesignCondition {
-  id: string;
-  season: Season;
-  indoor_temp_c: number;
-  indoor_rh_pct: number;
+  id: string;  // condition_name from JSON
+  summer_drybulb_c: number;
+  summer_rh_pct: number;
+  summer_wetbulb_c: number;
+  summer_dewpoint_c: number;
+  summer_enthalpy_kj_per_kgda: number;
+  summer_abs_humidity_kg_per_kgda: number;
+  winter_drybulb_c: number;
+  winter_rh_pct: number;
+  winter_wetbulb_c: number;
+  winter_dewpoint_c: number;
+  winter_enthalpy_kj_per_kgda: number;
+  winter_abs_humidity_kg_per_kgda: number;
 }
 
 export interface Room {
@@ -70,19 +79,35 @@ export interface Opening {
   solar_area_ratio_pct?: number;
 }
 
+export interface ConstructionLayer {
+  layer_no: number;
+  material_name: string;
+  thickness_mm?: number;
+  thermal_conductivity?: number;  // W/(m·K)
+  thermal_resistance?: number;   // m²·K/W
+}
+
 export interface Construction {
   id: string;
   name: string;
-  u_value_w_m2k: number;
   wall_type?: string;
+  layers: ConstructionLayer[];
+  ao_summer?: number;  // exterior surface heat transfer coefficient
+  ao_winter?: number;
+  ai?: number;  // interior surface heat transfer coefficient
+  total_resistance?: number;  // calculated
+  u_value_w_m2k?: number;  // calculated from layers
+  u_value_override?: number;  // user can override
 }
 
 export interface Glass {
-  id: string;
-  name: string;
-  solar_gain_key?: string;
-  glass_type?: string;
-  u_value_w_m2k?: number;
+  id: string;  // GL-01, GL-02, etc.
+  glass_code?: string;  // e.g. "2FA06"
+  glass_type?: string;  // e.g. "複層ガラス"
+  glass_description?: string;
+  blind_type?: string;  // "なし" | "明色ブラインド" | "中間色ブラインド"
+  sc?: number;  // shading coefficient (selected based on blind_type)
+  u_value_w_m2k?: number;  // U-value (selected based on blind_type)
 }
 
 export interface InternalLoad {

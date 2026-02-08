@@ -9,11 +9,12 @@ _TIME_KEYS = ("9", "12", "14", "16")
 
 
 def _outdoor_temp_series(outdoor: dict) -> dict[str, float]:
+    fallback = float(outdoor.get("cooling_drybulb_daily_max_c", outdoor.get("cooling_drybulb_c", 34.0)))
     return {
-        "9": float(outdoor.get("temp_9_c", outdoor.get("cooling_drybulb_c", 34.0))),
-        "12": float(outdoor.get("temp_12_c", outdoor.get("cooling_drybulb_c", 34.0))),
-        "14": float(outdoor.get("temp_14_c", outdoor.get("cooling_drybulb_c", 34.0))),
-        "16": float(outdoor.get("temp_16_c", outdoor.get("cooling_drybulb_c", 34.0))),
+        "9": float(outdoor.get("cooling_drybulb_9_c", outdoor.get("temp_9_c", fallback))),
+        "12": float(outdoor.get("cooling_drybulb_12_c", outdoor.get("temp_12_c", fallback))),
+        "14": float(outdoor.get("cooling_drybulb_14_c", outdoor.get("temp_14_c", fallback))),
+        "16": float(outdoor.get("cooling_drybulb_16_c", outdoor.get("temp_16_c", fallback))),
     }
 
 
@@ -55,10 +56,10 @@ def calc_ventilation_load(
         infil = sash_q * float(vent.infiltration_area_m2 or 0.0)
     total_flow = base_flow + infil
 
-    indoor_cool = summer_condition.indoor_temp_c if summer_condition else 26.0
-    indoor_rh = summer_condition.indoor_rh_pct if summer_condition else 50.0
-    indoor_heat = winter_condition.indoor_temp_c if winter_condition else 20.0
-    outdoor_rh = float(outdoor.get("cooling_rh_pct", 50.0))
+    indoor_cool = summer_condition.summer_drybulb_c if summer_condition else 26.0
+    indoor_rh = summer_condition.summer_rh_pct if summer_condition else 50.0
+    indoor_heat = winter_condition.winter_drybulb_c if winter_condition else 20.0
+    outdoor_rh = float(outdoor.get("cooling_rh_14_pct", outdoor.get("cooling_rh_pct", 50.0)))
 
     outdoor_temp = _outdoor_temp_series(outdoor)
 
@@ -68,7 +69,7 @@ def calc_ventilation_load(
         sensible[t] = round_half_up(1.006 * total_flow / 3.6 * delta, 0)
 
     indoor_state = moist_air_state(indoor_cool, indoor_rh)
-    outdoor_state = moist_air_state(float(outdoor.get("cooling_drybulb_c", outdoor_temp["14"])), outdoor_rh)
+    outdoor_state = moist_air_state(float(outdoor.get("cooling_drybulb_14_c", outdoor.get("cooling_drybulb_c", outdoor_temp["14"]))), outdoor_rh)
     humidity_ratio_in = indoor_state["humidity_ratio"]
     humidity_ratio_out = outdoor_state["humidity_ratio"]
     humidity_ratio_delta = max(humidity_ratio_out - humidity_ratio_in, 0.0)

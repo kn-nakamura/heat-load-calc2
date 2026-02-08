@@ -16,11 +16,12 @@ def _opening_area(opening: Opening) -> float:
 
 
 def _outdoor_temp_series(outdoor: dict) -> dict[str, float]:
+    fallback = float(outdoor.get("cooling_drybulb_daily_max_c", outdoor.get("cooling_drybulb_c", 34.0)))
     return {
-        "9": float(outdoor.get("temp_9_c", outdoor.get("cooling_drybulb_c", 34.0))),
-        "12": float(outdoor.get("temp_12_c", outdoor.get("cooling_drybulb_c", 34.0))),
-        "14": float(outdoor.get("temp_14_c", outdoor.get("cooling_drybulb_c", 34.0))),
-        "16": float(outdoor.get("temp_16_c", outdoor.get("cooling_drybulb_c", 34.0))),
+        "9": float(outdoor.get("cooling_drybulb_9_c", outdoor.get("temp_9_c", fallback))),
+        "12": float(outdoor.get("cooling_drybulb_12_c", outdoor.get("temp_12_c", fallback))),
+        "14": float(outdoor.get("cooling_drybulb_14_c", outdoor.get("temp_14_c", fallback))),
+        "16": float(outdoor.get("cooling_drybulb_16_c", outdoor.get("temp_16_c", fallback))),
     }
 
 
@@ -48,12 +49,14 @@ def calc_opening_solar_gain(
     area = _opening_area(opening)
     orientation = opening.orientation or "N"
     glass = glasses.get(opening.glass_id) if opening.glass_id else None
-    u_value = glass.u_value_w_m2k if glass and glass.u_value_w_m2k is not None else 0.0
+    u_value = 0.0
+    if glass and glass.u_value_w_m2k is not None:
+        u_value = glass.u_value_w_m2k
     glass_factor = 1.0
-    if glass and glass.u_value_w_m2k is not None and glass.u_value_w_m2k > 0:
-        glass_factor = min(1.0, 6.0 / glass.u_value_w_m2k)
+    if u_value > 0:
+        glass_factor = min(1.0, 6.0 / u_value)
 
-    indoor_cool = design_condition.indoor_temp_c if design_condition else 26.0
+    indoor_cool = design_condition.summer_drybulb_c if design_condition else 26.0
     outdoor_temp = _outdoor_temp_series(outdoor)
 
     values: dict[str, float] = {}
