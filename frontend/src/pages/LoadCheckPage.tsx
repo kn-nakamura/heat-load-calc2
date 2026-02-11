@@ -13,21 +13,35 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { Calculate as CalculateIcon, GetApp as DownloadIcon } from '@mui/icons-material';
+import { Calculate as CalculateIcon, GetApp as DownloadIcon, Cloud as CloudIcon, Computer as ComputerIcon } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
-import { useProjectStore, useRoomStore, useSystemStore } from '../stores';
+import { useProjectStore, useRoomStore, useSystemStore, useUIStore } from '../stores';
 import { LoadSummaryCard, LoadResultsTable } from '../components/load';
 import { SystemLoadResult } from '../types/system';
 import { calculateAllSystemLoads } from '../services/loadCalculation';
+import { calculateWithBackend, isBackendAvailable } from '../services/backendCalculation';
 
 export const LoadCheckPage: React.FC = () => {
   const { currentProject } = useProjectStore();
   const { rooms } = useRoomStore();
   const { systems } = useSystemStore();
+  const { showSnackbar } = useUIStore();
 
   const [selectedSystemId, setSelectedSystemId] = useState<string>('');
   const [loadResults, setLoadResults] = useState<SystemLoadResult[]>([]);
   const [calculating, setCalculating] = useState(false);
+  const [backendAvailable, setBackendAvailable] = useState<boolean | null>(null);
+  const [useBackend, setUseBackend] = useState(true);
+
+  // Check backend availability on mount
+  useEffect(() => {
+    isBackendAvailable().then((available) => {
+      setBackendAvailable(available);
+      if (!available) {
+        showSnackbar('バックエンドに接続できません。フロントエンド計算を使用します。', 'warning');
+      }
+    });
+  }, [showSnackbar]);
 
   // Auto-select first system when systems change
   useEffect(() => {
@@ -36,24 +50,44 @@ export const LoadCheckPage: React.FC = () => {
     }
   }, [systems, selectedSystemId]);
 
-  const handleCalculate = () => {
+  const handleCalculate = async () => {
     if (!currentProject) {
       return;
     }
 
     setCalculating(true);
 
-    // Simulate calculation delay for better UX
-    setTimeout(() => {
-      const results = calculateAllSystemLoads(
-        systems,
-        rooms,
-        currentProject.designConditions,
-        currentProject.regionClimateData || undefined
-      );
+    try {
+      let results: SystemLoadResult[];
+
+      if (backendAvailable && useBackend) {
+        // Use backend calculation
+        showSnackbar('バックエンド計算を実行中...', 'info');
+        results = await calculateWithBackend(currentProject, rooms, systems);
+        showSnackbar('計算が完了しました（バックエンド使用）', 'success');
+      } else {
+        // Use frontend calculation
+        showSnackbar('フロントエンド計算を実行中...', 'info');
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate delay
+        results = calculateAllSystemLoads(
+          systems,
+          rooms,
+          currentProject.designConditions,
+          currentProject.regionClimateData || undefined
+        );
+        showSnackbar('計算が完了しました（簡易計算）', 'success');
+      }
+
       setLoadResults(results);
+    } catch (error) {
+      console.error('Calculation error:', error);
+      showSnackbar(
+        `計算エラー: ${error instanceof Error ? error.message : '不明なエラー'}`,
+        'error'
+      );
+    } finally {
       setCalculating(false);
-    }, 500);
+    }
   };
 
   const handleExport = () => {
@@ -108,6 +142,19 @@ export const LoadCheckPage: React.FC = () => {
       {rooms.length === 0 && (
         <Alert severity="warning" sx={{ mb: 3 }}>
           室が登録されていません。室登録ページで室を作成してください。
+        </Alert>
+      )}
+
+      {/* Backend status */}
+      {backendAvailable !== null && (
+        <Alert
+          severity={backendAvailable ? 'success' : 'warning'}
+          icon={backendAvailable ? <CloudIcon /> : <ComputerIcon />}
+          sx={{ mb: 3 }}
+        >
+          {backendAvailable
+            ? 'バックエンド接続: 正常 - 詳細な熱負荷計算を使用します'
+            : 'バックエンド未接続 - 簡易計算モードで動作します（参照データとの連携なし）'}
         </Alert>
       )}
 
