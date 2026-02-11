@@ -52,6 +52,16 @@ class LoadVector(BaseModel):
             heat_latent=self.heat_latent + other.heat_latent,
         )
 
+    def __add__(self, other: "LoadVector") -> "LoadVector":
+        """Support + operator for LoadVector addition."""
+        return self.add(other)
+
+    def __radd__(self, other):
+        """Support sum() built-in function."""
+        if other == 0:
+            return self
+        return self.add(other)
+
 
 class CorrectionFactors(BaseModel):
     cool_9: float = 1.0
