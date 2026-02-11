@@ -1,6 +1,6 @@
 // Sidebar navigation component
 
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider } from '@mui/material';
+import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider, useMediaQuery, useTheme } from '@mui/material';
 import {
   Settings as SettingsIcon,
   Public as PublicIcon,
@@ -59,24 +59,20 @@ const navigationItems: NavigationItem[] = [
 ];
 
 export const Sidebar: React.FC = () => {
-  const { currentPage, setCurrentPage, sidebarOpen } = useUIStore();
+  const { currentPage, setCurrentPage, sidebarOpen, toggleSidebar } = useUIStore();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleNavigate = (pageId: PageId) => {
     setCurrentPage(pageId);
+    // Close sidebar on mobile after navigation
+    if (isMobile) {
+      toggleSidebar();
+    }
   };
 
-  return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: DRAWER_WIDTH,
-        flexShrink: 0,
-        '& .MuiDrawer-paper': {
-          width: DRAWER_WIDTH,
-          boxSizing: 'border-box',
-        },
-      }}
-    >
+  const drawerContent = (
+    <>
       <Toolbar>
         <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
           熱負荷計算
@@ -96,6 +92,47 @@ export const Sidebar: React.FC = () => {
           </ListItem>
         ))}
       </List>
-    </Drawer>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile: Temporary drawer */}
+      {isMobile ? (
+        <Drawer
+          variant="temporary"
+          open={sidebarOpen}
+          onClose={toggleSidebar}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile
+          }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': {
+              width: DRAWER_WIDTH,
+              boxSizing: 'border-box',
+            },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
+      ) : (
+        /* Desktop: Permanent drawer */
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            width: DRAWER_WIDTH,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: DRAWER_WIDTH,
+              boxSizing: 'border-box',
+            },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
+      )}
+    </>
   );
 };

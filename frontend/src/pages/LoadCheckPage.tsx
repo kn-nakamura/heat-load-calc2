@@ -110,14 +110,23 @@ export const LoadCheckPage: React.FC = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">負荷確認</Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
+        justifyContent: 'space-between',
+        alignItems: { xs: 'stretch', sm: 'center' },
+        mb: 3,
+        gap: 2
+      }}>
+        <Typography variant="h4" sx={{ mb: { xs: 1, sm: 0 } }}>負荷確認</Typography>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
           <Button
             variant="contained"
             startIcon={calculating ? <CircularProgress size={20} /> : <CalculateIcon />}
             onClick={handleCalculate}
             disabled={calculating || systems.length === 0 || rooms.length === 0}
+            fullWidth
+            sx={{ flex: { xs: '1 1 100%', sm: 'initial' } }}
           >
             {calculating ? '計算中...' : '負荷計算実行'}
           </Button>
@@ -126,6 +135,8 @@ export const LoadCheckPage: React.FC = () => {
             startIcon={<DownloadIcon />}
             onClick={handleExport}
             disabled={loadResults.length === 0}
+            fullWidth
+            sx={{ flex: { xs: '1 1 100%', sm: 'initial' } }}
           >
             結果出力
           </Button>

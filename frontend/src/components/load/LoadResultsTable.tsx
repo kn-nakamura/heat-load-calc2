@@ -50,8 +50,8 @@ export const LoadResultsTable: React.FC<LoadResultsTableProps> = ({ roomLoads })
         </Tabs>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table size="small">
+      <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
+        <Table size="small" sx={{ minWidth: 1200 }}>
           <TableHead>
             <TableRow>
               <TableCell rowSpan={2}>室名</TableCell>

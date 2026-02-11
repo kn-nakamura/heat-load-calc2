@@ -1,6 +1,6 @@
 // Main layout component
 
-import { Box, Toolbar, Snackbar, Alert, CircularProgress, Backdrop } from '@mui/material';
+import { Box, Toolbar, Snackbar, Alert, CircularProgress, Backdrop, useMediaQuery, useTheme } from '@mui/material';
 import { AppBar } from './AppBar';
 import { Sidebar } from './Sidebar';
 import { useUIStore } from '../../stores';
@@ -13,6 +13,8 @@ interface MainLayoutProps {
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { snackbar, hideSnackbar, isLoading } = useUIStore();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -23,8 +25,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         sx={{
           flexGrow: 1,
           bgcolor: 'background.default',
-          p: 3,
-          width: `calc(100% - ${DRAWER_WIDTH}px)`,
+          p: { xs: 1, sm: 2, md: 3 },
+          width: {
+            xs: '100%',
+            md: `calc(100% - ${DRAWER_WIDTH}px)`
+          },
           minHeight: '100vh',
         }}
       >

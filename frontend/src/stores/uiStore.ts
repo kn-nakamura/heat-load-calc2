@@ -90,8 +90,8 @@ export const useUIStore = create<UIState>((set) => ({
   roomTab: 'envelope',
   setRoomTab: (tab) => set({ roomTab: tab }),
 
-  // Sidebar state
-  sidebarOpen: true,
+  // Sidebar state (default closed on mobile, open on desktop)
+  sidebarOpen: typeof window !== 'undefined' ? window.innerWidth >= 900 : true,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
 

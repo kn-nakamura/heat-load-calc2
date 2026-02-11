@@ -15,7 +15,7 @@ import {
   LoadCheckPage,
 } from './pages';
 
-// Create MUI theme
+// Create MUI theme with mobile-friendly defaults
 const theme = createTheme({
   palette: {
     primary: {
@@ -35,6 +35,46 @@ const theme = createTheme({
       'Arial',
       'sans-serif',
     ].join(','),
+    // Responsive font sizes
+    h4: {
+      fontSize: '1.75rem',
+      '@media (max-width:600px)': {
+        fontSize: '1.5rem',
+      },
+    },
+    h5: {
+      fontSize: '1.5rem',
+      '@media (max-width:600px)': {
+        fontSize: '1.25rem',
+      },
+    },
+    h6: {
+      fontSize: '1.25rem',
+      '@media (max-width:600px)': {
+        fontSize: '1.1rem',
+      },
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          // Better touch targets on mobile
+          minHeight: 42,
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          // Smaller padding on mobile
+          '@media (max-width:600px)': {
+            padding: '8px 4px',
+            fontSize: '0.75rem',
+          },
+        },
+      },
+    },
   },
 });
 
