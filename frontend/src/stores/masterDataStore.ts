@@ -61,6 +61,10 @@ interface MasterDataState {
   deleteNonAirConditionedTempDiff: (id: string) => void;
 
   // Actions for envelope master data
+  addOverhang: (overhang: OverhangMaster) => void;
+  updateOverhang: (id: string, overhang: Partial<OverhangMaster>) => void;
+  deleteOverhang: (id: string) => void;
+
   addWindowGlass: (glass: WindowGlassMaster) => void;
   updateWindowGlass: (id: string, glass: Partial<WindowGlassMaster>) => void;
   deleteWindowGlass: (id: string) => void;
@@ -68,6 +72,30 @@ interface MasterDataState {
   addExteriorWall: (wall: ExteriorWallMaster) => void;
   updateExteriorWall: (id: string, wall: Partial<ExteriorWallMaster>) => void;
   deleteExteriorWall: (id: string) => void;
+
+  addRoof: (roof: RoofMaster) => void;
+  updateRoof: (id: string, roof: Partial<RoofMaster>) => void;
+  deleteRoof: (id: string) => void;
+
+  addPilotiFloor: (floor: PilotiFloorMaster) => void;
+  updatePilotiFloor: (id: string, floor: Partial<PilotiFloorMaster>) => void;
+  deletePilotiFloor: (id: string) => void;
+
+  addInteriorWall: (wall: InteriorWallMaster) => void;
+  updateInteriorWall: (id: string, wall: Partial<InteriorWallMaster>) => void;
+  deleteInteriorWall: (id: string) => void;
+
+  addCeilingFloor: (item: CeilingFloorMaster) => void;
+  updateCeilingFloor: (id: string, item: Partial<CeilingFloorMaster>) => void;
+  deleteCeilingFloor: (id: string) => void;
+
+  addUndergroundWall: (wall: UndergroundWallMaster) => void;
+  updateUndergroundWall: (id: string, wall: Partial<UndergroundWallMaster>) => void;
+  deleteUndergroundWall: (id: string) => void;
+
+  addEarthFloor: (floor: EarthFloorMaster) => void;
+  updateEarthFloor: (id: string, floor: Partial<EarthFloorMaster>) => void;
+  deleteEarthFloor: (id: string) => void;
 
   addMaterial: (material: MaterialMaster) => void;
   updateMaterial: (id: string, material: Partial<MaterialMaster>) => void;
@@ -185,6 +213,24 @@ export const useMasterDataStore = create<MasterDataState>((set) => ({
       nonAirConditionedTempDiff: state.nonAirConditionedTempDiff.filter((item) => item.id !== id),
     })),
 
+  // Overhang actions
+  addOverhang: (overhang) =>
+    set((state) => ({
+      overhangs: [...state.overhangs, overhang],
+    })),
+
+  updateOverhang: (id, updates) =>
+    set((state) => ({
+      overhangs: state.overhangs.map((item) =>
+        item.id === id ? { ...item, ...updates, updatedAt: new Date() } : item
+      ),
+    })),
+
+  deleteOverhang: (id) =>
+    set((state) => ({
+      overhangs: state.overhangs.filter((item) => item.id !== id),
+    })),
+
   // Window glass actions
   addWindowGlass: (glass) =>
     set((state) => ({
@@ -219,6 +265,114 @@ export const useMasterDataStore = create<MasterDataState>((set) => ({
   deleteExteriorWall: (id) =>
     set((state) => ({
       exteriorWalls: state.exteriorWalls.filter((item) => item.id !== id),
+    })),
+
+  // Roof actions
+  addRoof: (roof) =>
+    set((state) => ({
+      roofs: [...state.roofs, roof],
+    })),
+
+  updateRoof: (id, updates) =>
+    set((state) => ({
+      roofs: state.roofs.map((item) =>
+        item.id === id ? { ...item, ...updates, updatedAt: new Date() } : item
+      ),
+    })),
+
+  deleteRoof: (id) =>
+    set((state) => ({
+      roofs: state.roofs.filter((item) => item.id !== id),
+    })),
+
+  // Piloti floor actions
+  addPilotiFloor: (floor) =>
+    set((state) => ({
+      pilotiFloors: [...state.pilotiFloors, floor],
+    })),
+
+  updatePilotiFloor: (id, updates) =>
+    set((state) => ({
+      pilotiFloors: state.pilotiFloors.map((item) =>
+        item.id === id ? { ...item, ...updates, updatedAt: new Date() } : item
+      ),
+    })),
+
+  deletePilotiFloor: (id) =>
+    set((state) => ({
+      pilotiFloors: state.pilotiFloors.filter((item) => item.id !== id),
+    })),
+
+  // Interior wall actions
+  addInteriorWall: (wall) =>
+    set((state) => ({
+      interiorWalls: [...state.interiorWalls, wall],
+    })),
+
+  updateInteriorWall: (id, updates) =>
+    set((state) => ({
+      interiorWalls: state.interiorWalls.map((item) =>
+        item.id === id ? { ...item, ...updates, updatedAt: new Date() } : item
+      ),
+    })),
+
+  deleteInteriorWall: (id) =>
+    set((state) => ({
+      interiorWalls: state.interiorWalls.filter((item) => item.id !== id),
+    })),
+
+  // Ceiling/Floor actions
+  addCeilingFloor: (item) =>
+    set((state) => ({
+      ceilingFloors: [...state.ceilingFloors, item],
+    })),
+
+  updateCeilingFloor: (id, updates) =>
+    set((state) => ({
+      ceilingFloors: state.ceilingFloors.map((item) =>
+        item.id === id ? { ...item, ...updates, updatedAt: new Date() } : item
+      ),
+    })),
+
+  deleteCeilingFloor: (id) =>
+    set((state) => ({
+      ceilingFloors: state.ceilingFloors.filter((item) => item.id !== id),
+    })),
+
+  // Underground wall actions
+  addUndergroundWall: (wall) =>
+    set((state) => ({
+      undergroundWalls: [...state.undergroundWalls, wall],
+    })),
+
+  updateUndergroundWall: (id, updates) =>
+    set((state) => ({
+      undergroundWalls: state.undergroundWalls.map((item) =>
+        item.id === id ? { ...item, ...updates, updatedAt: new Date() } : item
+      ),
+    })),
+
+  deleteUndergroundWall: (id) =>
+    set((state) => ({
+      undergroundWalls: state.undergroundWalls.filter((item) => item.id !== id),
+    })),
+
+  // Earth floor actions
+  addEarthFloor: (floor) =>
+    set((state) => ({
+      earthFloors: [...state.earthFloors, floor],
+    })),
+
+  updateEarthFloor: (id, updates) =>
+    set((state) => ({
+      earthFloors: state.earthFloors.map((item) =>
+        item.id === id ? { ...item, ...updates, updatedAt: new Date() } : item
+      ),
+    })),
+
+  deleteEarthFloor: (id) =>
+    set((state) => ({
+      earthFloors: state.earthFloors.filter((item) => item.id !== id),
     })),
 
   // Material actions
