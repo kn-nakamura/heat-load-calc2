@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
+    "@mui/x-tree-view": "^8.27.0",
     "@tailwindcss/vite": "^4.1.18",
     "ag-grid-community": "^33.0.4",
     "ag-grid-react": "^33.0.4",
