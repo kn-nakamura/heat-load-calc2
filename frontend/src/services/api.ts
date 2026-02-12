@@ -1,6 +1,20 @@
 // API client for backend services
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000') + '/v1';
+function resolveBackendOrigin(): string {
+  const configured = import.meta.env.VITE_API_URL?.trim();
+  if (configured) {
+    return configured.replace(/\/+$/, '').replace(/\/v1$/, '');
+  }
+
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return window.location.origin;
+  }
+
+  return 'http://localhost:8000';
+}
+
+const BACKEND_ORIGIN = resolveBackendOrigin();
+const API_BASE_URL = `${BACKEND_ORIGIN}/v1`;
 
 export interface ApiError {
   detail: string | { issues: any[] };
@@ -174,8 +188,7 @@ export async function validateProject(project: BackendProject): Promise<{
 export async function checkBackendHealth(): Promise<boolean> {
   try {
     // Use /health endpoint (not under /v1)
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-    const response = await fetch(`${baseUrl}/health`, {
+    const response = await fetch(`${BACKEND_ORIGIN}/health`, {
       method: 'GET',
     });
     return response.ok;
