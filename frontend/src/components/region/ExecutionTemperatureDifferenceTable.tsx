@@ -115,21 +115,27 @@ export const ExecutionTemperatureDifferenceTable: React.FC<ExecutionTemperatureD
             {wallTypeData['日陰'] && (
               <TableRow>
                 <TableCell>日陰 [°C]</TableCell>
-                {times.map((time) => (
-                  <TableCell key={time} align="right">
-                    {wallTypeData['日陰'][time]?.toFixed(1) || '-'}
-                  </TableCell>
-                ))}
+                {times.map((time) => {
+                  const value = wallTypeData['日陰']?.[time];
+                  return (
+                    <TableCell key={time} align="right">
+                      {typeof value === 'number' ? value.toFixed(1) : '-'}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             )}
             {wallTypeData['水平'] && (
               <TableRow>
                 <TableCell>水平 [°C]</TableCell>
-                {times.map((time) => (
-                  <TableCell key={time} align="right">
-                    {wallTypeData['水平'][time]?.toFixed(1) || '-'}
-                  </TableCell>
-                ))}
+                {times.map((time) => {
+                  const value = wallTypeData['水平']?.[time];
+                  return (
+                    <TableCell key={time} align="right">
+                      {typeof value === 'number' ? value.toFixed(1) : '-'}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             )}
           </TableBody>
@@ -156,17 +162,20 @@ export const ExecutionTemperatureDifferenceTable: React.FC<ExecutionTemperatureD
               </TableHead>
               <TableBody>
                 {orientations.map((orientation) => {
-                  const orientationData = wallTypeData['方位別'][orientation];
+                  const orientationData = wallTypeData['方位別']?.[orientation];
                   if (!orientationData) return null;
 
                   return (
                     <TableRow key={orientation}>
                       <TableCell>{orientation}</TableCell>
-                      {times.map((time) => (
-                        <TableCell key={time} align="right">
-                          {orientationData[time]?.toFixed(1) || '-'}
-                        </TableCell>
-                      ))}
+                      {times.map((time) => {
+                        const value = orientationData[time];
+                        return (
+                          <TableCell key={time} align="right">
+                            {typeof value === 'number' ? value.toFixed(1) : '-'}
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
                   );
                 })}

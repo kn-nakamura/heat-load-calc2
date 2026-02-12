@@ -82,9 +82,13 @@ export interface ExecutionTemperatureDifferenceData {
   [city: string]: {
     [indoorTemp: string]: {
       [wallType: string]: {
-        [category: string]: {
+        日陰?: {
           [time: string]: number;
-        } | {
+        };
+        水平?: {
+          [time: string]: number;
+        };
+        方位別?: {
           [orientation: string]: {
             [time: string]: number;
           };
