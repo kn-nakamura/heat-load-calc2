@@ -8,7 +8,14 @@ import {
   useSystemStore,
   useUIStore,
 } from '../stores';
-import { fetchAllReferenceData, convertIndoorConditionsToMaster } from '../services/referenceData';
+import {
+  fetchAllReferenceData,
+  convertIndoorConditionsToMaster,
+  convertLightingPowerToMaster,
+  convertOccupancyHeatToMaster,
+  convertMaterialsToMaster,
+  convertWindowGlassToMaster,
+} from '../services/referenceData';
 
 // Project services
 export const projectService = {
@@ -82,35 +89,88 @@ export const masterDataService = {
       db.materials.toArray(),
     ]);
 
-    // If no indoor conditions exist in DB, populate from reference data
+    const { referenceData } = useProjectStore.getState();
+
+    // If no data exists in DB, populate from reference data
     let finalIndoorConditions = indoorConditions;
-    if (indoorConditions.length === 0) {
-      console.log('No indoor conditions in DB, loading from reference data...');
-      const { referenceData } = useProjectStore.getState();
-      if (referenceData && referenceData.design_indoor_conditions) {
-        const refConditions = convertIndoorConditionsToMaster(referenceData);
-        console.log('Converted indoor conditions:', refConditions.length);
-        if (refConditions.length > 0) {
-          finalIndoorConditions = refConditions;
-          // Save to DB for persistence
-          await db.indoorConditions.bulkPut(refConditions);
-          console.log('Saved indoor conditions to DB');
-        }
-      } else {
-        console.warn('No reference data available for indoor conditions');
+    let finalLightingPower = lightingPower;
+    let finalOccupancyHeat = occupancyHeat;
+    let finalMaterials = materials;
+    let finalWindowGlass = windowGlass;
+
+    // Indoor conditions
+    if (indoorConditions.length === 0 && referenceData?.design_indoor_conditions) {
+      console.log('Loading indoor conditions from reference data...');
+      const refConditions = convertIndoorConditionsToMaster(referenceData);
+      if (refConditions.length > 0) {
+        finalIndoorConditions = refConditions;
+        await db.indoorConditions.bulkPut(refConditions);
+        console.log('Saved indoor conditions:', refConditions.length);
       }
     } else {
       console.log('Loaded indoor conditions from DB:', indoorConditions.length);
     }
 
+    // Lighting power
+    if (lightingPower.length === 0 && referenceData?.lighting_power_density) {
+      console.log('Loading lighting power from reference data...');
+      const refLighting = convertLightingPowerToMaster(referenceData);
+      if (refLighting.length > 0) {
+        finalLightingPower = refLighting;
+        await db.lightingPower.bulkPut(refLighting);
+        console.log('Saved lighting power:', refLighting.length);
+      }
+    } else {
+      console.log('Loaded lighting power from DB:', lightingPower.length);
+    }
+
+    // Occupancy heat
+    if (occupancyHeat.length === 0 && referenceData?.occupancy_density) {
+      console.log('Loading occupancy heat from reference data...');
+      const refOccupancy = convertOccupancyHeatToMaster(referenceData);
+      if (refOccupancy.length > 0) {
+        finalOccupancyHeat = refOccupancy;
+        await db.occupancyHeat.bulkPut(refOccupancy);
+        console.log('Saved occupancy heat:', refOccupancy.length);
+      }
+    } else {
+      console.log('Loaded occupancy heat from DB:', occupancyHeat.length);
+    }
+
+    // Materials
+    if (materials.length === 0 && referenceData?.material_thermal_constants) {
+      console.log('Loading materials from reference data...');
+      const refMaterials = convertMaterialsToMaster(referenceData);
+      if (refMaterials.length > 0) {
+        finalMaterials = refMaterials;
+        await db.materials.bulkPut(refMaterials);
+        console.log('Saved materials:', refMaterials.length);
+      }
+    } else {
+      console.log('Loaded materials from DB:', materials.length);
+    }
+
+    // Window glass
+    if (windowGlass.length === 0 && referenceData?.glass_properties) {
+      console.log('Loading window glass from reference data...');
+      const refGlass = convertWindowGlassToMaster(referenceData);
+      if (refGlass.length > 0) {
+        finalWindowGlass = refGlass;
+        await db.windowGlass.bulkPut(refGlass);
+        console.log('Saved window glass:', refGlass.length);
+      }
+    } else {
+      console.log('Loaded window glass from DB:', windowGlass.length);
+    }
+
     useMasterDataStore.getState().loadMasterData({
       indoorConditions: finalIndoorConditions,
-      lightingPower,
-      occupancyHeat,
+      lightingPower: finalLightingPower,
+      occupancyHeat: finalOccupancyHeat,
       equipmentPower,
       nonAirConditionedTempDiff,
       overhangs,
-      windowGlass,
+      windowGlass: finalWindowGlass,
       exteriorWalls,
       roofs,
       pilotiFloors,
@@ -118,7 +178,7 @@ export const masterDataService = {
       ceilingFloors,
       undergroundWalls,
       earthFloors,
-      materials,
+      materials: finalMaterials,
     });
   },
 

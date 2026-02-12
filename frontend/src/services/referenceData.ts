@@ -220,9 +220,7 @@ export function searchLocationsByCity(
 /**
  * Convert reference data indoor conditions to master data format
  */
-export function convertIndoorConditionsToMaster(
-  referenceData: Partial<ReferenceData>
-): any[] {
+export function convertIndoorConditionsToMaster(referenceData: Partial<ReferenceData>): any[] {
   const records = referenceData.design_indoor_conditions?.records || [];
   const now = new Date();
 
@@ -247,4 +245,103 @@ export function convertIndoorConditionsToMaster(
     createdAt: now,
     updatedAt: now,
   }));
+}
+
+/**
+ * Convert lighting power density to master data format
+ */
+export function convertLightingPowerToMaster(referenceData: Partial<ReferenceData>): any[] {
+  const records = referenceData.lighting_power_density?.records || [];
+  const now = new Date();
+
+  return records.map((record: any, index: number) => ({
+    id: `ref-lighting-${index}`,
+    name: `${record.room_examples || '一般'} (${record.design_illuminance_lux}lx)`,
+    designIlluminance: record.design_illuminance_lux || 500,
+    powerDensity: {
+      fluorescentDownlight: record.lighting_subtype === '下面開放形' ? record.power_w_per_m2 : 15,
+      fluorescentLouver: record.lighting_subtype === 'ルーパー有' ? record.power_w_per_m2 : 18,
+      fluorescentAcrylicCover: record.lighting_subtype === 'アクリルカバー有' ? record.power_w_per_m2 : 16,
+      ledDownlight: record.power_w_per_m2 * 0.5 || 8,
+      ledLouver: record.power_w_per_m2 * 0.5 || 10,
+    },
+    remarks: `${record.lighting_type} ${record.lighting_subtype}`,
+    createdAt: now,
+    updatedAt: now,
+  }));
+}
+
+/**
+ * Convert occupancy density to master data format
+ */
+export function convertOccupancyHeatToMaster(referenceData: Partial<ReferenceData>): any[] {
+  const records = referenceData.occupancy_density?.records || [];
+  const now = new Date();
+
+  return records.map((record: any, index: number) => ({
+    id: `ref-occupancy-${index}`,
+    name: record.room_name || `室用途${index + 1}`,
+    summer: {
+      sensibleHeat: record.sensible_w_per_person || 60,
+      latentHeat: record.latent_w_per_person || 50,
+      totalHeat: (record.sensible_w_per_person || 60) + (record.latent_w_per_person || 50),
+    },
+    winter: {
+      sensibleHeat: record.sensible_w_per_person || 60,
+      latentHeat: record.latent_w_per_person || 50,
+      totalHeat: (record.sensible_w_per_person || 60) + (record.latent_w_per_person || 50),
+    },
+    remarks: `人員密度: ${record.people_density_per_m2 || 0.15} 人/m²`,
+    createdAt: now,
+    updatedAt: now,
+  }));
+}
+
+/**
+ * Convert material thermal constants to master data format
+ */
+export function convertMaterialsToMaster(referenceData: Partial<ReferenceData>): any[] {
+  const records = referenceData.material_thermal_constants?.records || [];
+  const now = new Date();
+
+  return records.map((record: any, index: number) => ({
+    id: `ref-material-${index}`,
+    name: record.material_name || `材料${index + 1}`,
+    category: record.category || '一般材料',
+    thermalConductivity: record.thermal_conductivity_w_per_mk || 1.0,
+    volumetricHeatCapacity: record.volumetric_heat_capacity_kj_per_m3k || 1000.0,
+    remarks: `材料番号: ${record.material_no || ''}`,
+    createdAt: now,
+    updatedAt: now,
+  }));
+}
+
+/**
+ * Convert glass properties to master data format
+ */
+export function convertWindowGlassToMaster(referenceData: Partial<ReferenceData>): any[] {
+  const records = referenceData.glass_properties?.records || [];
+  const now = new Date();
+
+  // Group by glass_code to avoid duplicates
+  const glassMap = new Map<string, any>();
+
+  records.forEach((record: any) => {
+    if (!glassMap.has(record.glass_code)) {
+      glassMap.set(record.glass_code, {
+        id: `ref-glass-${record.glass_code}`,
+        name: record.glass_description || record.glass_code,
+        glassCode: record.glass_code,
+        glassType: record.glass_type || '複層ガラス',
+        shadingCoefficient: record.sc_no_blind || 0.85,
+        shadingCoefficientWithBlind: record.sc_light_blind || 0.5,
+        uValue: record.u_value_glass_w_per_m2k || 3.5,
+        remarks: `フレーム: ${record.frame_type || 'アルミ'}`,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+  });
+
+  return Array.from(glassMap.values());
 }
