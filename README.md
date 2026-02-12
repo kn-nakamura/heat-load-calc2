@@ -126,7 +126,23 @@ If `pytest`/`httpx` are missing, install backend dev dependencies first.
 5. Review trace and totals
 6. Export JSON and Excel
 
-## 11. Next planned extensions
+## 11. Deployment
+
+This application can be deployed with:
+- **Frontend**: Vercel (or any static hosting)
+- **Backend**: Railway (or any Python hosting)
+
+**Important**: You must configure environment variables for production deployment.
+
+See detailed deployment instructions:
+- `docs/deployment.md` - Complete deployment guide with environment variable setup
+
+Quick setup:
+1. **Railway**: Set `CORS_ORIGINS` to your Vercel frontend URL
+2. **Vercel**: Set `VITE_API_URL` to your Railway backend URL
+3. Redeploy both services after setting environment variables
+
+## 12. Next planned extensions
 
 - IFC importer module
 - Stronger full-range parity tests
@@ -136,5 +152,6 @@ If `pytest`/`httpx` are missing, install backend dev dependencies first.
 ---
 
 See also:
+- `docs/deployment.md`
 - `docs/development.md`
 - `docs/rounding.md`
