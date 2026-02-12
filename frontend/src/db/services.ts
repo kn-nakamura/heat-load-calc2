@@ -293,6 +293,13 @@ const isValidPageId = (value: string | null): value is ReturnType<typeof useUISt
   return typeof value === 'string' && PAGE_IDS.has(value);
 };
 
+const loadMostRecentlyUpdatedProject = async (): Promise<void> => {
+  const latestProject = await db.projects.orderBy('updatedAt').reverse().first();
+  if (latestProject) {
+    useProjectStore.getState().setCurrentProject(latestProject);
+  }
+};
+
 export const sessionStateService = {
   saveState(): void {
     const { currentPage } = useUIStore.getState();
@@ -325,6 +332,10 @@ export const sessionStateService = {
 
     if (savedProjectId) {
       await projectService.loadProject(savedProjectId);
+    }
+
+    if (!useProjectStore.getState().currentProject) {
+      await loadMostRecentlyUpdatedProject();
     }
 
     const hasProject = useProjectStore.getState().currentProject !== null;

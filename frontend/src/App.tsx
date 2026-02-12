@@ -106,6 +106,19 @@ export default function App() {
     let initialized = false;
     let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
+    const flushSave = () => {
+      if (saveTimer) {
+        clearTimeout(saveTimer);
+        saveTimer = null;
+      }
+
+      if (!initialized) return;
+
+      appService.saveAll().catch((error) => {
+        console.error('Auto-save flush failed:', error);
+      });
+    };
+
     const scheduleSave = () => {
       if (!initialized) return;
 
@@ -113,11 +126,7 @@ export default function App() {
         clearTimeout(saveTimer);
       }
 
-      saveTimer = setTimeout(() => {
-        appService.saveAll().catch((error) => {
-          console.error('Auto-save failed:', error);
-        });
-      }, 400);
+      saveTimer = setTimeout(flushSave, 400);
     };
 
     const markInitialized = setTimeout(() => {
@@ -129,11 +138,24 @@ export default function App() {
     const unsubRoom = useRoomStore.subscribe(scheduleSave);
     const unsubSystem = useSystemStore.subscribe(scheduleSave);
 
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        flushSave();
+      }
+    };
+
+    const handlePageHide = () => {
+      flushSave();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', handlePageHide);
+
     return () => {
       clearTimeout(markInitialized);
-      if (saveTimer) {
-        clearTimeout(saveTimer);
-      }
+      flushSave();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handlePageHide);
       unsubProject();
       unsubMasterData();
       unsubRoom();
