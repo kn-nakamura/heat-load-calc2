@@ -85,15 +85,22 @@ export const masterDataService = {
     // If no indoor conditions exist in DB, populate from reference data
     let finalIndoorConditions = indoorConditions;
     if (indoorConditions.length === 0) {
+      console.log('No indoor conditions in DB, loading from reference data...');
       const { referenceData } = useProjectStore.getState();
-      if (referenceData) {
+      if (referenceData && referenceData.design_indoor_conditions) {
         const refConditions = convertIndoorConditionsToMaster(referenceData);
+        console.log('Converted indoor conditions:', refConditions.length);
         if (refConditions.length > 0) {
           finalIndoorConditions = refConditions;
           // Save to DB for persistence
           await db.indoorConditions.bulkPut(refConditions);
+          console.log('Saved indoor conditions to DB');
         }
+      } else {
+        console.warn('No reference data available for indoor conditions');
       }
+    } else {
+      console.log('Loaded indoor conditions from DB:', indoorConditions.length);
     }
 
     useMasterDataStore.getState().loadMasterData({
@@ -191,10 +198,17 @@ export const systemService = {
 export const referenceDataService = {
   async loadReferenceData(): Promise<void> {
     try {
+      console.log('Loading reference data from backend...');
       const referenceData = await fetchAllReferenceData();
+      console.log('Reference data loaded:', {
+        indoor: referenceData.design_indoor_conditions?.records?.length || 0,
+        outdoor: referenceData.design_outdoor_conditions?.records?.length || 0,
+        locations: referenceData.location_data?.records?.length || 0,
+      });
       useProjectStore.getState().setReferenceData(referenceData);
     } catch (error) {
       console.error('Failed to load reference data:', error);
+      // Continue even if reference data fails to load
     }
   },
 };

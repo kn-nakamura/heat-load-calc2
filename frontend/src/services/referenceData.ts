@@ -117,11 +117,24 @@ export async function fetchAllReferenceData(): Promise<Partial<ReferenceData>> {
 
   const results: Partial<ReferenceData> = {};
 
+  // Check backend availability first
+  try {
+    const isAvailable = await api.checkBackendHealth();
+    if (!isAvailable) {
+      console.warn('Backend is not available, skipping reference data fetch');
+      return results;
+    }
+  } catch (error) {
+    console.warn('Backend health check failed:', error);
+    return results;
+  }
+
   await Promise.all(
     tables.map(async (tableName) => {
       try {
         const data = await api.getReferenceTable(tableName);
         results[tableName as keyof ReferenceData] = data;
+        console.log(`Fetched ${tableName}:`, data.records?.length || 0, 'records');
       } catch (error) {
         console.warn(`Failed to fetch reference table: ${tableName}`, error);
       }
