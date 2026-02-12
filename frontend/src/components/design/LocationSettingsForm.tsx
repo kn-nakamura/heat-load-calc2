@@ -3,6 +3,7 @@
 import { Box, TextField, Typography, FormControl, InputLabel, Select, MenuItem, Autocomplete, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { Search as SearchIcon } from '@mui/icons-material';
+import { useEffect, useRef } from 'react';
 import { DesignConditions } from '../../types';
 import { useProjectStore } from '../../stores';
 import { searchLocationsByCity, findNearestLocation, getOutdoorConditionByCity } from '../../services/referenceData';
@@ -18,8 +19,24 @@ const orientationBases = ['真北', '磁北'];
 
 export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ formData, onChange }) => {
   const { referenceData } = useProjectStore();
+  const isInitialized = useRef(false);
 
   const availableCities = referenceData?.location_data?.records.map((r) => r.city) || [];
+
+  // Get representative city for each region
+  const getRepresentativeCityForRegion = (region: string): string => {
+    const regionMap: { [key: string]: string } = {
+      '1地域': '札幌',
+      '2地域': '盛岡',
+      '3地域': '仙台',
+      '4地域': '東京',
+      '5地域': '長野',
+      '6地域': '東京',
+      '7地域': '福岡',
+      '8地域': '那覇',
+    };
+    return regionMap[region] || '東京';
+  };
 
   const handleCitySelect = (city: string | null) => {
     if (!city || !referenceData) return;
@@ -51,6 +68,14 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
     }
   };
 
+  const handleRegionChange = (newRegion: string) => {
+    onChange('region', newRegion);
+
+    // Auto-select representative city for the region
+    const representativeCity = getRepresentativeCityForRegion(newRegion);
+    handleCitySelect(representativeCity);
+  };
+
   const handleSearchNearby = () => {
     if (!formData.latitude || !formData.longitude || !referenceData) return;
 
@@ -59,6 +84,39 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
       handleCitySelect(result.location.city);
     }
   };
+
+  // Auto-set representative city on initial load if location is not set
+  useEffect(() => {
+    if (!isInitialized.current && referenceData && !formData.locationLabel && formData.region) {
+      const representativeCity = getRepresentativeCityForRegion(formData.region);
+      const location = referenceData.location_data?.records.find((r) => r.city === representativeCity);
+      if (location) {
+        onChange('locationLabel', representativeCity);
+        onChange('latitude', location.latitude_deg);
+        onChange('longitude', location.longitude_deg);
+
+        // Also update outdoor conditions based on the city
+        const outdoorCondition = getOutdoorConditionByCity(referenceData as any, representativeCity);
+        if (outdoorCondition) {
+          onChange('outdoorSummer', {
+            dryBulbTemp: outdoorCondition.cooling_drybulb_14_c,
+            wetBulbTemp: outdoorCondition.cooling_wetbulb_14_c,
+            relativeHumidity: outdoorCondition.cooling_rh_14_pct,
+            absoluteHumidity: outdoorCondition.cooling_abs_humidity_14_g_per_kgda / 1000,
+            enthalpy: outdoorCondition.cooling_enthalpy_14_kj_per_kgda,
+          });
+          onChange('outdoorWinter', {
+            dryBulbTemp: outdoorCondition.heating_drybulb_c,
+            wetBulbTemp: outdoorCondition.heating_wetbulb_c,
+            relativeHumidity: outdoorCondition.heating_rh_pct,
+            absoluteHumidity: outdoorCondition.heating_abs_humidity_g_per_kgda / 1000,
+            enthalpy: outdoorCondition.heating_enthalpy_kj_per_kgda,
+          });
+        }
+      }
+      isInitialized.current = true;
+    }
+  }, [referenceData, formData.locationLabel, formData.region, onChange]);
 
   return (
     <Box>
@@ -97,7 +155,7 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
             <Select
               value={formData.region || '6地域'}
               label="地域区分"
-              onChange={(e) => onChange('region', e.target.value)}
+              onChange={(e) => handleRegionChange(e.target.value)}
             >
               {regions.map((region) => (
                 <MenuItem key={region} value={region}>
