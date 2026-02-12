@@ -38,6 +38,7 @@ export const DesignConditionsPage: React.FC = () => {
   const handleChange = (field: keyof DesignConditions, value: any) => {
     if (!formData) return;
     setFormData((prev) => ({ ...prev!, [field]: value }));
+    updateDesignConditions({ [field]: value } as Partial<DesignConditions>);
   };
 
   const handleAddressSelect = (result: NominatimSearchResult) => {
@@ -55,6 +56,12 @@ export const DesignConditionsPage: React.FC = () => {
       latitude: lat,
       longitude: lon,
     }));
+    updateDesignConditions({
+      buildingLocation: result.display_name,
+      locationLabel: locationName,
+      latitude: lat,
+      longitude: lon,
+    });
 
     // Find nearest weather station
     const nearest = findNearestLocation(referenceData as any, lat, lon);
@@ -86,6 +93,25 @@ export const DesignConditionsPage: React.FC = () => {
             enthalpy: outdoorCondition.heating_enthalpy_kj_per_kgda,
           },
         }));
+        updateDesignConditions({
+          locationLabel: location.city,
+          latitude: location.latitude_deg,
+          longitude: location.longitude_deg,
+          outdoorSummer: {
+            dryBulbTemp: outdoorCondition.cooling_drybulb_14_c,
+            wetBulbTemp: outdoorCondition.cooling_wetbulb_14_c,
+            relativeHumidity: outdoorCondition.cooling_rh_14_pct,
+            absoluteHumidity: outdoorCondition.cooling_abs_humidity_14_g_per_kgda / 1000,
+            enthalpy: outdoorCondition.cooling_enthalpy_14_kj_per_kgda,
+          },
+          outdoorWinter: {
+            dryBulbTemp: outdoorCondition.heating_drybulb_c,
+            wetBulbTemp: outdoorCondition.heating_wetbulb_c,
+            relativeHumidity: outdoorCondition.heating_rh_pct,
+            absoluteHumidity: outdoorCondition.heating_abs_humidity_g_per_kgda / 1000,
+            enthalpy: outdoorCondition.heating_enthalpy_kj_per_kgda,
+          },
+        });
 
         showSnackbar('外気設計条件を自動設定しました', 'success');
       }
