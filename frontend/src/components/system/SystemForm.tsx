@@ -1,6 +1,19 @@
 // System form component
 
-import { Box, TextField, Typography, Button, FormControl, InputLabel, Select, MenuItem, Chip } from '@mui/material';
+import {
+  Box,
+  TextField,
+  Typography,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  Checkbox,
+  ListItemText,
+  OutlinedInput,
+} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { Save as SaveIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { System } from '../../types';
@@ -104,6 +117,34 @@ export const SystemForm: React.FC<SystemFormProps> = ({
         </Grid>
 
         <Grid size={{ xs: 12 }}>
+          <FormControl fullWidth>
+            <InputLabel>割り当て室</InputLabel>
+            <Select
+              multiple
+              value={formData.roomIds || []}
+              input={<OutlinedInput label="割り当て室" />}
+              onChange={(e) => onChange('roomIds', e.target.value)}
+              renderValue={(selected) =>
+                rooms
+                  .filter((room) => (selected as string[]).includes(room.id))
+                  .map((room) => `${room.floor} ${room.roomNumber} ${room.roomName}`)
+                  .join(', ')
+              }
+            >
+              {rooms.map((room) => {
+                const label = `${room.floor} ${room.roomNumber} ${room.roomName}`;
+                return (
+                  <MenuItem key={room.id} value={room.id}>
+                    <Checkbox checked={(formData.roomIds || []).includes(room.id)} />
+                    <ListItemText primary={label} />
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
           <TextField
             fullWidth
             type="number"
@@ -131,7 +172,7 @@ export const SystemForm: React.FC<SystemFormProps> = ({
               ))
             ) : (
               <Typography variant="body2" color="text.secondary">
-                室が割り当てられていません（室登録ページで割り当てできます）
+                室が割り当てられていません
               </Typography>
             )}
           </Box>

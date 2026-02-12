@@ -79,6 +79,9 @@ export const LoadCheckPage: React.FC = () => {
       }
 
       setLoadResults(results);
+      if (results.length > 0) {
+        setSelectedSystemId(results[0].systemId);
+      }
     } catch (error) {
       console.error('Calculation error:', error);
       showSnackbar(
@@ -124,7 +127,7 @@ export const LoadCheckPage: React.FC = () => {
             variant="contained"
             startIcon={calculating ? <CircularProgress size={20} /> : <CalculateIcon />}
             onClick={handleCalculate}
-            disabled={calculating || systems.length === 0 || rooms.length === 0}
+            disabled={calculating || rooms.length === 0}
             fullWidth
             sx={{ flex: { xs: '1 1 100%', sm: 'initial' } }}
           >
@@ -145,8 +148,8 @@ export const LoadCheckPage: React.FC = () => {
 
       {/* Validation warnings */}
       {systems.length === 0 && (
-        <Alert severity="warning" sx={{ mb: 3 }}>
-          系統が登録されていません。系統登録ページで系統を作成してください。
+        <Alert severity="info" sx={{ mb: 3 }}>
+          系統が登録されていないため、全室を1つの集計結果として計算します。
         </Alert>
       )}
 
@@ -169,7 +172,7 @@ export const LoadCheckPage: React.FC = () => {
         </Alert>
       )}
 
-      {systems.length > 0 && rooms.length > 0 && loadResults.length === 0 && (
+      {rooms.length > 0 && loadResults.length === 0 && (
         <Alert severity="info" sx={{ mb: 3 }}>
           「負荷計算実行」ボタンをクリックして計算を開始してください。
         </Alert>

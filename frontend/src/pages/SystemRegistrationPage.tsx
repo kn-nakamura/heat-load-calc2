@@ -2,7 +2,7 @@
 
 import { Box, Typography, Paper } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { useSystemStore, useUIStore } from '../stores';
+import { useRoomStore, useSystemStore, useUIStore } from '../stores';
 import { SystemTree, SystemForm } from '../components/system';
 import { System } from '../types';
 import { masterDataService } from '../db';
@@ -10,6 +10,7 @@ import { masterDataService } from '../db';
 export const SystemRegistrationPage: React.FC = () => {
   const { systems, getSystemTree, addSystem, updateSystem, deleteSystem, selectSystem, selectedSystemId } =
     useSystemStore();
+  const { rooms, updateRoom } = useRoomStore();
   const { showSnackbar } = useUIStore();
 
   const [formData, setFormData] = useState<Partial<System>>({});
@@ -64,7 +65,45 @@ export const SystemRegistrationPage: React.FC = () => {
     }
 
     try {
-      updateSystem(selectedSystemId, formData);
+      const selectedRoomIds = Array.from(new Set(formData.roomIds || []));
+      const selectedRoomIdSet = new Set(selectedRoomIds);
+
+      systems.forEach((system) => {
+        if (system.id === selectedSystemId) {
+          return;
+        }
+
+        const filteredRoomIds = system.roomIds.filter((roomId) => !selectedRoomIdSet.has(roomId));
+        if (filteredRoomIds.length !== system.roomIds.length) {
+          updateSystem(system.id, { roomIds: filteredRoomIds });
+        }
+      });
+
+      updateSystem(selectedSystemId, { ...formData, roomIds: selectedRoomIds });
+
+      rooms.forEach((room) => {
+        if (selectedRoomIdSet.has(room.id)) {
+          updateRoom(room.id, {
+            systemNotes: {
+              ...room.systemNotes,
+              systemId: selectedSystemId,
+              systemName: formData.name || null,
+            },
+          });
+          return;
+        }
+
+        if (room.systemNotes.systemId === selectedSystemId) {
+          updateRoom(room.id, {
+            systemNotes: {
+              ...room.systemNotes,
+              systemId: null,
+              systemName: null,
+            },
+          });
+        }
+      });
+
       await masterDataService.saveAllMasterData();
       showSnackbar('保存しました', 'success');
     } catch (error) {
@@ -94,6 +133,18 @@ export const SystemRegistrationPage: React.FC = () => {
     }
 
     try {
+      rooms.forEach((room) => {
+        if (room.systemNotes.systemId === id) {
+          updateRoom(room.id, {
+            systemNotes: {
+              ...room.systemNotes,
+              systemId: null,
+              systemName: null,
+            },
+          });
+        }
+      });
+
       deleteSystem(id);
       await masterDataService.saveAllMasterData();
       selectSystem(null);

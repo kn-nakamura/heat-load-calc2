@@ -88,6 +88,30 @@ function convertBackendResults(backendResult: BackendCalcResult, systems: System
     });
   });
 
+  if (systemResults.length === 0 && backendResult.room_results.length > 0) {
+    const roomLoads = backendResult.room_results.map((backendRoom) => convertRoomResult(backendRoom));
+
+    const summerSensibleLoad = roomLoads.reduce((sum, room) => sum + room.summer.totalSensibleLoad, 0);
+    const summerLatentLoad = roomLoads.reduce((sum, room) => sum + room.summer.totalLatentLoad, 0);
+    const winterSensibleLoad = roomLoads.reduce((sum, room) => sum + room.winter.totalSensibleLoad, 0);
+    const winterLatentLoad = roomLoads.reduce((sum, room) => sum + room.winter.totalLatentLoad, 0);
+
+    systemResults.push({
+      systemId: '__unassigned__',
+      systemName: '未系統（全室集計）',
+      summerSensibleLoad,
+      summerLatentLoad,
+      summerTotalLoad: summerSensibleLoad + summerLatentLoad,
+      winterSensibleLoad,
+      winterLatentLoad,
+      winterTotalLoad: winterSensibleLoad + winterLatentLoad,
+      outdoorAirVolume: 0,
+      exhaustAirVolume: 0,
+      roomCount: roomLoads.length,
+      roomLoads,
+    });
+  }
+
   return systemResults;
 }
 
