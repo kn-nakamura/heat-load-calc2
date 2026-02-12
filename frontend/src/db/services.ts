@@ -6,7 +6,9 @@ import {
   useMasterDataStore,
   useRoomStore,
   useSystemStore,
+  useUIStore,
 } from '../stores';
+import { fetchAllReferenceData, convertIndoorConditionsToMaster } from '../services/referenceData';
 
 // Project services
 export const projectService = {
@@ -80,8 +82,22 @@ export const masterDataService = {
       db.materials.toArray(),
     ]);
 
+    // If no indoor conditions exist in DB, populate from reference data
+    let finalIndoorConditions = indoorConditions;
+    if (indoorConditions.length === 0) {
+      const { referenceData } = useProjectStore.getState();
+      if (referenceData) {
+        const refConditions = convertIndoorConditionsToMaster(referenceData);
+        if (refConditions.length > 0) {
+          finalIndoorConditions = refConditions;
+          // Save to DB for persistence
+          await db.indoorConditions.bulkPut(refConditions);
+        }
+      }
+    }
+
     useMasterDataStore.getState().loadMasterData({
-      indoorConditions,
+      indoorConditions: finalIndoorConditions,
       lightingPower,
       occupancyHeat,
       equipmentPower,
@@ -171,15 +187,64 @@ export const systemService = {
   },
 };
 
+// Reference data services
+export const referenceDataService = {
+  async loadReferenceData(): Promise<void> {
+    try {
+      const referenceData = await fetchAllReferenceData();
+      useProjectStore.getState().setReferenceData(referenceData);
+    } catch (error) {
+      console.error('Failed to load reference data:', error);
+    }
+  },
+};
+
+// Session state services (for persisting page state on reload)
+export const sessionStateService = {
+  saveState(): void {
+    const { currentPage } = useUIStore.getState();
+    const { currentProject } = useProjectStore.getState();
+
+    sessionStorage.setItem('currentPage', currentPage);
+    if (currentProject) {
+      sessionStorage.setItem('currentProjectId', currentProject.id);
+    }
+  },
+
+  async restoreState(): Promise<void> {
+    const savedPage = sessionStorage.getItem('currentPage');
+    const savedProjectId = sessionStorage.getItem('currentProjectId');
+
+    if (savedPage) {
+      useUIStore.getState().setCurrentPage(savedPage as any);
+    }
+
+    if (savedProjectId) {
+      await projectService.loadProject(savedProjectId);
+    }
+  },
+
+  clearState(): void {
+    sessionStorage.removeItem('currentPage');
+    sessionStorage.removeItem('currentProjectId');
+  },
+};
+
 // Application initialization
 export const appService = {
   async initialize(): Promise<void> {
+    // Load reference data first (needed for default master data)
+    await referenceDataService.loadReferenceData();
+
     // Load all data from IndexedDB into stores
     await Promise.all([
       masterDataService.loadAllMasterData(),
       roomService.loadAllRooms(),
       systemService.loadAllSystems(),
     ]);
+
+    // Restore session state after data is loaded
+    await sessionStateService.restoreState();
   },
 
   async saveAll(): Promise<void> {
@@ -190,6 +255,9 @@ export const appService = {
       roomService.saveAllRooms(),
       systemService.saveAllSystems(),
     ]);
+
+    // Save session state
+    sessionStateService.saveState();
   },
 
   async exportData(): Promise<string> {
