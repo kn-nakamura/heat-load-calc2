@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Calculate as CalculateIcon, GetApp as DownloadIcon, Cloud as CloudIcon, Computer as ComputerIcon } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
-import { useProjectStore, useRoomStore, useSystemStore, useUIStore } from '../stores';
+import { useProjectStore, useRoomStore, useSystemStore, useUIStore, useMasterDataStore } from '../stores';
 import { LoadSummaryCard, LoadResultsTable } from '../components/load';
 import { SystemLoadResult } from '../types/system';
 import { calculateAllSystemLoads } from '../services/loadCalculation';
@@ -26,6 +26,7 @@ export const LoadCheckPage: React.FC = () => {
   const { rooms } = useRoomStore();
   const { systems } = useSystemStore();
   const { showSnackbar } = useUIStore();
+  const { lightingPower, occupancyHeat, equipmentPower } = useMasterDataStore();
 
   const [selectedSystemId, setSelectedSystemId] = useState<string>('');
   const [loadResults, setLoadResults] = useState<SystemLoadResult[]>([]);
@@ -63,7 +64,11 @@ export const LoadCheckPage: React.FC = () => {
       if (backendAvailable && useBackend) {
         // Use backend calculation
         showSnackbar('バックエンド計算を実行中...', 'info');
-        results = await calculateWithBackend(currentProject, rooms, systems);
+        results = await calculateWithBackend(currentProject, rooms, systems, {
+          lightingPower,
+          occupancyHeat,
+          equipmentPower,
+        });
         showSnackbar('計算が完了しました（バックエンド使用）', 'success');
       } else {
         // Use frontend calculation

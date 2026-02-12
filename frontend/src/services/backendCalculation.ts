@@ -3,6 +3,7 @@
 import { Project } from '../types/project';
 import { Room } from '../types/room';
 import { System } from '../types/system';
+import { EquipmentPowerMaster, LightingPowerMaster, OccupancyHeatMaster } from '../types';
 import { SystemLoadResult, RoomLoadResult } from '../types/system';
 import { runCalculation, BackendCalcResult, BackendLoadVector, checkBackendHealth } from './api';
 import { mapProjectToBackend } from './dataMapper';
@@ -17,13 +18,20 @@ export async function isBackendAvailable(): Promise<boolean> {
 /**
  * Calculate loads using backend API
  */
+interface BackendCalculationMasterData {
+  lightingPower: LightingPowerMaster[];
+  occupancyHeat: OccupancyHeatMaster[];
+  equipmentPower: EquipmentPowerMaster[];
+}
+
 export async function calculateWithBackend(
   project: Project,
   rooms: Room[],
-  systems: System[]
+  systems: System[],
+  masterData: BackendCalculationMasterData
 ): Promise<SystemLoadResult[]> {
   // Convert frontend data to backend format
-  const backendProject = mapProjectToBackend(project, rooms, systems);
+  const backendProject = mapProjectToBackend(project, rooms, systems, masterData);
 
   // Call backend calculation
   const result = await runCalculation(backendProject);

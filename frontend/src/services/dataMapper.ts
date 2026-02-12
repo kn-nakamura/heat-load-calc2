@@ -3,7 +3,14 @@
 import { Project as FrontendProject, DesignConditions } from '../types/project';
 import { Room as FrontendRoom } from '../types/room';
 import { System as FrontendSystem } from '../types/system';
+import { EquipmentPowerMaster, LightingPowerMaster, OccupancyHeatMaster } from '../types';
 import { BackendProject } from './api';
+
+interface MapperMasterData {
+  lightingPower: LightingPowerMaster[];
+  occupancyHeat: OccupancyHeatMaster[];
+  equipmentPower: EquipmentPowerMaster[];
+}
 
 /**
  * Convert frontend project to backend project format
@@ -11,7 +18,8 @@ import { BackendProject } from './api';
 export function mapProjectToBackend(
   project: FrontendProject,
   rooms: FrontendRoom[],
-  systems: FrontendSystem[]
+  systems: FrontendSystem[],
+  masterData: MapperMasterData
 ): BackendProject {
   const designConditions = mapDesignConditionsToBackend(project.designConditions);
   const backendRooms = rooms.map((room) => mapRoomToBackend(room));
@@ -20,6 +28,8 @@ export function mapProjectToBackend(
   // Extract surfaces from rooms
   const surfaces: any[] = [];
   const openings: any[] = [];
+  const internalLoads: any[] = [];
+  const ventilationInfiltration: any[] = [];
 
   rooms.forEach((room) => {
     room.envelope.rows.forEach((row, index) => {
@@ -56,6 +66,9 @@ export function mapProjectToBackend(
         }
       }
     });
+
+    internalLoads.push(...mapRoomInternalLoads(room, masterData));
+    ventilationInfiltration.push(mapRoomVentilation(room));
   });
 
   return {
@@ -84,9 +97,9 @@ export function mapProjectToBackend(
     openings: openings,
     constructions: [], // Would need envelope master data
     glasses: [], // Would need glass master data
-    internal_loads: [], // Would be extracted from room internal conditions
+    internal_loads: internalLoads,
     mechanical_loads: [],
-    ventilation_infiltration: [],
+    ventilation_infiltration: ventilationInfiltration,
     systems: backendSystems,
   };
 }
@@ -130,7 +143,103 @@ function mapSystemToBackend(system: FrontendSystem): any {
     id: system.id,
     name: system.name,
     parent_id: system.parentId,
+    room_ids: system.roomIds,
   };
+}
+
+function mapRoomInternalLoads(room: FrontendRoom, masterData: MapperMasterData): any[] {
+  const loads: any[] = [];
+  const area = room.floorArea || 0;
+  const occupancyCount = room.calculationConditions.occupancyCount || 0;
+
+  const lightingMaster = masterData.lightingPower.find((item) => item.id === room.indoorConditions.lightingCode);
+  const lightingPowerDensity = selectLightingPowerDensity(lightingMaster, room.indoorConditions.lightingType);
+  if (lightingPowerDensity > 0 && area > 0) {
+    loads.push({
+      id: `${room.id}_lighting`,
+      room_id: room.id,
+      kind: 'lighting',
+      sensible_w: lightingPowerDensity * area,
+      latent_w: 0,
+    });
+  }
+
+  const occupancyMaster = masterData.occupancyHeat.find((item) => item.id === room.indoorConditions.occupancyCode);
+  if (occupancyMaster && occupancyCount > 0) {
+    loads.push({
+      id: `${room.id}_occupancy`,
+      room_id: room.id,
+      kind: 'occupancy',
+      sensible_w: occupancyMaster.summer.sensibleHeat * occupancyCount,
+      latent_w: occupancyMaster.summer.latentHeat * occupancyCount,
+    });
+  }
+
+  const equipmentMaster = masterData.equipmentPower.find((item) => item.id === room.indoorConditions.equipmentCode);
+  if (equipmentMaster && area > 0) {
+    loads.push({
+      id: `${room.id}_equipment`,
+      room_id: room.id,
+      kind: 'equipment',
+      sensible_w: equipmentMaster.powerDensity * area,
+      latent_w: 0,
+    });
+  }
+
+  const otherSensibleLoad = room.calculationConditions.otherSensibleLoad || 0;
+  const otherLatentLoad = room.calculationConditions.otherLatentLoad || 0;
+  if (otherSensibleLoad > 0 || otherLatentLoad > 0) {
+    loads.push({
+      id: `${room.id}_other`,
+      room_id: room.id,
+      kind: 'other',
+      sensible_w: otherSensibleLoad,
+      latent_w: otherLatentLoad,
+    });
+  }
+
+  return loads;
+}
+
+function mapRoomVentilation(room: FrontendRoom): any {
+  return {
+    id: `${room.id}_ventilation`,
+    room_id: room.id,
+    outdoor_air_m3h: room.calculationConditions.outdoorAirVolume || 0,
+    infiltration_mode: room.calculationConditions.infiltrationMethod || 'none',
+    infiltration_area_m2: (room.calculationConditions.infiltrationArea || 0) / 10000,
+    sash_type: room.calculationConditions.windowType || null,
+    airtightness: room.calculationConditions.airtightness || null,
+    wind_speed_ms: room.calculationConditions.windSpeed || null,
+    air_changes_per_hour: room.calculationConditions.ventilationCount || null,
+  };
+}
+
+function selectLightingPowerDensity(
+  lightingMaster: LightingPowerMaster | undefined,
+  lightingType: string | null,
+): number {
+  if (!lightingMaster) {
+    return 0;
+  }
+
+  switch (lightingType) {
+    case '蛍光灯ダウンライト':
+      return lightingMaster.powerDensity.fluorescentDownlight;
+    case '蛍光灯ルーバ':
+      return lightingMaster.powerDensity.fluorescentLouver;
+    case 'LEDダウンライト':
+      return lightingMaster.powerDensity.ledDownlight;
+    case 'LEDルーバ':
+      return lightingMaster.powerDensity.ledLouver;
+    case '白熱灯':
+      return Math.max(
+        lightingMaster.powerDensity.fluorescentAcrylicCover,
+        lightingMaster.powerDensity.fluorescentDownlight,
+      );
+    default:
+      return lightingMaster.powerDensity.ledDownlight || lightingMaster.powerDensity.fluorescentDownlight;
+  }
 }
 
 function mapEnvelopeTypeToSurfaceKind(type: string): string {
