@@ -3,7 +3,7 @@
   "source_excel": "Thermal Load Data.xlsx",
   "files": [
     {
-      "file": "aluminum_sash_infiltration_from_excel.json",
+      "file": "aluminum_sash_infiltration.json",
       "source_sheet": "表3-3_アルミサッシのすきま風の量",
       "top_level_keys": [
         "metadata",
@@ -33,7 +33,7 @@
       "count": 3
     },
     {
-      "file": "design_outdoor_conditions_from_excel.json",
+      "file": "design_outdoor_conditions.json",
       "source_sheet": "表2-6_設計用屋外条件",
       "top_level_keys": [
         "metadata",
@@ -43,7 +43,7 @@
       "count": 80
     },
     {
-      "file": "execution_temperature_difference_from_excel.json",
+      "file": "execution_temperature_difference.json",
       "source_sheet": "表2-8_実行温度差ETD",
       "top_level_keys": [
         "metadata",
@@ -84,7 +84,7 @@
       "count": 23
     },
     {
-      "file": "heating_orientation_factors_from_excel.json",
+      "file": "heating_orientation_factors.json",
       "source_sheet": "表3-1_方位係数",
       "top_level_keys": [
         "metadata",
@@ -144,7 +144,7 @@
       "count": 8
     },
     {
-      "file": "others_tables_from_excel.json",
+      "file": "others_tables.json",
       "source_sheet": "表3-1_方位係数",
       "top_level_keys": [
         "metadata",
@@ -155,7 +155,7 @@
       "count": 14
     },
     {
-      "file": "standard_solar_gain_from_excel.json",
+      "file": "standard_solar_gain.json",
       "source_sheet": "表2-10_ガラス面標準日射熱取得、太陽高度、太陽方位",
       "top_level_keys": [
         "metadata",
