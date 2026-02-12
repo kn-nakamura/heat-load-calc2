@@ -78,6 +78,22 @@ export interface StandardSolarGainData {
   };
 }
 
+export interface ExecutionTemperatureDifferenceData {
+  [city: string]: {
+    [indoorTemp: string]: {
+      [wallType: string]: {
+        [category: string]: {
+          [time: string]: number;
+        } | {
+          [orientation: string]: {
+            [time: string]: number;
+          };
+        };
+      };
+    };
+  };
+}
+
 export interface ReferenceData {
   design_indoor_conditions: {
     metadata: any;
@@ -102,6 +118,11 @@ export interface ReferenceData {
   standard_solar_gain?: {
     metadata: any;
     regions: StandardSolarGainData;
+    units: any;
+  };
+  execution_temperature_difference?: {
+    metadata: any;
+    regions: ExecutionTemperatureDifferenceData;
     units: any;
   };
   material_thermal_constants?: {
@@ -136,6 +157,7 @@ export async function fetchAllReferenceData(): Promise<Partial<ReferenceData>> {
     'location_data',
     'heating_ground_temperature',
     'standard_solar_gain',
+    'execution_temperature_difference',
     'material_thermal_constants',
     'glass_properties',
     'lighting_power_density',
@@ -263,6 +285,17 @@ export function getSolarGainByCity(
   city: string
 ): StandardSolarGainData[string] | null {
   const regions = referenceData.standard_solar_gain?.regions;
+  return regions?.[city] || null;
+}
+
+/**
+ * Get execution temperature difference (ETD) data by city
+ */
+export function getETDByCity(
+  referenceData: ReferenceData,
+  city: string
+): ExecutionTemperatureDifferenceData[string] | null {
+  const regions = referenceData.execution_temperature_difference?.regions;
   return regions?.[city] || null;
 }
 

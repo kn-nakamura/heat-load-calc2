@@ -7,6 +7,7 @@ import {
   OutdoorConditionsDetailTable,
   HeatingGroundTemperatureTable,
   StandardSolarGainTable,
+  ExecutionTemperatureDifferenceTable,
   RegionBasicInfo
 } from '../components/region';
 import {
@@ -14,6 +15,7 @@ import {
   getOutdoorConditionByCity,
   getGroundTemperatureByCity,
   getSolarGainByCity,
+  getETDByCity,
   ReferenceData
 } from '../services/referenceData';
 
@@ -71,6 +73,13 @@ export const RegionDataPage: React.FC = () => {
   const isAutoSelectedCity = !currentProject.designConditions.locationLabel;
   const cityLabel = currentProject.designConditions.locationLabel ||
                     getRepresentativeCityForRegion(currentProject.designConditions.region);
+
+  // Debug logging
+  console.log('RegionDataPage - locationLabel:', currentProject.designConditions.locationLabel);
+  console.log('RegionDataPage - region:', currentProject.designConditions.region);
+  console.log('RegionDataPage - cityLabel:', cityLabel);
+  console.log('RegionDataPage - isAutoSelectedCity:', isAutoSelectedCity);
+
   const outdoorConditions = referenceData && cityLabel
     ? getOutdoorConditionByCity(referenceData as ReferenceData, cityLabel)
     : null;
@@ -80,6 +89,13 @@ export const RegionDataPage: React.FC = () => {
   const solarGain = referenceData && cityLabel
     ? getSolarGainByCity(referenceData as ReferenceData, cityLabel)
     : null;
+  const etdData = referenceData && cityLabel
+    ? getETDByCity(referenceData as ReferenceData, cityLabel)
+    : null;
+
+  console.log('RegionDataPage - outdoorConditions:', outdoorConditions);
+  console.log('RegionDataPage - solarGain:', solarGain);
+  console.log('RegionDataPage - etdData:', etdData);
 
   return (
     <Box>
@@ -129,6 +145,13 @@ export const RegionDataPage: React.FC = () => {
       {!isLoadingReference && (
         <Paper sx={{ p: 3, mb: 3 }}>
           <StandardSolarGainTable data={solarGain} city={cityLabel} />
+        </Paper>
+      )}
+
+      {/* Execution Temperature Difference (ETD) */}
+      {!isLoadingReference && (
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <ExecutionTemperatureDifferenceTable data={etdData} city={cityLabel} />
         </Paper>
       )}
     </Box>

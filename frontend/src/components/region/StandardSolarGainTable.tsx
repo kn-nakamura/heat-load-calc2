@@ -20,6 +20,9 @@ interface StandardSolarGainTableProps {
 }
 
 export const StandardSolarGainTable: React.FC<StandardSolarGainTableProps> = ({ data, city }) => {
+  console.log('StandardSolarGainTable - city:', city);
+  console.log('StandardSolarGainTable - data:', data);
+
   if (!data) {
     return (
       <Box>
@@ -27,7 +30,7 @@ export const StandardSolarGainTable: React.FC<StandardSolarGainTableProps> = ({ 
           標準日射熱取得
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          都市が選択されていません
+          都市が選択されていません (data is null)
         </Typography>
       </Box>
     );
@@ -42,6 +45,9 @@ export const StandardSolarGainTable: React.FC<StandardSolarGainTableProps> = ({ 
   // Extract solar altitude and azimuth
   const solarAltitude = data._solar_altitude_deg || {};
   const solarAzimuth = data._solar_azimuth_deg || {};
+
+  console.log('StandardSolarGainTable - solarAltitude:', solarAltitude);
+  console.log('StandardSolarGainTable - solarAzimuth:', solarAzimuth);
 
   return (
     <Box>
