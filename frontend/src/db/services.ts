@@ -279,15 +279,27 @@ export const sessionStateService = {
     const { currentPage } = useUIStore.getState();
     const { currentProject } = useProjectStore.getState();
 
-    sessionStorage.setItem('currentPage', currentPage);
-    if (currentProject) {
-      sessionStorage.setItem('currentProjectId', currentProject.id);
+    try {
+      sessionStorage.setItem('currentPage', currentPage);
+      if (currentProject) {
+        sessionStorage.setItem('currentProjectId', currentProject.id);
+      }
+    } catch (error) {
+      console.warn('Session state save skipped because storage is unavailable:', error);
     }
   },
 
   async restoreState(): Promise<void> {
-    const savedPage = sessionStorage.getItem('currentPage');
-    const savedProjectId = sessionStorage.getItem('currentProjectId');
+    let savedPage: string | null = null;
+    let savedProjectId: string | null = null;
+
+    try {
+      savedPage = sessionStorage.getItem('currentPage');
+      savedProjectId = sessionStorage.getItem('currentProjectId');
+    } catch (error) {
+      console.warn('Session state restore skipped because storage is unavailable:', error);
+      return;
+    }
 
     if (savedPage) {
       useUIStore.getState().setCurrentPage(savedPage as any);
@@ -299,8 +311,12 @@ export const sessionStateService = {
   },
 
   clearState(): void {
-    sessionStorage.removeItem('currentPage');
-    sessionStorage.removeItem('currentProjectId');
+    try {
+      sessionStorage.removeItem('currentPage');
+      sessionStorage.removeItem('currentProjectId');
+    } catch (error) {
+      console.warn('Session state clear skipped because storage is unavailable:', error);
+    }
   },
 };
 
