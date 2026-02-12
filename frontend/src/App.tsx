@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { MainLayout } from './components/layout';
 import { useUIStore } from './stores';
-import { appService } from './db';
+import { appService, sessionStateService } from './db';
 import {
   DesignConditionsPage,
   RegionDataPage,
@@ -94,6 +94,20 @@ export default function App() {
 
     initializeApp();
   }, [showSnackbar]);
+
+  // Save state when page changes or before unload
+  useEffect(() => {
+    sessionStateService.saveState();
+  }, [currentPage]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStateService.saveState();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   // Render current page based on navigation state
   const renderPage = () => {

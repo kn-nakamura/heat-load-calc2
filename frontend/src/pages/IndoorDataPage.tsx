@@ -1,6 +1,7 @@
 // Indoor data page (屋内データ)
 
-import { Box, Typography, Paper, Tabs, Tab } from '@mui/material';
+import { Box, Typography, Paper, Tabs, Tab, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ViewList as ViewListIcon, TableChart as TableChartIcon } from '@mui/icons-material';
 import { useState } from 'react';
 import { useUIStore, IndoorDataTab, useMasterDataStore } from '../stores';
 import {
@@ -10,6 +11,7 @@ import {
   OccupancyHeatForm,
   EquipmentPowerForm,
   NonAirConditionedTempDiffForm,
+  IndoorConditionsTable,
 } from '../components/masterData';
 import {
   IndoorConditionMaster,
@@ -37,6 +39,8 @@ export const IndoorDataPage: React.FC = () => {
     equipmentPower,
     nonAirConditionedTempDiff,
     addIndoorCondition,
+    updateIndoorCondition,
+    deleteIndoorCondition,
     addLightingPower,
     addOccupancyHeat,
     addEquipmentPower,
@@ -44,6 +48,13 @@ export const IndoorDataPage: React.FC = () => {
   } = useMasterDataStore();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'form' | 'table'>('form');
+
+  const handleViewModeChange = (_event: React.MouseEvent<HTMLElement>, newMode: 'form' | 'table' | null) => {
+    if (newMode !== null) {
+      setViewMode(newMode);
+    }
+  };
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: IndoorDataTab) => {
     setIndoorDataTab(newValue);
@@ -194,9 +205,42 @@ export const IndoorDataPage: React.FC = () => {
     }
   };
 
+  const handleUpdateIndoorCondition = async (id: string, updates: Partial<IndoorConditionMaster>) => {
+    try {
+      updateIndoorCondition(id, updates);
+      await masterDataService.saveAllMasterData();
+    } catch (error) {
+      console.error('Update error:', error);
+      showSnackbar('更新に失敗しました', 'error');
+    }
+  };
+
+  const handleDeleteIndoorCondition = async (id: string) => {
+    try {
+      deleteIndoorCondition(id);
+      await masterDataService.saveAllMasterData();
+      showSnackbar('削除しました', 'success');
+    } catch (error) {
+      console.error('Delete error:', error);
+      showSnackbar('削除に失敗しました', 'error');
+    }
+  };
+
   const renderTabContent = () => {
     switch (indoorDataTab) {
       case 'indoor-conditions':
+        if (viewMode === 'table') {
+          return (
+            <Box sx={{ p: 2 }}>
+              <IndoorConditionsTable
+                data={indoorConditions}
+                onUpdate={handleUpdateIndoorCondition}
+                onAdd={handleAddIndoorCondition}
+                onDelete={handleDeleteIndoorCondition}
+              />
+            </Box>
+          );
+        }
         return (
           <Box sx={{ display: 'flex', height: '600px' }}>
             <Box sx={{ width: '33%', minWidth: '250px' }}>
@@ -293,9 +337,19 @@ export const IndoorDataPage: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        屋内データ
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h4">屋内データ</Typography>
+        <ToggleButtonGroup value={viewMode} exclusive onChange={handleViewModeChange} size="small">
+          <ToggleButton value="form" aria-label="form view">
+            <ViewListIcon sx={{ mr: 1 }} />
+            フォーム
+          </ToggleButton>
+          <ToggleButton value="table" aria-label="table view">
+            <TableChartIcon sx={{ mr: 1 }} />
+            テーブル
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
       <Paper sx={{ mt: 2 }}>
         <Tabs value={indoorDataTab} onChange={handleTabChange}>
           {tabs.map((tab) => (

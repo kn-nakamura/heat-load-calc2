@@ -1,8 +1,11 @@
 // Location settings form component
 
-import { Box, TextField, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, TextField, Typography, FormControl, InputLabel, Select, MenuItem, Autocomplete, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { Search as SearchIcon } from '@mui/icons-material';
 import { DesignConditions } from '../../types';
+import { useProjectStore } from '../../stores';
+import { searchLocationsByCity, findNearestLocation, getOutdoorConditionByCity } from '../../services/referenceData';
 
 interface LocationSettingsFormProps {
   formData: DesignConditions;
@@ -14,6 +17,49 @@ const solarRegions = ['A1', 'A2', 'A3', 'A4', 'A5'];
 const orientationBases = ['真北', '磁北'];
 
 export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ formData, onChange }) => {
+  const { referenceData } = useProjectStore();
+
+  const availableCities = referenceData?.location_data?.records.map((r) => r.city) || [];
+
+  const handleCitySelect = (city: string | null) => {
+    if (!city || !referenceData) return;
+
+    const location = referenceData.location_data?.records.find((r) => r.city === city);
+    if (!location) return;
+
+    onChange('locationLabel', city);
+    onChange('latitude', location.latitude_deg);
+    onChange('longitude', location.longitude_deg);
+
+    // Also update outdoor conditions based on the city
+    const outdoorCondition = getOutdoorConditionByCity(referenceData as any, city);
+    if (outdoorCondition) {
+      onChange('outdoorSummer', {
+        dryBulbTemp: outdoorCondition.cooling_drybulb_14_c,
+        wetBulbTemp: outdoorCondition.cooling_wetbulb_14_c,
+        relativeHumidity: outdoorCondition.cooling_rh_14_pct,
+        absoluteHumidity: outdoorCondition.cooling_abs_humidity_14_g_per_kgda / 1000, // Convert g to kg
+        enthalpy: outdoorCondition.cooling_enthalpy_14_kj_per_kgda,
+      });
+      onChange('outdoorWinter', {
+        dryBulbTemp: outdoorCondition.heating_drybulb_c,
+        wetBulbTemp: outdoorCondition.heating_wetbulb_c,
+        relativeHumidity: outdoorCondition.heating_rh_pct,
+        absoluteHumidity: outdoorCondition.heating_abs_humidity_g_per_kgda / 1000, // Convert g to kg
+        enthalpy: outdoorCondition.heating_enthalpy_kj_per_kgda,
+      });
+    }
+  };
+
+  const handleSearchNearby = () => {
+    if (!formData.latitude || !formData.longitude || !referenceData) return;
+
+    const result = findNearestLocation(referenceData as any, formData.latitude, formData.longitude);
+    if (result) {
+      handleCitySelect(result.location.city);
+    }
+  };
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -22,12 +68,26 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
 
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <TextField
-            fullWidth
-            label="地点名"
+          <Autocomplete
+            freeSolo
+            options={availableCities}
             value={formData.locationLabel || ''}
-            onChange={(e) => onChange('locationLabel', e.target.value)}
-            placeholder="例: 東京、大阪、札幌"
+            onInputChange={(_, newValue) => {
+              onChange('locationLabel', newValue);
+            }}
+            onChange={(_, newValue) => {
+              if (typeof newValue === 'string') {
+                handleCitySelect(newValue);
+              }
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="地点名"
+                placeholder="例: 東京、大阪、札幌"
+                helperText="都市名で検索してください"
+              />
+            )}
           />
         </Grid>
 
@@ -87,6 +147,17 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
             inputProps={{ step: 0.01 }}
             placeholder="東経"
           />
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <Button
+            variant="outlined"
+            startIcon={<SearchIcon />}
+            onClick={handleSearchNearby}
+            disabled={!formData.latitude || !formData.longitude}
+          >
+            最寄りの地点を検索
+          </Button>
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6 }}>

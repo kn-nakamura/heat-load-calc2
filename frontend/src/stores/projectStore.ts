@@ -2,16 +2,21 @@
 
 import { create } from 'zustand';
 import { Project, DesignConditions, RegionClimateData } from '../types';
+import { ReferenceData } from '../services/referenceData';
 
 interface ProjectState {
   // Current project
   currentProject: Project | null;
+
+  // Reference data from backend
+  referenceData: Partial<ReferenceData> | null;
 
   // Actions
   setCurrentProject: (project: Project | null) => void;
   updateDesignConditions: (conditions: Partial<DesignConditions>) => void;
   updateRegionClimateData: (data: RegionClimateData | null) => void;
   createNewProject: (name: string) => void;
+  setReferenceData: (data: Partial<ReferenceData>) => void;
 }
 
 // Default design conditions
@@ -52,6 +57,7 @@ const defaultDesignConditions: DesignConditions = {
 
 export const useProjectStore = create<ProjectState>((set) => ({
   currentProject: null,
+  referenceData: null,
 
   setCurrentProject: (project) => set({ currentProject: project }),
 
@@ -95,4 +101,6 @@ export const useProjectStore = create<ProjectState>((set) => ({
     };
     set({ currentProject: newProject });
   },
+
+  setReferenceData: (data) => set({ referenceData: data }),
 }));

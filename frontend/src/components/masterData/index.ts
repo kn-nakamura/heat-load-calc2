@@ -2,6 +2,7 @@
 
 export * from './MasterDataList';
 export * from './IndoorConditionsForm';
+export * from './IndoorConditionsTable';
 export * from './LightingPowerForm';
 export * from './OccupancyHeatForm';
 export * from './EquipmentPowerForm';
