@@ -180,5 +180,32 @@ export function calculateAllSystemLoads(
   designConditions: DesignConditions,
   climateData?: RegionClimateData
 ): SystemLoadResult[] {
+  if (systems.length === 0) {
+    const roomLoads = rooms.map((room) => calculateRoomLoad(room, designConditions, climateData));
+
+    const summerSensibleLoad = roomLoads.reduce((sum, r) => sum + r.summer.totalSensibleLoad, 0);
+    const summerLatentLoad = roomLoads.reduce((sum, r) => sum + r.summer.totalLatentLoad, 0);
+    const winterSensibleLoad = roomLoads.reduce((sum, r) => sum + r.winter.totalSensibleLoad, 0);
+    const winterLatentLoad = roomLoads.reduce((sum, r) => sum + r.winter.totalLatentLoad, 0);
+    const outdoorAirVolume = roomLoads.reduce((sum, r) => sum + r.outdoorAirVolume, 0);
+
+    return [
+      {
+        systemId: '__unassigned__',
+        systemName: '未系統（全室集計）',
+        summerSensibleLoad,
+        summerLatentLoad,
+        summerTotalLoad: summerSensibleLoad + summerLatentLoad,
+        winterSensibleLoad,
+        winterLatentLoad,
+        winterTotalLoad: winterSensibleLoad + winterLatentLoad,
+        outdoorAirVolume,
+        exhaustAirVolume: outdoorAirVolume,
+        roomCount: roomLoads.length,
+        roomLoads,
+      },
+    ];
+  }
+
   return systems.map((system) => calculateSystemLoad(system, rooms, designConditions, climateData));
 }
