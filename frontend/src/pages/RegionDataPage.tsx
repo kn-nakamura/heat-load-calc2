@@ -1,6 +1,6 @@
 // Region data page (地区データ)
 
-import { Box, Typography, Paper, Button, Grid } from '@mui/material';
+import { Box, Typography, Paper, Button, Grid, Alert } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import { useProjectStore, useUIStore } from '../stores';
@@ -107,8 +107,25 @@ export const RegionDataPage: React.FC = () => {
     );
   }
 
+  // Get representative city for the region if no city is selected
+  const getRepresentativeCityForRegion = (region: string): string => {
+    const regionMap: { [key: string]: string } = {
+      '1地域': '札幌',
+      '2地域': '盛岡',
+      '3地域': '仙台',
+      '4地域': '東京',
+      '5地域': '長野',
+      '6地域': '東京',
+      '7地域': '福岡',
+      '8地域': '那覇',
+    };
+    return regionMap[region] || '東京';
+  };
+
   // Get outdoor conditions and ground temperature for the selected city
-  const cityLabel = currentProject.designConditions.locationLabel || '';
+  const isAutoSelectedCity = !currentProject.designConditions.locationLabel;
+  const cityLabel = currentProject.designConditions.locationLabel ||
+                    getRepresentativeCityForRegion(currentProject.designConditions.region);
   const outdoorConditions = referenceData && cityLabel
     ? getOutdoorConditionByCity(referenceData as ReferenceData, cityLabel)
     : null;
@@ -130,12 +147,20 @@ export const RegionDataPage: React.FC = () => {
         </Button>
       </Box>
 
+      {/* Auto-selected city notification */}
+      {isAutoSelectedCity && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          地点が選択されていないため、{currentProject.designConditions.region}の代表地点として「{cityLabel}」のデータを表示しています。
+          設計条件ページで地点を選択すると、選択した地点のデータが表示されます。
+        </Alert>
+      )}
+
       {/* Region Basic Info */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <RegionBasicInfo
           region={currentProject.designConditions.region}
           solarRegion={currentProject.designConditions.solarRegion}
-          city={currentProject.designConditions.locationLabel}
+          city={cityLabel}
           latitude={currentProject.designConditions.latitude}
           longitude={currentProject.designConditions.longitude}
           orientationBasis={currentProject.designConditions.orientationBasis}
