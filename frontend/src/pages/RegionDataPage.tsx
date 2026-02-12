@@ -1,18 +1,33 @@
 // Region data page (地区データ)
 
-import { Box, Typography, Paper, Button, Divider } from '@mui/material';
+import { Box, Typography, Paper, Button, Grid } from '@mui/material';
 import { Save as SaveIcon } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import { useProjectStore, useUIStore } from '../stores';
-import { MonthlyTemperatureTable, SolarRadiationTable, GroundTemperatureTable } from '../components/region';
+import {
+  MonthlyTemperatureTable,
+  SolarRadiationTable,
+  GroundTemperatureTable,
+  OutdoorConditionsDetailTable,
+  HeatingGroundTemperatureTable,
+  RegionBasicInfo
+} from '../components/region';
 import { RegionClimateData } from '../types';
 import { masterDataService } from '../db';
+import {
+  fetchAllReferenceData,
+  getOutdoorConditionByCity,
+  getGroundTemperatureByCity,
+  ReferenceData
+} from '../services/referenceData';
 
 export const RegionDataPage: React.FC = () => {
   const { currentProject, updateRegionClimateData } = useProjectStore();
   const { showSnackbar } = useUIStore();
 
   const [formData, setFormData] = useState<RegionClimateData | null>(null);
+  const [referenceData, setReferenceData] = useState<Partial<ReferenceData> | null>(null);
+  const [isLoadingReference, setIsLoadingReference] = useState(true);
 
   useEffect(() => {
     if (currentProject) {
@@ -39,6 +54,24 @@ export const RegionDataPage: React.FC = () => {
       }
     }
   }, [currentProject]);
+
+  useEffect(() => {
+    // Fetch reference data from backend
+    const loadReferenceData = async () => {
+      try {
+        setIsLoadingReference(true);
+        const data = await fetchAllReferenceData();
+        setReferenceData(data);
+      } catch (error) {
+        console.error('Failed to fetch reference data:', error);
+        showSnackbar('参照データの取得に失敗しました', 'warning');
+      } finally {
+        setIsLoadingReference(false);
+      }
+    };
+
+    loadReferenceData();
+  }, [showSnackbar]);
 
   const handleSave = async () => {
     if (!formData) {
@@ -74,13 +107,22 @@ export const RegionDataPage: React.FC = () => {
     );
   }
 
+  // Get outdoor conditions and ground temperature for the selected city
+  const cityLabel = currentProject.designConditions.locationLabel || '';
+  const outdoorConditions = referenceData && cityLabel
+    ? getOutdoorConditionByCity(referenceData as ReferenceData, cityLabel)
+    : null;
+  const groundTemperature = referenceData && cityLabel
+    ? getGroundTemperatureByCity(referenceData as ReferenceData, cityLabel)
+    : null;
+
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Box>
           <Typography variant="h4">地区データ</Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            地域: {formData.region}
+            地域: {formData.region} {cityLabel && `/ 地点: ${cityLabel}`}
           </Typography>
         </Box>
         <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSave}>
@@ -88,6 +130,34 @@ export const RegionDataPage: React.FC = () => {
         </Button>
       </Box>
 
+      {/* Region Basic Info */}
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <RegionBasicInfo
+          region={currentProject.designConditions.region}
+          solarRegion={currentProject.designConditions.solarRegion}
+          city={currentProject.designConditions.locationLabel}
+          latitude={currentProject.designConditions.latitude}
+          longitude={currentProject.designConditions.longitude}
+          orientationBasis={currentProject.designConditions.orientationBasis}
+          orientationAngle={currentProject.designConditions.orientationAngle}
+        />
+      </Paper>
+
+      {/* Outdoor Conditions Detail */}
+      {!isLoadingReference && (
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <OutdoorConditionsDetailTable data={outdoorConditions} />
+        </Paper>
+      )}
+
+      {/* Heating Ground Temperature */}
+      {!isLoadingReference && (
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <HeatingGroundTemperatureTable data={groundTemperature} />
+        </Paper>
+      )}
+
+      {/* Monthly Temperature */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <MonthlyTemperatureTable
           data={formData.monthlyTemperatures}
@@ -95,6 +165,7 @@ export const RegionDataPage: React.FC = () => {
         />
       </Paper>
 
+      {/* Solar Radiation */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <SolarRadiationTable
           data={formData.solarRadiation}
@@ -102,6 +173,7 @@ export const RegionDataPage: React.FC = () => {
         />
       </Paper>
 
+      {/* Ground Temperature (User Editable) */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <GroundTemperatureTable
           data={formData.groundTemperatures}

@@ -63,6 +63,13 @@ export interface LocationDataRecord {
   longitude_deg: number;
 }
 
+export interface HeatingGroundTemperatureRecord {
+  city: string;
+  temperatures_c_by_depth_m: {
+    [depth: string]: number;
+  };
+}
+
 export interface ReferenceData {
   design_indoor_conditions: {
     metadata: any;
@@ -77,6 +84,11 @@ export interface ReferenceData {
   location_data: {
     metadata: any;
     records: LocationDataRecord[];
+    units: any;
+  };
+  heating_ground_temperature?: {
+    metadata: any;
+    records: HeatingGroundTemperatureRecord[];
     units: any;
   };
   material_thermal_constants?: {
@@ -109,6 +121,7 @@ export async function fetchAllReferenceData(): Promise<Partial<ReferenceData>> {
     'design_indoor_conditions',
     'design_outdoor_conditions',
     'location_data',
+    'heating_ground_temperature',
     'material_thermal_constants',
     'glass_properties',
     'lighting_power_density',
@@ -215,6 +228,17 @@ export function searchLocationsByCity(
   if (!searchTerm) return records;
 
   return records.filter((r) => r.city.includes(searchTerm));
+}
+
+/**
+ * Get ground temperature data by city
+ */
+export function getGroundTemperatureByCity(
+  referenceData: ReferenceData,
+  city: string
+): HeatingGroundTemperatureRecord | null {
+  const records = referenceData.heating_ground_temperature?.records || [];
+  return records.find((r) => r.city === city) || null;
 }
 
 /**
