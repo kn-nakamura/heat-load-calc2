@@ -274,15 +274,29 @@ export const referenceDataService = {
 };
 
 // Session state services (for persisting page state on reload)
+const STORAGE_KEYS = {
+  currentPage: 'currentPage',
+  currentProjectId: 'currentProjectId',
+  currentProjectSnapshot: 'currentProjectSnapshot',
+} as const;
+
+const deserializeDate = (value: unknown): Date | null => {
+  if (typeof value !== 'string') return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
 export const sessionStateService = {
   saveState(): void {
     const { currentPage } = useUIStore.getState();
     const { currentProject } = useProjectStore.getState();
 
     try {
-      sessionStorage.setItem('currentPage', currentPage);
+      localStorage.setItem(STORAGE_KEYS.currentPage, currentPage);
+
       if (currentProject) {
-        sessionStorage.setItem('currentProjectId', currentProject.id);
+        localStorage.setItem(STORAGE_KEYS.currentProjectId, currentProject.id);
+        localStorage.setItem(STORAGE_KEYS.currentProjectSnapshot, JSON.stringify(currentProject));
       }
     } catch (error) {
       console.warn('Session state save skipped because storage is unavailable:', error);
@@ -292,28 +306,55 @@ export const sessionStateService = {
   async restoreState(): Promise<void> {
     let savedPage: string | null = null;
     let savedProjectId: string | null = null;
+    let savedProjectSnapshot: string | null = null;
 
     try {
-      savedPage = sessionStorage.getItem('currentPage');
-      savedProjectId = sessionStorage.getItem('currentProjectId');
+      savedPage =
+        localStorage.getItem(STORAGE_KEYS.currentPage) ?? sessionStorage.getItem(STORAGE_KEYS.currentPage);
+      savedProjectId =
+        localStorage.getItem(STORAGE_KEYS.currentProjectId) ?? sessionStorage.getItem(STORAGE_KEYS.currentProjectId);
+      savedProjectSnapshot = localStorage.getItem(STORAGE_KEYS.currentProjectSnapshot);
     } catch (error) {
       console.warn('Session state restore skipped because storage is unavailable:', error);
       return;
     }
 
-    if (savedPage) {
-      useUIStore.getState().setCurrentPage(savedPage as any);
+    if (savedProjectSnapshot) {
+      try {
+        const project = JSON.parse(savedProjectSnapshot);
+        const createdAt = deserializeDate(project?.createdAt);
+        const updatedAt = deserializeDate(project?.updatedAt);
+        const lastCalculatedAt = deserializeDate(project?.lastCalculatedAt);
+
+        if (project?.id && createdAt && updatedAt) {
+          useProjectStore.getState().setCurrentProject({
+            ...project,
+            createdAt,
+            updatedAt,
+            lastCalculatedAt,
+          });
+        }
+      } catch (error) {
+        console.warn('Failed to restore project snapshot from localStorage:', error);
+      }
     }
 
     if (savedProjectId) {
       await projectService.loadProject(savedProjectId);
     }
+
+    if (savedPage) {
+      useUIStore.getState().setCurrentPage(savedPage as any);
+    }
   },
 
   clearState(): void {
     try {
-      sessionStorage.removeItem('currentPage');
-      sessionStorage.removeItem('currentProjectId');
+      localStorage.removeItem(STORAGE_KEYS.currentPage);
+      localStorage.removeItem(STORAGE_KEYS.currentProjectId);
+      localStorage.removeItem(STORAGE_KEYS.currentProjectSnapshot);
+      sessionStorage.removeItem(STORAGE_KEYS.currentPage);
+      sessionStorage.removeItem(STORAGE_KEYS.currentProjectId);
     } catch (error) {
       console.warn('Session state clear skipped because storage is unavailable:', error);
     }
