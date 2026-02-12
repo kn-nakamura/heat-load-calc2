@@ -70,6 +70,14 @@ export interface HeatingGroundTemperatureRecord {
   };
 }
 
+export interface StandardSolarGainData {
+  [city: string]: {
+    _solar_altitude_deg: { [time: string]: number };
+    _solar_azimuth_deg: { [time: string]: number };
+    [orientation: string]: { [time: string]: number };
+  };
+}
+
 export interface ReferenceData {
   design_indoor_conditions: {
     metadata: any;
@@ -89,6 +97,11 @@ export interface ReferenceData {
   heating_ground_temperature?: {
     metadata: any;
     records: HeatingGroundTemperatureRecord[];
+    units: any;
+  };
+  standard_solar_gain?: {
+    metadata: any;
+    regions: StandardSolarGainData;
     units: any;
   };
   material_thermal_constants?: {
@@ -122,6 +135,7 @@ export async function fetchAllReferenceData(): Promise<Partial<ReferenceData>> {
     'design_outdoor_conditions',
     'location_data',
     'heating_ground_temperature',
+    'standard_solar_gain',
     'material_thermal_constants',
     'glass_properties',
     'lighting_power_density',
@@ -239,6 +253,17 @@ export function getGroundTemperatureByCity(
 ): HeatingGroundTemperatureRecord | null {
   const records = referenceData.heating_ground_temperature?.records || [];
   return records.find((r) => r.city === city) || null;
+}
+
+/**
+ * Get standard solar gain data by city
+ */
+export function getSolarGainByCity(
+  referenceData: ReferenceData,
+  city: string
+): StandardSolarGainData[string] | null {
+  const regions = referenceData.standard_solar_gain?.regions;
+  return regions?.[city] || null;
 }
 
 /**
