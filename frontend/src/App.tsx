@@ -3,7 +3,13 @@
 import { useEffect } from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { MainLayout } from './components/layout';
-import { useUIStore } from './stores';
+import {
+  useUIStore,
+  useProjectStore,
+  useMasterDataStore,
+  useRoomStore,
+  useSystemStore,
+} from './stores';
 import { appService, sessionStateService } from './db';
 import {
   DesignConditionsPage,
@@ -94,6 +100,46 @@ export default function App() {
 
     initializeApp();
   }, [showSnackbar]);
+
+  // Auto-save edited data so reload keeps in-progress input
+  useEffect(() => {
+    let initialized = false;
+    let saveTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const scheduleSave = () => {
+      if (!initialized) return;
+
+      if (saveTimer) {
+        clearTimeout(saveTimer);
+      }
+
+      saveTimer = setTimeout(() => {
+        appService.saveAll().catch((error) => {
+          console.error('Auto-save failed:', error);
+        });
+      }, 400);
+    };
+
+    const markInitialized = setTimeout(() => {
+      initialized = true;
+    }, 0);
+
+    const unsubProject = useProjectStore.subscribe(scheduleSave);
+    const unsubMasterData = useMasterDataStore.subscribe(scheduleSave);
+    const unsubRoom = useRoomStore.subscribe(scheduleSave);
+    const unsubSystem = useSystemStore.subscribe(scheduleSave);
+
+    return () => {
+      clearTimeout(markInitialized);
+      if (saveTimer) {
+        clearTimeout(saveTimer);
+      }
+      unsubProject();
+      unsubMasterData();
+      unsubRoom();
+      unsubSystem();
+    };
+  }, []);
 
   // Save state when page changes or before unload
   useEffect(() => {

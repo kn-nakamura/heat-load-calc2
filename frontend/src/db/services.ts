@@ -274,15 +274,35 @@ export const referenceDataService = {
 };
 
 // Session state services (for persisting page state on reload)
+const STORAGE_KEYS = {
+  currentPage: 'currentPage',
+  currentProjectId: 'currentProjectId',
+} as const;
+
+const PAGE_IDS = new Set([
+  'design-conditions',
+  'region-data',
+  'indoor-data',
+  'glass-structure',
+  'room-registration',
+  'system-registration',
+  'load-check',
+]);
+
+const isValidPageId = (value: string | null): value is ReturnType<typeof useUIStore.getState>['currentPage'] => {
+  return typeof value === 'string' && PAGE_IDS.has(value);
+};
+
 export const sessionStateService = {
   saveState(): void {
     const { currentPage } = useUIStore.getState();
     const { currentProject } = useProjectStore.getState();
 
     try {
-      sessionStorage.setItem('currentPage', currentPage);
+      localStorage.setItem(STORAGE_KEYS.currentPage, currentPage);
+
       if (currentProject) {
-        sessionStorage.setItem('currentProjectId', currentProject.id);
+        localStorage.setItem(STORAGE_KEYS.currentProjectId, currentProject.id);
       }
     } catch (error) {
       console.warn('Session state save skipped because storage is unavailable:', error);
@@ -294,26 +314,36 @@ export const sessionStateService = {
     let savedProjectId: string | null = null;
 
     try {
-      savedPage = sessionStorage.getItem('currentPage');
-      savedProjectId = sessionStorage.getItem('currentProjectId');
+      savedPage =
+        localStorage.getItem(STORAGE_KEYS.currentPage) ?? sessionStorage.getItem(STORAGE_KEYS.currentPage);
+      savedProjectId =
+        localStorage.getItem(STORAGE_KEYS.currentProjectId) ?? sessionStorage.getItem(STORAGE_KEYS.currentProjectId);
     } catch (error) {
       console.warn('Session state restore skipped because storage is unavailable:', error);
       return;
     }
 
-    if (savedPage) {
-      useUIStore.getState().setCurrentPage(savedPage as any);
-    }
-
     if (savedProjectId) {
       await projectService.loadProject(savedProjectId);
+    }
+
+    const hasProject = useProjectStore.getState().currentProject !== null;
+    if (isValidPageId(savedPage) && (savedPage === 'design-conditions' || hasProject)) {
+      useUIStore.getState().setCurrentPage(savedPage);
+      return;
+    }
+
+    if (!hasProject) {
+      useUIStore.getState().setCurrentPage('design-conditions');
     }
   },
 
   clearState(): void {
     try {
-      sessionStorage.removeItem('currentPage');
-      sessionStorage.removeItem('currentProjectId');
+      localStorage.removeItem(STORAGE_KEYS.currentPage);
+      localStorage.removeItem(STORAGE_KEYS.currentProjectId);
+      sessionStorage.removeItem(STORAGE_KEYS.currentPage);
+      sessionStorage.removeItem(STORAGE_KEYS.currentProjectId);
     } catch (error) {
       console.warn('Session state clear skipped because storage is unavailable:', error);
     }
