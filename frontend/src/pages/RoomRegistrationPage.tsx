@@ -187,6 +187,8 @@ export const RoomRegistrationPage: React.FC = () => {
               }
             }
             onChange={(field, value) => handleNestedChange('indoorConditions', field, value)}
+            floorArea={formData.floorArea || 0}
+            occupancyDensity={formData.calculationConditions?.occupancyDensity || 0}
           />
         );
 

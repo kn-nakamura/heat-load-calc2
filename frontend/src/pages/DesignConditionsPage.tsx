@@ -1,9 +1,9 @@
 // Design conditions page (設計条件)
 
 import { Box, Typography, Paper, Button, Divider } from '@mui/material';
-import { Save as SaveIcon } from '@mui/icons-material';
-import { useState, useEffect } from 'react';
-import { useProjectStore, useUIStore } from '../stores';
+import { Save as SaveIcon, Download as DownloadIcon, Upload as UploadIcon } from '@mui/icons-material';
+import { useState, useEffect, useRef } from 'react';
+import { useProjectStore, useUIStore, useRoomStore, useSystemStore } from '../stores';
 import {
   AddressSearchForm,
   BuildingInfoForm,
@@ -12,15 +12,18 @@ import {
   CalculationSettingsForm,
 } from '../components/design';
 import { DesignConditions } from '../types';
-import { masterDataService } from '../db';
+import { masterDataService, appService } from '../db';
 import { NominatimSearchResult, extractLocationName } from '../services/addressSearch';
 import { findNearestLocation, getOutdoorConditionByCity } from '../services/referenceData';
 
 export const DesignConditionsPage: React.FC = () => {
-  const { currentProject, updateDesignConditions, createNewProject, referenceData } = useProjectStore();
+  const { currentProject, updateDesignConditions, createNewProject, referenceData, setCurrentProject } = useProjectStore();
+  const { rooms } = useRoomStore();
+  const { systems } = useSystemStore();
   const { showSnackbar } = useUIStore();
 
   const [formData, setFormData] = useState<DesignConditions | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Create a new project if none exists
@@ -139,6 +142,74 @@ export const DesignConditionsPage: React.FC = () => {
     }
   };
 
+  const handleExport = async () => {
+    if (!currentProject) {
+      showSnackbar('プロジェクトが読み込まれていません', 'error');
+      return;
+    }
+
+    try {
+      // Save current state before exporting
+      await appService.saveAll();
+
+      // Export all data (project, rooms, systems, master data)
+      const dataStr = await appService.exportData();
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      const fileName = `${currentProject.designConditions.buildingName || 'project'}_${new Date().toISOString().split('T')[0]}.json`;
+      link.download = fileName;
+      link.click();
+
+      URL.revokeObjectURL(url);
+      showSnackbar('プロジェクト全体をエクスポートしました', 'success');
+    } catch (error) {
+      console.error('Export error:', error);
+      showSnackbar('エクスポートに失敗しました', 'error');
+    }
+  };
+
+  const handleImport = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!window.confirm('インポートすると現在のデータが上書きされます。続行しますか？')) {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
+    }
+
+    try {
+      const text = await file.text();
+
+      // Import all data (project, rooms, systems, master data)
+      await appService.importData(text);
+
+      // Refresh form data from newly imported project
+      const { currentProject: importedProject } = useProjectStore.getState();
+      if (importedProject) {
+        setFormData(importedProject.designConditions);
+      }
+
+      showSnackbar('プロジェクト全体をインポートしました', 'success');
+    } catch (error) {
+      console.error('Import error:', error);
+      showSnackbar('インポートに失敗しました', 'error');
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   if (!formData) {
     return (
       <Box sx={{ p: 3 }}>
@@ -151,10 +222,27 @@ export const DesignConditionsPage: React.FC = () => {
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant="h4">設計条件</Typography>
-        <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSave}>
-          保存
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button variant="outlined" startIcon={<UploadIcon />} onClick={handleImport}>
+            インポート
+          </Button>
+          <Button variant="outlined" startIcon={<DownloadIcon />} onClick={handleExport}>
+            エクスポート
+          </Button>
+          <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSave}>
+            保存
+          </Button>
+        </Box>
       </Box>
+
+      {/* Hidden file input for import */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
 
       <Paper sx={{ p: 3 }}>
         {/* Address Search */}

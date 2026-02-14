@@ -38,6 +38,24 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
     return regionMap[region] || '東京';
   };
 
+  // Get solar region based on city
+  const getSolarRegionForCity = (city: string): string => {
+    // Map major cities to solar regions based on typical climate zones
+    const cityToSolarRegionMap: { [key: string]: string } = {
+      '札幌': 'A1',
+      '盛岡': 'A1',
+      '仙台': 'A2',
+      '新潟': 'A2',
+      '東京': 'A3',
+      '大阪': 'A3',
+      '名古屋': 'A3',
+      '福岡': 'A4',
+      '鹿児島': 'A4',
+      '那覇': 'A5',
+    };
+    return cityToSolarRegionMap[city] || 'A3';
+  };
+
   const handleCitySelect = (city: string | null) => {
     if (!city || !referenceData) return;
 
@@ -47,6 +65,10 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
     onChange('locationLabel', city);
     onChange('latitude', location.latitude_deg);
     onChange('longitude', location.longitude_deg);
+
+    // Auto-set solar region based on city
+    const solarRegion = getSolarRegionForCity(city);
+    onChange('solarRegion', solarRegion);
 
     // Also update outdoor conditions based on the city
     const outdoorCondition = getOutdoorConditionByCity(referenceData as any, city);
@@ -94,6 +116,10 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
         onChange('locationLabel', representativeCity);
         onChange('latitude', location.latitude_deg);
         onChange('longitude', location.longitude_deg);
+
+        // Auto-set solar region based on city
+        const solarRegion = getSolarRegionForCity(representativeCity);
+        onChange('solarRegion', solarRegion);
 
         // Also update outdoor conditions based on the city
         const outdoorCondition = getOutdoorConditionByCity(referenceData as any, representativeCity);

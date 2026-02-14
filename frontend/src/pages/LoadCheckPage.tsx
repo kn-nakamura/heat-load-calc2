@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Calculate as CalculateIcon, GetApp as DownloadIcon, Cloud as CloudIcon, Computer as ComputerIcon } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
-import { useProjectStore, useRoomStore, useSystemStore, useUIStore } from '../stores';
+import { useProjectStore, useRoomStore, useSystemStore, useUIStore, useMasterDataStore } from '../stores';
 import { LoadSummaryCard, LoadResultsTable } from '../components/load';
 import { SystemLoadResult } from '../types/system';
 import { calculateAllSystemLoads } from '../services/loadCalculation';
@@ -25,6 +25,7 @@ export const LoadCheckPage: React.FC = () => {
   const { currentProject } = useProjectStore();
   const { rooms } = useRoomStore();
   const { systems } = useSystemStore();
+  const { lightingPower, occupancyHeat, equipmentPower } = useMasterDataStore();
   const { showSnackbar } = useUIStore();
 
   const [selectedSystemId, setSelectedSystemId] = useState<string>('');
@@ -73,7 +74,10 @@ export const LoadCheckPage: React.FC = () => {
           systems,
           rooms,
           currentProject.designConditions,
-          currentProject.regionClimateData || undefined
+          currentProject.regionClimateData || undefined,
+          lightingPower,
+          occupancyHeat,
+          equipmentPower
         );
         showSnackbar('計算が完了しました（簡易計算）', 'success');
       }
