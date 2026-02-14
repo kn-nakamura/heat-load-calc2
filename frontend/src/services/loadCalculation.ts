@@ -5,6 +5,7 @@ import { System } from '../types/system';
 import { RoomLoadResult, SystemLoadResult } from '../types/system';
 import { DesignConditions } from '../types/project';
 import { RegionClimateData } from '../types';
+import { LightingPowerMaster, OccupancyHeatMaster, EquipmentPowerMaster } from '../types';
 
 /**
  * Calculate room heat loads
@@ -14,7 +15,10 @@ import { RegionClimateData } from '../types';
 export function calculateRoomLoad(
   room: Room,
   designConditions: DesignConditions,
-  climateData?: RegionClimateData
+  climateData?: RegionClimateData,
+  lightingPowerMaster?: LightingPowerMaster[],
+  occupancyHeatMaster?: OccupancyHeatMaster[],
+  equipmentPowerMaster?: EquipmentPowerMaster[]
 ): RoomLoadResult {
   const area = room.floorArea || 0;
   const volume = room.roomVolume || area * 2.7; // Assume 2.7m ceiling if volume not specified
@@ -30,16 +34,39 @@ export function calculateRoomLoad(
   const summerDeltaT = Math.abs(summerOutdoor - summerIndoor);
   const winterDeltaT = Math.abs(winterIndoor - winterOutdoor);
 
+  // Get master data items
+  const selectedLighting = lightingPowerMaster?.find((item) => item.id === room.indoorConditions.lightingCode);
+  const selectedOccupancy = occupancyHeatMaster?.find((item) => item.id === room.indoorConditions.occupancyCode);
+  const selectedEquipment = equipmentPowerMaster?.find((item) => item.id === room.indoorConditions.equipmentCode);
+
+  // Calculate lighting power density based on lighting type
+  const getLightingPowerDensity = (): number => {
+    if (!selectedLighting || !room.indoorConditions.lightingType) return 0;
+
+    const typeMap: { [key: string]: keyof typeof selectedLighting.powerDensity } = {
+      '蛍光灯ダウンライト': 'fluorescentDownlight',
+      '蛍光灯ルーバ': 'fluorescentLouver',
+      'LEDダウンライト': 'ledDownlight',
+      'LEDルーバ': 'ledLouver',
+    };
+
+    const key = typeMap[room.indoorConditions.lightingType];
+    return key ? selectedLighting.powerDensity[key] : 0;
+  };
+
+  const lightingPowerDensity = getLightingPowerDensity();
+  const equipmentPowerDensity = selectedEquipment?.powerDensity || 0;
+
   // Simplified calculations (placeholder formulas)
   // Real implementation would use detailed heat transfer equations
 
   // Summer loads
   const summerEnvelopeLoad = area * 15 * summerDeltaT; // Simplified U*A*ΔT
   const summerSolarLoad = area * 100; // Simplified solar gain [W/m²]
-  const summerLightingLoad = 10 * area; // Default 10W/m² if no code
-  const summerOccupancySensible = totalOccupants * 60; // ~60W sensible per person
-  const summerOccupancyLatent = totalOccupants * 50; // ~50W latent per person
-  const summerEquipmentLoad = 10 * area; // Default 10W/m² if no code
+  const summerLightingLoad = lightingPowerDensity * area; // W/m² × m²
+  const summerOccupancySensible = selectedOccupancy ? selectedOccupancy.summer.sensibleHeat * totalOccupants : 0;
+  const summerOccupancyLatent = selectedOccupancy ? selectedOccupancy.summer.latentHeat * totalOccupants : 0;
+  const summerEquipmentLoad = equipmentPowerDensity * area; // W/m² × m²
   const summerOtherSensible = room.calculationConditions.otherSensibleLoad || 0;
   const summerOtherLatent = room.calculationConditions.otherLatentLoad || 0;
 
@@ -63,10 +90,10 @@ export function calculateRoomLoad(
 
   // Winter loads (heating)
   const winterEnvelopeLoad = area * 15 * winterDeltaT;
-  const winterLightingLoad = 10 * area * 0.7; // Reduced in winter
-  const winterOccupancySensible = totalOccupants * 60;
-  const winterOccupancyLatent = totalOccupants * 50;
-  const winterEquipmentLoad = 10 * area;
+  const winterLightingLoad = lightingPowerDensity * area; // W/m² × m²
+  const winterOccupancySensible = selectedOccupancy ? selectedOccupancy.winter.sensibleHeat * totalOccupants : 0;
+  const winterOccupancyLatent = selectedOccupancy ? selectedOccupancy.winter.latentHeat * totalOccupants : 0;
+  const winterEquipmentLoad = equipmentPowerDensity * area; // W/m² × m²
   const winterOtherSensible = room.calculationConditions.otherSensibleLoad || 0;
   const winterOtherLatent = room.calculationConditions.otherLatentLoad || 0;
 
@@ -139,13 +166,18 @@ export function calculateSystemLoad(
   system: System,
   rooms: Room[],
   designConditions: DesignConditions,
-  climateData?: RegionClimateData
+  climateData?: RegionClimateData,
+  lightingPowerMaster?: LightingPowerMaster[],
+  occupancyHeatMaster?: OccupancyHeatMaster[],
+  equipmentPowerMaster?: EquipmentPowerMaster[]
 ): SystemLoadResult {
   // Get rooms assigned to this system
   const systemRooms = rooms.filter((room) => system.roomIds.includes(room.id));
 
   // Calculate load for each room
-  const roomLoads = systemRooms.map((room) => calculateRoomLoad(room, designConditions, climateData));
+  const roomLoads = systemRooms.map((room) =>
+    calculateRoomLoad(room, designConditions, climateData, lightingPowerMaster, occupancyHeatMaster, equipmentPowerMaster)
+  );
 
   // Aggregate loads
   const summerSensibleLoad = roomLoads.reduce((sum, r) => sum + r.summer.totalSensibleLoad, 0);
@@ -178,10 +210,15 @@ export function calculateAllSystemLoads(
   systems: System[],
   rooms: Room[],
   designConditions: DesignConditions,
-  climateData?: RegionClimateData
+  climateData?: RegionClimateData,
+  lightingPowerMaster?: LightingPowerMaster[],
+  occupancyHeatMaster?: OccupancyHeatMaster[],
+  equipmentPowerMaster?: EquipmentPowerMaster[]
 ): SystemLoadResult[] {
   if (systems.length === 0) {
-    const roomLoads = rooms.map((room) => calculateRoomLoad(room, designConditions, climateData));
+    const roomLoads = rooms.map((room) =>
+      calculateRoomLoad(room, designConditions, climateData, lightingPowerMaster, occupancyHeatMaster, equipmentPowerMaster)
+    );
 
     const summerSensibleLoad = roomLoads.reduce((sum, r) => sum + r.summer.totalSensibleLoad, 0);
     const summerLatentLoad = roomLoads.reduce((sum, r) => sum + r.summer.totalLatentLoad, 0);
@@ -207,5 +244,7 @@ export function calculateAllSystemLoads(
     ];
   }
 
-  return systems.map((system) => calculateSystemLoad(system, rooms, designConditions, climateData));
+  return systems.map((system) =>
+    calculateSystemLoad(system, rooms, designConditions, climateData, lightingPowerMaster, occupancyHeatMaster, equipmentPowerMaster)
+  );
 }

@@ -14,7 +14,7 @@ interface LocationSettingsFormProps {
 }
 
 const regions = ['1地域', '2地域', '3地域', '4地域', '5地域', '6地域', '7地域', '8地域'];
-const solarRegions = ['A1', 'A2', 'A3', 'A4', 'A5'];
+const solarRepresentativeCities = ['札幌', '仙台', '東京', '大阪', '福岡', '那覇']; // 日射計算用代表地区
 const orientationBases = ['真北', '磁北'];
 
 export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ formData, onChange }) => {
@@ -38,6 +38,55 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
     return regionMap[region] || '東京';
   };
 
+  // Get solar representative city based on selected city
+  const getSolarRepresentativeCity = (city: string): string => {
+    // Map cities to their nearest solar radiation representative city
+    const cityToRepresentativeMap: { [key: string]: string } = {
+      '札幌': '札幌',
+      '旭川': '札幌',
+      '帯広': '札幌',
+      '釧路': '札幌',
+      '函館': '札幌',
+      '盛岡': '仙台',
+      '仙台': '仙台',
+      '秋田': '仙台',
+      '山形': '仙台',
+      '福島': '仙台',
+      '新潟': '仙台',
+      '東京': '東京',
+      '横浜': '東京',
+      '千葉': '東京',
+      'さいたま': '東京',
+      '宇都宮': '東京',
+      '前橋': '東京',
+      '水戸': '東京',
+      '長野': '東京',
+      '名古屋': '東京',
+      '岐阜': '東京',
+      '静岡': '東京',
+      '大阪': '大阪',
+      '京都': '大阪',
+      '神戸': '大阪',
+      '奈良': '大阪',
+      '和歌山': '大阪',
+      '岡山': '大阪',
+      '広島': '大阪',
+      '高松': '大阪',
+      '松江': '大阪',
+      '鳥取': '大阪',
+      '福岡': '福岡',
+      '北九州': '福岡',
+      '佐賀': '福岡',
+      '長崎': '福岡',
+      '熊本': '福岡',
+      '大分': '福岡',
+      '宮崎': '福岡',
+      '鹿児島': '福岡',
+      '那覇': '那覇',
+    };
+    return cityToRepresentativeMap[city] || '東京';
+  };
+
   const handleCitySelect = (city: string | null) => {
     if (!city || !referenceData) return;
 
@@ -47,6 +96,10 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
     onChange('locationLabel', city);
     onChange('latitude', location.latitude_deg);
     onChange('longitude', location.longitude_deg);
+
+    // Auto-set solar representative city based on selected city
+    const solarCity = getSolarRepresentativeCity(city);
+    onChange('solarRegion', solarCity);
 
     // Also update outdoor conditions based on the city
     const outdoorCondition = getOutdoorConditionByCity(referenceData as any, city);
@@ -94,6 +147,10 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
         onChange('locationLabel', representativeCity);
         onChange('latitude', location.latitude_deg);
         onChange('longitude', location.longitude_deg);
+
+        // Auto-set solar representative city based on selected city
+        const solarCity = getSolarRepresentativeCity(representativeCity);
+        onChange('solarRegion', solarCity);
 
         // Also update outdoor conditions based on the city
         const outdoorCondition = getOutdoorConditionByCity(referenceData as any, representativeCity);
@@ -168,15 +225,15 @@ export const LocationSettingsForm: React.FC<LocationSettingsFormProps> = ({ form
 
         <Grid size={{ xs: 12, sm: 3 }}>
           <FormControl fullWidth>
-            <InputLabel>日射地域区分</InputLabel>
+            <InputLabel>日射計算用地域</InputLabel>
             <Select
-              value={formData.solarRegion || 'A3'}
-              label="日射地域区分"
+              value={formData.solarRegion || '東京'}
+              label="日射計算用地域"
               onChange={(e) => onChange('solarRegion', e.target.value)}
             >
-              {solarRegions.map((region) => (
-                <MenuItem key={region} value={region}>
-                  {region}
+              {solarRepresentativeCities.map((city) => (
+                <MenuItem key={city} value={city}>
+                  {city}
                 </MenuItem>
               ))}
             </Select>

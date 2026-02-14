@@ -31,7 +31,7 @@ const defaultDesignConditions: DesignConditions = {
   reportAuthor: '',
   remarks: '',
   region: '6地域',
-  solarRegion: 'A3',
+  solarRegion: '東京',
   latitude: null,
   longitude: null,
   locationLabel: '',
