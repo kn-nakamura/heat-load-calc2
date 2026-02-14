@@ -54,25 +54,10 @@ export const RegionDataPage: React.FC = () => {
     );
   }
 
-  // Get representative city for the region if no city is selected
-  const getRepresentativeCityForRegion = (region: string): string => {
-    const regionMap: { [key: string]: string } = {
-      '1地域': '札幌',
-      '2地域': '盛岡',
-      '3地域': '仙台',
-      '4地域': '東京',
-      '5地域': '長野',
-      '6地域': '東京',
-      '7地域': '福岡',
-      '8地域': '那覇',
-    };
-    return regionMap[region] || '東京';
-  };
-
   // Get outdoor conditions and ground temperature for the selected city
   const isAutoSelectedCity = !currentProject.designConditions.locationLabel;
   const cityLabel = currentProject.designConditions.locationLabel ||
-                    getRepresentativeCityForRegion(currentProject.designConditions.region);
+                    currentProject.designConditions.region || '東京';
 
   // Debug logging
   console.log('RegionDataPage - locationLabel:', currentProject.designConditions.locationLabel);

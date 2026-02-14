@@ -58,6 +58,51 @@ export function mapProjectToBackend(
     });
   });
 
+  // Extract internal loads from rooms
+  const internal_loads: any[] = [];
+  rooms.forEach((room) => {
+    // Lighting load
+    if (room.indoorConditions?.lightingCode) {
+      internal_loads.push({
+        id: `${room.id}_lighting`,
+        room_id: room.id,
+        kind: 'lighting',
+        sensible_w: 100, // Placeholder - should come from master data
+        latent_w: 0,
+      });
+    }
+    // Occupancy load
+    if (room.indoorConditions?.occupancyCode) {
+      internal_loads.push({
+        id: `${room.id}_occupancy`,
+        room_id: room.id,
+        kind: 'occupancy',
+        sensible_w: room.calculationConditions?.occupancyCount ? (room.calculationConditions.occupancyCount * 100) : 100,
+        latent_w: room.calculationConditions?.occupancyCount ? (room.calculationConditions.occupancyCount * 50) : 50,
+      });
+    }
+    // Equipment load
+    if (room.indoorConditions?.equipmentCode) {
+      internal_loads.push({
+        id: `${room.id}_equipment`,
+        room_id: room.id,
+        kind: 'equipment',
+        sensible_w: 100, // Placeholder - should come from master data
+        latent_w: 0,
+      });
+    }
+    // Other loads
+    if (room.calculationConditions?.otherSensibleLoad || room.calculationConditions?.otherLatentLoad) {
+      internal_loads.push({
+        id: `${room.id}_other`,
+        room_id: room.id,
+        kind: 'other',
+        sensible_w: room.calculationConditions?.otherSensibleLoad || 0,
+        latent_w: room.calculationConditions?.otherLatentLoad || 0,
+      });
+    }
+  });
+
   return {
     id: project.id,
     name: project.name,
@@ -84,7 +129,7 @@ export function mapProjectToBackend(
     openings: openings,
     constructions: [], // Would need envelope master data
     glasses: [], // Would need glass master data
-    internal_loads: [], // Would be extracted from room internal conditions
+    internal_loads: internal_loads,
     mechanical_loads: [],
     ventilation_infiltration: [],
     systems: backendSystems,
