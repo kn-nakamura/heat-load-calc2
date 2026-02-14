@@ -81,6 +81,8 @@ export const DesignConditionsPage: React.FC = () => {
           locationLabel: location.city,
           latitude: location.latitude_deg,
           longitude: location.longitude_deg,
+          region: location.city,
+          solarRegion: location.city,
           outdoorSummer: {
             dryBulbTemp: outdoorCondition.cooling_drybulb_14_c,
             wetBulbTemp: outdoorCondition.cooling_wetbulb_14_c,
@@ -100,6 +102,8 @@ export const DesignConditionsPage: React.FC = () => {
           locationLabel: location.city,
           latitude: location.latitude_deg,
           longitude: location.longitude_deg,
+          region: location.city,
+          solarRegion: location.city,
           outdoorSummer: {
             dryBulbTemp: outdoorCondition.cooling_drybulb_14_c,
             wetBulbTemp: outdoorCondition.cooling_wetbulb_14_c,
@@ -116,7 +120,7 @@ export const DesignConditionsPage: React.FC = () => {
           },
         });
 
-        showSnackbar('外気設計条件を自動設定しました', 'success');
+        showSnackbar('外気設計条件と日射区分を自動設定しました', 'success');
       }
     }
   };
