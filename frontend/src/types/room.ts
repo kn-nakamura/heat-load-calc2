@@ -17,6 +17,7 @@ export interface EnvelopeRow {
   overhangCode: string | null;           // ひさしコード (references OverhangMaster)
   nonAirConditionedDiff: string | null;  // 非空調差温度コード (references NonAirConditionedTempDiffMaster)
   undergroundDepth: string | null;       // 地中深さ (for underground walls)
+  intermittent_factor: number;           // 間欠係数 (運用係数: 0-1, default: 1.0)
   remarks: string;                       // 備考
 }
 

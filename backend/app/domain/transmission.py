@@ -84,7 +84,7 @@ def calc_surface_load(
             else max(indoor_winter - outdoor_winter, 0.0)
         )
         heating_factor = references.lookup_orientation_factor_for_heating(orientation)
-    heat_sensible = round_half_up(area * u_val * heating_delta * heating_factor, 0)
+    heat_sensible = round_half_up(area * u_val * heating_delta * heating_factor * surface.intermittent_factor, 0)
 
     load = LoadVector(
         cool_9=values["9"],
