@@ -37,6 +37,7 @@ export function mapProjectToBackend(
           area_m2: row.area,
           adjacent_type: 'outdoor', // Simplified
           construction_id: row.code,
+          intermittent_factor: row.intermittent_factor ?? 1.0,
         });
 
         // If it's a window, add as opening
@@ -103,6 +104,15 @@ export function mapProjectToBackend(
     }
   });
 
+  // Extract ventilation/infiltration from rooms
+  const ventilation_infiltration: any[] = [];
+  rooms.forEach((room) => {
+    const ventData = mapCalculationConditionsToVentilation(room);
+    if (ventData) {
+      ventilation_infiltration.push(ventData);
+    }
+  });
+
   return {
     id: project.id,
     name: project.name,
@@ -131,7 +141,7 @@ export function mapProjectToBackend(
     glasses: [], // Would need glass master data
     internal_loads: internal_loads,
     mechanical_loads: [],
-    ventilation_infiltration: [],
+    ventilation_infiltration: ventilation_infiltration,
     systems: backendSystems,
   };
 }
@@ -191,4 +201,68 @@ function mapEnvelopeTypeToSurfaceKind(type: string): string {
     default:
       return 'wall';
   }
+}
+
+/**
+ * Map calculation conditions to ventilation/infiltration data
+ */
+function mapCalculationConditionsToVentilation(room: FrontendRoom): any | null {
+  const calc = room.calculationConditions;
+
+  // Return null if no ventilation data exists
+  if (!calc || (!calc.outdoorAirVolume && !calc.infiltrationMethod)) {
+    return null;
+  }
+
+  // Map infiltration method to infiltration_mode
+  let infiltration_mode = 'none';
+  if (calc.infiltrationMethod === 'SHASE-S' && calc.infiltrationArea) {
+    infiltration_mode = 'sash';
+  } else if (calc.infiltrationMethod === '建築基準法') {
+    infiltration_mode = 'door';
+  }
+
+  return {
+    id: `${room.id}_ventilation`,
+    room_id: room.id,
+    outdoor_air_m3h: calc.outdoorAirVolume ?? 0.0,
+    infiltration_mode: infiltration_mode,
+    door_exposure: 'other',
+    air_changes_per_hour: null,
+    infiltration_area_m2: calc.infiltrationArea ? calc.infiltrationArea / 10000 : undefined, // cm² to m²
+    sash_type: mapSashType(calc.windowType),
+    airtightness: mapAirtightness(calc.airtightness),
+    wind_speed_ms: calc.windSpeed ?? undefined,
+    sensible_effectiveness_pct: undefined,
+    total_effectiveness_pct: undefined,
+    preset_load: null,
+  };
+}
+
+/**
+ * Map sash type from frontend format to backend format
+ */
+function mapSashType(windowType: string | null): string | undefined {
+  if (!windowType) return undefined;
+
+  const typeMap: Record<string, string> = {
+    'アルミサッシ': 'aluminum',
+    '木製サッシ': 'timber',
+    '樹脂サッシ': 'resin',
+  };
+  return typeMap[windowType];
+}
+
+/**
+ * Map airtightness level from frontend format to backend format
+ */
+function mapAirtightness(airtightness: string | null): string | undefined {
+  if (!airtightness) return undefined;
+
+  const levelMap: Record<string, string> = {
+    '高気密': 'high',
+    '中気密': 'medium',
+    '低気密': 'low',
+  };
+  return levelMap[airtightness];
 }

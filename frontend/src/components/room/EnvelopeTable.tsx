@@ -93,6 +93,7 @@ export const EnvelopeTable: React.FC<EnvelopeTableProps> = ({ rows, onChange }) 
       overhangCode: null,
       nonAirConditionedDiff: null,
       undergroundDepth: null,
+      intermittent_factor: 1.0,
       remarks: '',
     };
 
@@ -153,6 +154,7 @@ export const EnvelopeTable: React.FC<EnvelopeTableProps> = ({ rows, onChange }) 
               <TableCell>合計面積[m²]</TableCell>
               <TableCell>ひさしコード</TableCell>
               <TableCell>非空調差温度</TableCell>
+              <TableCell>間欠係数</TableCell>
               <TableCell>備考</TableCell>
               <TableCell>操作</TableCell>
             </TableRow>
@@ -293,6 +295,17 @@ export const EnvelopeTable: React.FC<EnvelopeTableProps> = ({ rows, onChange }) 
                       ))}
                     </Select>
                   </FormControl>
+                </TableCell>
+
+                {/* Intermittent Factor */}
+                <TableCell>
+                  <TextField
+                    size="small"
+                    type="number"
+                    value={row.intermittent_factor || 1.0}
+                    onChange={(e) => handleRowChange(row.rowNumber, 'intermittent_factor', parseFloat(e.target.value) || 1.0)}
+                    inputProps={{ min: 0, max: 1, step: 0.1, style: { width: 60 } }}
+                  />
                 </TableCell>
 
                 {/* Remarks */}
